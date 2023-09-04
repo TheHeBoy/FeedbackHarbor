@@ -11,9 +11,6 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class AppCommentCreateReqVO {
 
-    @Schema(description = "用户id")
-    private Long uid;
-
     @Schema(description = "父id")
     private Long parentId;
 
@@ -22,13 +19,4 @@ public class AppCommentCreateReqVO {
 
     @Schema(description = "内容")
     private String content;
-
-    @Schema(description = "用户类型")
-    private Integer userType;
-
-    @Schema(description = "头像")
-    private String avatar;
-
-    @Schema(description = "用户昵称")
-    private String nickname;
 }

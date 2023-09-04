@@ -16,16 +16,4 @@ public class AppFeedbackCreateReqVO {
 
     @Schema(description = "反馈类型", example = "1")
     private Integer feedbackType;
-
-    @Schema(description = "用户类型")
-    private Integer userType;
-
-    @Schema(description = "头像")
-    private String avatar;
-
-    @Schema(description = "用户昵称")
-    private String nickname;
-
-    @Schema(description = "用户id")
-    private Long uid;
 }
