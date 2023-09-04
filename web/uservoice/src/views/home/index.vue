@@ -1,15 +1,16 @@
 <template>
   <div class="container w-full mx-auto main">
-    <div class="mx-auto w-250 flex">
+    <div class="mx-auto w-2/3 flex min-w-200">
       <div class="w-full">
         <el-card class="box-card">
           <FeedBackTags />
         </el-card>
         <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-          <el-card v-for="feedback in feedbackList" :key="feedback.uid" class="box-card mt-5 w-200">
-            <FeedBack :v-model="feedback"/>
+          <el-card c v-for="feedback in feedbackList" :key="feedback.id" class="box-card mt-5">
+            <FeedBack :v-model="feedback" class="w-full" />
           </el-card>
         </div>
+        <p v-if="loading">Loading...</p>
       </div>
       <div class="ml-6">
         <el-affix position="top" :offset="20">
@@ -19,8 +20,7 @@
         </el-affix>
       </div>
     </div>
-    <p v-if="loading">Loading...</p>
-    <FeedBackDialog ref="feedBackDialog" @submit="submitFeedback"/>
+    <FeedBackDialog ref="feedBackDialog" @submit="submitFeedback" />
   </div>
 
   <el-backtop :right="100" :bottom="100" />
@@ -34,8 +34,8 @@ const feedBackDialog = ref<any>(null);
 const feedbackList = ref<FeedbackVO[]>([]);
 const userStore = useUserStoreWithOut();
 
-const feedbackClick = ()=>{
-  if(userStore.isLoginAndShwolog()){
+const feedbackClick = () => {
+  if (userStore.isLoginAndShwolog()) {
     feedBackDialog.value.show()
   }
 }
@@ -50,7 +50,7 @@ const load = () => {
   pageRequest();
 };
 
-const submitFeedback = (data:any) => {
+const submitFeedback = (data: any) => {
   feedbackList.value.unshift(data);
 }
 

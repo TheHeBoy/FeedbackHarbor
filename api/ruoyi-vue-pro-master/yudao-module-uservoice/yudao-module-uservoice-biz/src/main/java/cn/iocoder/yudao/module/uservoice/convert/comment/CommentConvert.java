@@ -6,7 +6,6 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 
 import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.AppCommentCreateReqVO;
 import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.AppCommentPageRespVO;
-import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.AppCommentRespVO;
 import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.ReplyVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

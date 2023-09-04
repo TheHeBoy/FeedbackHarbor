@@ -13,7 +13,7 @@
 import '~/styles/index.scss'
 import emoji from '@/types/emoji'
 import { PropType, reactive } from 'vue'
-import { createComment,createCommentVO, getCommentPage } from '@/api/comment'
+import { createComment, createCommentVO, getCommentPage } from '@/api/comment'
 import { CommentApi, ConfigApi, SubmitParamApi, UToast, dayjs } from '~/index'
 import { useUserStoreWithOut } from '@/store/user'
 import { FeedbackVO } from '@/api/feedback'
@@ -27,7 +27,7 @@ const props = defineProps({
 
 const useUserStore = useUserStoreWithOut();
 
-const {user} = storeToRefs(useUserStore);
+const { user } = storeToRefs(useUserStore);
 
 watch(user, () => {
   config.user.id = user.value.id;
@@ -49,17 +49,13 @@ const config = reactive<ConfigApi>({
 })
 
 const submit = ({ content, parentId, files, finish }: SubmitParamApi) => {
-  const createCommentVO:createCommentVO = {
-    uid: config.user.id,
+  const createCommentVO: createCommentVO = {
     content: content,
     feedbackId: props.vModel.id,
-    userType: 0,
     parentId: parentId == null ? null : Number(parentId),
-    nickname: config.user.username,
-    avatar: config.user.avatar
   }
-  if(useUserStore.isLoginAndShwolog()){
-    createComment(createCommentVO).then((data)=>{
+  if (useUserStore.isLoginAndShwolog()) {
+    createComment(createCommentVO).then((data) => {
       const comment: CommentApi = {
         id: data.id,
         parentId: data.parentId,
@@ -98,29 +94,29 @@ const like = (id: string, finish: () => void) => {
   }, 200)
 }
 
-let params = {pageNo: 1,pageSize: 5,feedbackId: props.vModel.id};
+let params = { pageNo: 1, pageSize: 5, feedbackId: props.vModel.id };
 
-const commentPage = () =>{
+const commentPage = () => {
   getCommentPage(params).then((data => {
     config.total = data.total;
-    let comments:CommentApi[] = [];
-    for(let i=0; i< data.list.length; i++){
+    let comments: CommentApi[] = [];
+    for (let i = 0; i < data.list.length; i++) {
       const commentVO = data.list[i];
-      const replies:CommentApi[] = commentVO.replies.map((e:any)=>{
+      const replies: CommentApi[] = commentVO.replies.map((e: any) => {
         return {
-              id: e.id,
-              parentId: e.parentId,
-              uid: e.uid,
-              address: '',
-              content: e.content,
-              likes: e.likes,
-              createTime: e.createTime,
-              user: {
-                username: e.nickname,
-                avatar: e.avatar,
-                homeLink: ''
-              }
-            }
+          id: e.id,
+          parentId: e.parentId,
+          uid: e.uid,
+          address: '',
+          content: e.content,
+          likes: e.likes,
+          createTime: e.createTime,
+          user: {
+            username: e.nickname,
+            avatar: e.avatar,
+            homeLink: ''
+          }
+        }
       });
       comments.push({
         id: commentVO.id,
@@ -139,7 +135,7 @@ const commentPage = () =>{
           total: commentVO.replies.length,
           list: replies
         }
-    });
+      });
     }
     config.comments.push(...comments);
     loading.value = false;

@@ -14,8 +14,7 @@
     </el-form>
     <button
       class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      @click="submitForm(ruleFormRef)"
-    >
+      @click="submitForm(ruleFormRef)">
       提交反馈
     </button>
   </el-dialog>
@@ -24,7 +23,6 @@
 <script lang="ts" setup>
 import { ElInput, FormInstance } from 'element-plus';
 import { FeedbackCreateVO, FeedbackVO, createFeedback } from '@/api/feedback';
-import { useUserStoreWithOut } from '@/store/user';
 
 const rules = {
   content: [
@@ -44,27 +42,21 @@ const emit = defineEmits(['submit'])
 
 const ruleFormRef = ref<FormInstance>();
 
-const {user} = useUserStoreWithOut();
-
 const modelData = ref({
   feedbackType: 0,
   content: '',
-  uid: user.id,
-  nickname: user.nickname,
-  avatar: user.avatar,
-  userType: user.userType,
 });
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      createFeedback(modelData.value as FeedbackCreateVO).then((data)=>{
-        if(data){
-          emit('submit',data);
+      createFeedback(modelData.value as FeedbackCreateVO).then((data) => {
+        if (data) {
+          emit('submit', data);
           isShow.value = false;
         }
-      }).catch(err =>{
+      }).catch(err => {
         console.log(err);
       });
     }

@@ -5,6 +5,8 @@ import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.AppCommentCre
 import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.AppCommentPageReqVO;
 import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.AppCommentPageRespVO;
 import cn.iocoder.yudao.module.uservoice.controller.app.comment.vo.ReplyVO;
+import cn.iocoder.yudao.module.uservoice.dal.dataobject.appuser.AppUserDO;
+import cn.iocoder.yudao.module.uservoice.service.appuser.AppUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,6 +24,7 @@ import cn.iocoder.yudao.module.uservoice.convert.comment.CommentConvert;
 import cn.iocoder.yudao.module.uservoice.dal.mysql.comment.CommentMapper;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 import static cn.iocoder.yudao.module.uservoice.enums.ErrorCodeConstants.*;
 
 /**
@@ -36,6 +39,9 @@ public class CommentServiceImpl implements CommentService {
     @Resource
     private CommentMapper commentMapper;
 
+    @Resource
+    private AppUserService appUserService;
+
     @Override
     public Long createComment(CommentCreateReqVO createReqVO) {
         // 插入
@@ -43,13 +49,6 @@ public class CommentServiceImpl implements CommentService {
         commentMapper.insert(comment);
         // 返回
         return comment.getId();
-    }
-
-    @Override
-    public CommentDO createComment(AppCommentCreateReqVO createReqVO) {
-        CommentDO comment = CommentConvert.INSTANCE.convert(createReqVO);
-        commentMapper.insert(comment);
-        return comment;
     }
 
     @Override
@@ -106,6 +105,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDO> getCommentList(CommentExportReqVO exportReqVO) {
         return commentMapper.selectList(exportReqVO);
+    }
+
+    @Override
+    public CommentDO createComment(AppCommentCreateReqVO createReqVO) {
+        CommentDO comment = CommentConvert.INSTANCE.convert(createReqVO);
+        AppUserDO user = appUserService.getUser(getLoginUserId());
+        comment.setUid(user.getId());
+        comment.setAvatar(user.getAvatar());
+        comment.setNickname(user.getNickname());
+        comment.setUserType(user.getUserType());
+        commentMapper.insert(comment);
+        return comment;
     }
 
 }

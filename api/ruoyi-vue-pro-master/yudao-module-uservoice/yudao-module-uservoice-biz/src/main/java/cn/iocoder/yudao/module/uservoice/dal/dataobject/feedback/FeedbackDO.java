@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.uservoice.dal.dataobject.feedback;
 
 import cn.iocoder.yudao.module.uservoice.controller.app.auth.vo.AppAuthUserInfoRespVO;
+import cn.iocoder.yudao.module.uservoice.dal.dataobject.UserBaseDO;
 import cn.iocoder.yudao.module.uservoice.dal.dataobject.appuser.AppUserDO;
 import lombok.*;
 import java.util.*;
@@ -22,17 +23,13 @@ import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedbackDO extends BaseDO {
+public class FeedbackDO extends UserBaseDO {
 
     /**
      * 主键
      */
     @TableId
     private Long id;
-    /**
-     * 用户id
-     */
-    private Long uid;
     /**
      * 内容
      */
@@ -45,16 +42,4 @@ public class FeedbackDO extends BaseDO {
      * 反馈类型
      */
     private Integer feedbackType;
-    /**
-     * 用户昵称
-     */
-    private String nickname;
-    /**
-     * 用户类型
-     */
-    private Integer userType;
-    /**
-     * 头像
-     */
-    private String avatar;
 }

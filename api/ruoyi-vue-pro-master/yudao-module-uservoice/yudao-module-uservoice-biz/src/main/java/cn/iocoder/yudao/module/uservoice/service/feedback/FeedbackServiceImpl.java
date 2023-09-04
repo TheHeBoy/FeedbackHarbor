@@ -5,10 +5,13 @@ import cn.iocoder.yudao.module.uservoice.controller.app.feedback.vo.AppFeedbackP
 import cn.iocoder.yudao.module.uservoice.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.uservoice.service.appuser.AppUserService;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
+
 import cn.iocoder.yudao.module.uservoice.controller.admin.feedback.vo.*;
 import cn.iocoder.yudao.module.uservoice.dal.dataobject.feedback.FeedbackDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
@@ -22,8 +25,8 @@ import static cn.iocoder.yudao.module.uservoice.enums.ErrorCodeConstants.*;
 
 /**
  * 用户反馈 Service 实现类
- *
- *  芋道源码
+ * <p>
+ * 芋道源码
  */
 @Service
 @Validated
@@ -91,6 +94,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO) {
         // 插入
         FeedbackDO feedback = FeedbackConvert.INSTANCE.convert(createReqVO);
+        AppUserDO user = appUserService.getUser(getLoginUserId());
+        feedback.setUid(user.getId());
+        feedback.setAvatar(user.getAvatar());
+        feedback.setNickname(user.getNickname());
+        feedback.setUserType(user.getUserType());
         feedbackMapper.insert(feedback);
         return feedback;
     }

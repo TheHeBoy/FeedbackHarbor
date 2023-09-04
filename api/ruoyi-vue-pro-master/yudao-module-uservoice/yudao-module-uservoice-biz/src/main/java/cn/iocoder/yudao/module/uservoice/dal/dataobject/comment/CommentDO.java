@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.uservoice.dal.dataobject.comment;
 
+import cn.iocoder.yudao.module.uservoice.dal.dataobject.UserBaseDO;
 import lombok.*;
 import java.util.*;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDO extends BaseDO {
+public class CommentDO extends UserBaseDO {
 
     /**
      * 主键
@@ -31,10 +32,6 @@ public class CommentDO extends BaseDO {
      * 父节点
      */
     private Long parentId;
-    /**
-     * 用户id
-     */
-    private Long uid;
     /**
      * 反馈id
      */
@@ -47,17 +44,4 @@ public class CommentDO extends BaseDO {
      * 点赞数
      */
     private Long likes;
-    /**
-     * 用户类型;
-     */
-    private Integer userType;
-    /**
-     * 头像;
-     */
-    private String avatar;
-    /**
-     * 用户昵称;
-     */
-    private String nickname;
-
 }

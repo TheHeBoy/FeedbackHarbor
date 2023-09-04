@@ -20,10 +20,6 @@ export type FeedbackPageParams = {
 export type FeedbackCreateVO = {
   content: string;
   feedbackType: number;
-  uid: number;
-  nickname: string;
-  avatar: string;
-  userType: number;
 };
 
 export const createFeedback = (data: FeedbackCreateVO) => {

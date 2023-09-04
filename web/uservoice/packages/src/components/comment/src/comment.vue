@@ -14,7 +14,7 @@
       </div>
     </div>
     <!-- <div class="hot-list"></div> -->
-    <div class="comment-list-wrapper">
+    <div v-if="comments.length != 0" class="comment-list-wrapper">
       <slot>
         <!-- <div class="title">全部评论</div> -->
       </slot>

@@ -1,13 +1,9 @@
 import request from '@/api/http';
 
 export type createCommentVO = {
-  uid: number;
   content: string;
   feedbackId: number;
-  userType: number;
   parentId: number | null;
-  nickname: string;
-  avatar: string;
 };
 
 export type FeedbackPageParams = {

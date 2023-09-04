@@ -22,6 +22,7 @@ public interface FeedbackConvert {
     FeedbackConvert INSTANCE = Mappers.getMapper(FeedbackConvert.class);
 
     FeedbackDO convert(FeedbackCreateReqVO bean);
+
     FeedbackDO convert(AppFeedbackCreateReqVO bean);
 
     FeedbackDO convert(FeedbackUpdateReqVO bean);
