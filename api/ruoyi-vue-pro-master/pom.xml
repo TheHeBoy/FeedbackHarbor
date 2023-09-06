@@ -16,7 +16,7 @@
         <module>yudao-module-system</module>
         <module>yudao-module-infra</module>
         <!-- 示例项目 -->
-        <module>yudao-module-uservoice</module>
+        <module>yudao-module-harbor</module>
     </modules>
 
     <name>${project.artifactId}</name>
