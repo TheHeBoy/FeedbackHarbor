@@ -77,7 +77,7 @@ const likeClick = (feedback: FeedbackVO) => {
       feedbackLikeIds.value.push(fid);
       feedback.likes++;
     } else {
-      feedbackLikeIds.value = feedbackLikeIds.value.filter(item => item !== fid);
+      feedbackLikeIds.value = feedbackLikeIds.value.filter(item => item != fid);
       feedback.likes--;
     }
   });

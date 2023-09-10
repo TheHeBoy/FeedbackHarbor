@@ -6,7 +6,6 @@ export type FeedbackLikeVO = {
 
 
 export const feedbackLike = (data: FeedbackLikeVO) => {
-  console.log(data)
   return request.post('/feedback-like/like', data);
 };
 
