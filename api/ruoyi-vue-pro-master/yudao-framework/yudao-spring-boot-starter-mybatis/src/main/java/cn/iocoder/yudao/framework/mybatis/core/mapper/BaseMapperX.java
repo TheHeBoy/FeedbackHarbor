@@ -3,6 +3,7 @@ package cn.iocoder.yudao.framework.mybatis.core.mapper;
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.mybatis.core.util.MyBatisUtils;
+import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -115,4 +116,11 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
         Db.saveOrUpdateBatch(collection);
     }
 
+    default boolean saveOrUpdate(T entity) {
+        return Db.saveOrUpdate(entity);
+    }
+
+    default boolean saveOrUpdate(T entity, AbstractWrapper<T, ?, ?> updateWrapper) {
+        return Db.saveOrUpdate(entity,updateWrapper);
+    }
 }

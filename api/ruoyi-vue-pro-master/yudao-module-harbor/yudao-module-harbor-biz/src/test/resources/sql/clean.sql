@@ -1,2 +1,5 @@
-DELETE FROM "uservoice_app_user";
-DELETE FROM "uservoice_feedback";
+DELETE FROM "harbor_app_user";
+DELETE FROM "harbor_comment";
+DELETE FROM "harbor_comment_like";
+DELETE FROM "harbor_feedback";
+DELETE FROM "harbor_feedback_like";

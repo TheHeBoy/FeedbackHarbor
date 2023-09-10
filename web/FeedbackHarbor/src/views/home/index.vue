@@ -7,7 +7,8 @@
         </el-card>
         <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
           <div v-for="feedback in feedbackList" :key="feedback.id" class="mt-5">
-            <FeedBack :v-model="feedback" class="w-full" />
+            <FeedBack @like="likeClick(feedback)" :feedback-like-ids="feedbackLikeIds" :v-model="feedback"
+              class="w-full" />
           </div>
         </div>
         <p v-if="loading">Loading...</p>
@@ -27,17 +28,15 @@
 </template>
 <script lang="ts" setup>
 import { FeedbackPageParams, FeedbackVO, getFeedbackPage } from '@/api/feedback';
+import { getFeedbackLikeList, feedbackLike, FeedbackLikeVO } from '@/api/feedback/like';
 import { useUserStoreWithOut } from '@/store/user';
-
 
 const feedBackDialog = ref<any>(null);
 const feedbackList = ref<FeedbackVO[]>([]);
 const userStore = useUserStoreWithOut();
 
 const feedbackClick = () => {
-  if (userStore.isLoginAndShwolog()) {
-    feedBackDialog.value.show()
-  }
+  feedBackDialog.value.show()
 }
 let pageParams = { pageNo: 1, pageSize: 5 };
 let total = -1;
@@ -63,5 +62,26 @@ const pageRequest = () => {
 }
 
 pageRequest();
+
+//点赞
+const feedbackLikeIds = ref<Number[]>([]);
+
+getFeedbackLikeList().then((data) => {
+  feedbackLikeIds.value = data;
+})
+
+const likeClick = (feedback: FeedbackVO) => {
+  const fid = feedback.id;
+  feedbackLike({ feedbackId: fid }).then((data) => {
+    if (data) {
+      feedbackLikeIds.value.push(fid);
+      feedback.likes++;
+    } else {
+      feedbackLikeIds.value = feedbackLikeIds.value.filter(item => item !== fid);
+      feedback.likes--;
+    }
+  });
+}
+
 </script>
 <style lang="scss" scoped></style>

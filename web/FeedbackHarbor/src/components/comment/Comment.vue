@@ -76,7 +76,6 @@ const submit = ({ content, parentId, files, finish }: SubmitParamApi) => {
       UToast({ message: '评论成功!', type: 'info' })
     })
   }
-
 }
 
 const more = () => {

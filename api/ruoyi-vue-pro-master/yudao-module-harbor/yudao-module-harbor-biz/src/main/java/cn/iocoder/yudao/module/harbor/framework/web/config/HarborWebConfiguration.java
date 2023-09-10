@@ -7,14 +7,14 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration(proxyBeanMethods = false)
-public class UserVoiceWebConfiguration {
+public class HarborWebConfiguration {
 
     /**
      * UserVoice 模块的 API 分组
      */
     @Bean
     public GroupedOpenApi UserVoiceGroupedOpenApi() {
-        return YudaoSwaggerAutoConfiguration.buildGroupedOpenApi("uservoice");
+        return YudaoSwaggerAutoConfiguration.buildGroupedOpenApi("harbor");
     }
 
 }

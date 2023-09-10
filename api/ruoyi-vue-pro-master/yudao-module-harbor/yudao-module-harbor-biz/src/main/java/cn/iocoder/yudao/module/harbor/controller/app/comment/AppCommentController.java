@@ -16,6 +16,7 @@ import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
+import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
 @Tag(name = "App - 评论")
 @RestController
@@ -30,7 +31,7 @@ public class AppCommentController {
     @PreAuthenticated
     @Operation(summary = "创建评论")
     public CommonResult<CommentDO> createComment(@Valid @RequestBody AppCommentCreateReqVO createReqVO) {
-        return success(commentService.createComment(createReqVO));
+        return success(commentService.createComment(createReqVO, getLoginUserId()));
     }
 
     @GetMapping("/page")

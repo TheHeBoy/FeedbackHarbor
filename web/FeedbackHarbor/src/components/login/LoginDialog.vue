@@ -1,12 +1,7 @@
 <template>
   <el-dialog v-model="isShow" width="350" title="账号登陆">
-    <el-form
-      ref="ruleFormRef"
-      hide-required-asterisk
-      label-position="top"
-      :rules="LoginRules"
-      :model="loginData.loginForm"
-    >
+    <el-form ref="ruleFormRef" hide-required-asterisk label-position="top" :rules="LoginRules"
+      :model="loginData.loginForm">
       <el-form-item label="账号" prop="username">
         <el-input v-model="loginData.loginForm.username" />
       </el-form-item>
@@ -15,11 +10,9 @@
       </el-form-item>
     </el-form>
     <el-form-item>
-      <button
-        type="submit"
+      <button type="submit"
         class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        @click="submitForm(ruleFormRef)"
-      >
+        @click="submitForm(ruleFormRef)">
         登录
       </button>
     </el-form-item>
@@ -51,6 +44,7 @@ const LoginRules = {
   username: [{ required: true, message: '请输入用户名' }],
   password: [{ required: true, message: '请输入密码' }],
 };
+const reload = inject("reload") as Function;
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -60,6 +54,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         setToken(data);
         userStore.setUserInfoAction();
         loginDialogsStore.close();
+        reload();
       });
     }
   });

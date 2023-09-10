@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.harbor.service.feedback;
 
 import java.util.*;
 import javax.validation.*;
+
 import cn.iocoder.yudao.module.harbor.controller.admin.feedback.vo.*;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
@@ -10,8 +11,8 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 
 /**
  * 用户反馈 Service 接口
- *
- *  芋道源码
+ * <p>
+ * 芋道源码
  */
 public interface FeedbackService {
 
@@ -45,13 +46,6 @@ public interface FeedbackService {
      */
     FeedbackDO getFeedback(Long id);
 
-    /**
-     * 获得用户反馈列表
-     *
-     * @param ids 编号
-     * @return 用户反馈列表
-     */
-    List<FeedbackDO> getFeedbackList(Collection<Long> ids);
 
     /**
      * 获得用户反馈分页
@@ -69,7 +63,7 @@ public interface FeedbackService {
      */
     List<FeedbackDO> getFeedbackList(FeedbackExportReqVO exportReqVO);
 
-    FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO);
+    FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid);
 
     PageResult<FeedbackDO> getFeedbackPage(AppFeedbackPageReqVO pageVO);
 }

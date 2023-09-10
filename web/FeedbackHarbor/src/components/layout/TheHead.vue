@@ -58,10 +58,12 @@ const homeMenuItem = ref<InstanceType<typeof ElMenuItem>>();
 const handleSelect = (key: string) => {
   layoutStore.setActiveIndex(key);
 };
+const reload = inject("reload") as Function;
 
 const logoutClick = () => {
   logout().then(async (data) => {
     await userStore.loginOut();
+    reload();
   })
 }
 </script>

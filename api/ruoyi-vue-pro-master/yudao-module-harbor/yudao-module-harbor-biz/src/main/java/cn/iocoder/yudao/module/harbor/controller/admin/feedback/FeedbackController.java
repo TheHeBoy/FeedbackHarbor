@@ -69,15 +69,6 @@ public class FeedbackController {
         return success(FeedbackConvert.INSTANCE.convert(feedback));
     }
 
-    @GetMapping("/list")
-    @Operation(summary = "获得用户反馈列表")
-    @Parameter(name = "ids", description = "编号列表", required = true, example = "1024,2048")
-    @PreAuthorize("@ss.hasPermission('uservoice:feedback:query')")
-    public CommonResult<List<FeedbackRespVO>> getFeedbackList(@RequestParam("ids") Collection<Long> ids) {
-        List<FeedbackDO> list = feedbackService.getFeedbackList(ids);
-        return success(FeedbackConvert.INSTANCE.convertList(list));
-    }
-
     @GetMapping("/page")
     @Operation(summary = "获得用户反馈分页")
     @PreAuthorize("@ss.hasPermission('uservoice:feedback:query')")

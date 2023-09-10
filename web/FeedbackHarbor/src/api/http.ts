@@ -3,6 +3,7 @@ import showCodeMessage from '@/api/code';
 import { formatJsonToUrlParams, instanceObject } from '@/utils/format';
 import { getAccessToken } from '@/utils/auth';
 import { useloginStoreWithOut } from '@/store/login';
+import { ElMessage } from 'element-plus';
 
 const BASE_PREFIX = import.meta.env.VITE_API_BASEURL;
 // 请求白名单，无须token的接口
@@ -49,7 +50,8 @@ axiosInstance.interceptors.response.use(
     const code = data.code;
     if (code == 401) {
       // 如果未认证，说明可能是访问令牌过期了
-      useloginStoreWithOut().open()
+      useloginStoreWithOut().open();
+      return Promise.reject("未认证，请登录");
     } else if (code == 500) {
       ElMessage.error(showCodeMessage(data.msg));
       return Promise.reject(data.msg)

@@ -42,24 +42,6 @@ public class CommentServiceImpl implements CommentService {
     private AppUserService appUserService;
 
     @Override
-    public Long createComment(CommentCreateReqVO createReqVO) {
-        // 插入
-        CommentDO comment = CommentConvert.INSTANCE.convert(createReqVO);
-        commentMapper.insert(comment);
-        // 返回
-        return comment.getId();
-    }
-
-    @Override
-    public void updateComment(CommentUpdateReqVO updateReqVO) {
-        // 校验存在
-        validateCommentExists(updateReqVO.getId());
-        // 更新
-        CommentDO updateObj = CommentConvert.INSTANCE.convert(updateReqVO);
-        commentMapper.updateById(updateObj);
-    }
-
-    @Override
     public void deleteComment(Long id) {
         // 校验存在
         validateCommentExists(id);
@@ -107,9 +89,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDO createComment(AppCommentCreateReqVO createReqVO) {
+    public CommentDO createComment(AppCommentCreateReqVO createReqVO,Long uid) {
         CommentDO comment = CommentConvert.INSTANCE.convert(createReqVO);
-        AppUserDO user = appUserService.getUser(getLoginUserId());
+        AppUserDO user = appUserService.getUser(uid);
         comment.setUid(user.getId());
         comment.setAvatar(user.getAvatar());
         comment.setNickname(user.getNickname());

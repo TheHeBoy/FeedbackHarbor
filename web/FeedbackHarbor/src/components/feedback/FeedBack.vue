@@ -12,12 +12,6 @@
             <span>{{ vModel.nickname }}</span>
             <!-- <el-tag class="ml-1 mr-1 rounded-lg" type="danger">官方</el-tag> -->
             <div class="flex-grow"></div>
-            <div class="">
-              <el-button link type="primary">
-                <i-mdi-arrow-up class="w-7 h-7 font-bold" />
-                <span class="font-bold text-lg">23</span>
-              </el-button>
-            </div>
           </div>
           <div>
             {{ vModel.content }}
@@ -28,12 +22,19 @@
               <el-popover trigger="click" placement="bottom">
                 <p>举报</p>
                 <template #reference>
-                  <el-button link type="primary" size="small">
+                  <el-button link linksize="small">
                     <i-mdi-dots-vertical />
                   </el-button>
                 </template>
               </el-popover>
-              <el-button link type="primary" size="small" @click="commentShow = !commentShow">评论</el-button>
+              <el-button link size="small" @click="commentShow = !commentShow">评论</el-button>
+              <el-button link @click="likeClick">
+                <u-icon>
+                  <like v-if="props.feedbackLikeIds.map(String).indexOf(str(props.vModel.id)) == -1" />
+                  <liked v-else color="#1e80ff" />
+                </u-icon>
+                <span class="ml-1">{{ vModel.likes }}</span>
+              </el-button>
             </div>
           </div>
         </div>
@@ -47,12 +48,25 @@
 import { PropType } from 'vue';
 import { FeedbackVO } from '@/api/feedback';
 import { formatDate } from '@/utils/formatTime';
-
+import liked from '@/assets/svg/LikedSVG.svg?component';
+import like from '@/assets/svg/LikeSVG.svg?component';
+import { number } from 'vue-types';
+import { str } from '~/util/basic';
 const commentShow = ref(false);
-defineProps({
+const props = defineProps({
   vModel: {
     type: Object as PropType<FeedbackVO>,
     required: true,
   },
+  feedbackLikeIds: {
+    type: Array as PropType<Number[]>,
+    required: true,
+  }
 });
+
+const emit = defineEmits(['like'])
+const likeClick = () => {
+  emit('like', props.vModel);
+}
+
 </script>

@@ -36,21 +36,6 @@ public class CommentController {
     @Resource
     private CommentService commentService;
 
-    @PostMapping("/create")
-    @Operation(summary = "创建评论")
-    @PreAuthorize("@ss.hasPermission('uservoice:comment:create')")
-    public CommonResult<Long> createComment(@Valid @RequestBody CommentCreateReqVO createReqVO) {
-        return success(commentService.createComment(createReqVO));
-    }
-
-    @PutMapping("/update")
-    @Operation(summary = "更新评论")
-    @PreAuthorize("@ss.hasPermission('uservoice:comment:update')")
-    public CommonResult<Boolean> updateComment(@Valid @RequestBody CommentUpdateReqVO updateReqVO) {
-        commentService.updateComment(updateReqVO);
-        return success(true);
-    }
-
     @DeleteMapping("/delete")
     @Operation(summary = "删除评论")
     @Parameter(name = "id", description = "编号", required = true)

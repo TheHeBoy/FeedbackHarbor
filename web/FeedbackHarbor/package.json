@@ -61,7 +61,7 @@
     "vite-plugin-fonts": "^0.6.0",
     "vite-plugin-vue-markdown": "^0.21.1",
     "vite-plugin-windicss": "^1.8.7",
-    "vite-svg-loader": "^3.4.0",
+    "vite-svg-loader": "^3.6.0",
     "vue-tsc": "^0.38.4"
   },
   "lint-staged": {

@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.harbor.service.feedback;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
+import cn.iocoder.yudao.module.harbor.dal.redis.feedback.FeedbackLikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,12 @@ import cn.iocoder.yudao.module.harbor.dal.mysql.feedback.FeedbackMapper;
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 import static cn.iocoder.yudao.module.harbor.enums.ErrorCodeConstants.*;
+import static cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackLikeEnum.LIKED;
+import static cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackLikeEnum.LIKED_CANCEL;
 
 /**
  * 用户反馈 Service 实现类
  * <p>
- * 芋道源码
  */
 @Service
 @Validated
@@ -37,6 +39,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Resource
     private AppUserService appUserService;
+
+    @Resource
+    private FeedbackLikeRedisDAO feedbackLikeRedisDAO;
 
     @Override
     public Long createFeedback(FeedbackCreateReqVO createReqVO) {
@@ -72,12 +77,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public FeedbackDO getFeedback(Long id) {
-        return feedbackMapper.selectById(id);
-    }
-
-    @Override
-    public List<FeedbackDO> getFeedbackList(Collection<Long> ids) {
-        return feedbackMapper.selectBatchIds(ids);
+        FeedbackDO feedbackDO = feedbackMapper.selectById(id);
+        feedbackDO.setLikes(feedbackDO.getLikes() + getLikeCount(feedbackDO.getId()));
+        return feedbackDO;
     }
 
     @Override
@@ -91,21 +93,37 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO) {
+    public FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO,Long uid) {
         // 插入
         FeedbackDO feedback = FeedbackConvert.INSTANCE.convert(createReqVO);
-        AppUserDO user = appUserService.getUser(getLoginUserId());
+        AppUserDO user = appUserService.getUser(uid);
         feedback.setUid(user.getId());
         feedback.setAvatar(user.getAvatar());
         feedback.setNickname(user.getNickname());
         feedback.setUserType(user.getUserType());
         feedbackMapper.insert(feedback);
-        return feedback;
+        return feedbackMapper.selectById(feedback.getId());
     }
 
     @Override
     public PageResult<FeedbackDO> getFeedbackPage(AppFeedbackPageReqVO pageVO) {
-        return feedbackMapper.selectPage(pageVO);
+        PageResult<FeedbackDO> feedbackDOPageResult = feedbackMapper.selectPage(pageVO);
+        feedbackDOPageResult.getList().forEach(e -> {
+            Long likeCount = getLikeCount(e.getId());
+            e.setLikes(e.getLikes() + likeCount);
+        });
+        return feedbackDOPageResult;
     }
 
+    /**
+     * 获取redis中的反馈点赞数量
+     *
+     * @param feedbackId 反馈id
+     * @return void
+     */
+    private Long getLikeCount(Long feedbackId) {
+        long count = feedbackLikeRedisDAO.sSize(String.valueOf(feedbackId), LIKED);
+        long cancelCount = feedbackLikeRedisDAO.sSize(String.valueOf(feedbackId), LIKED_CANCEL);
+        return count - cancelCount;
+    }
 }

@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.harbor.service.comment;
 
 import java.util.*;
 import javax.validation.*;
+
 import cn.iocoder.yudao.module.harbor.controller.admin.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentPageReqVO;
@@ -11,27 +12,13 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 
 /**
  * 评论 Service 接口
- *
- *  hehong
+ * <p>
+ * hehong
  */
 public interface CommentService {
 
-    /**
-     * 创建评论
-     *
-     * @param createReqVO 创建信息
-     * @return 编号
-     */
-    Long createComment(@Valid CommentCreateReqVO createReqVO);
+    CommentDO createComment(@Valid AppCommentCreateReqVO createReqVO, Long uid);
 
-    CommentDO createComment(@Valid AppCommentCreateReqVO createReqVO);
-
-    /**
-     * 更新评论
-     *
-     * @param updateReqVO 更新信息
-     */
-    void updateComment(@Valid CommentUpdateReqVO updateReqVO);
 
     /**
      * 删除评论
