@@ -13,13 +13,10 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 import static cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackLikeEnum.LIKED;
 import static cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackLikeEnum.LIKED_CANCEL;
 
@@ -60,6 +57,58 @@ public class FeedbackServiceLikeImpl implements FeedbackLikeService {
         return listByUid(uid, LIKED);
     }
 
+    @Override
+    public void syncLike() {
+        Set<String> keys = feedbackLikeRedisDAO.list(LIKED);
+        Set<String> cancelKeys = feedbackLikeRedisDAO.list(LIKED_CANCEL);
+
+        Map<FeedbackLikeDO, Boolean> likeMap = new TreeMap<>(Comparator
+                .comparing(FeedbackLikeDO::getUid)
+                .thenComparing(FeedbackLikeDO::getFeedbackId));
+
+        for (String key : keys) {
+            String feedbackId = key.split(":")[2];
+            Set<Long> uidSet = feedbackLikeRedisDAO.sGet(key);
+            for (Long uid : uidSet) {
+                likeMap.put(FeedbackLikeDO.builder()
+                        .feedbackId(Long.valueOf(feedbackId))
+                        .uid(uid)
+                        .build(),true);
+            }
+        }
+
+        for (String key : cancelKeys) {
+            String feedbackId = key.split(":")[2];
+            Set<Long> uidSet = feedbackLikeRedisDAO.sGet(key);
+            for (Long uid : uidSet) {
+                FeedbackLikeDO feedbackLikeDO = FeedbackLikeDO.builder()
+                        .feedbackId(Long.valueOf(feedbackId))
+                        .uid(uid)
+                        .build();
+                if(likeMap.containsKey(feedbackLikeDO)){
+                    likeMap.remove(feedbackLikeDO);
+                }else {
+                    likeMap.put(feedbackLikeDO,false);
+                }
+            }
+        }
+
+        likeMap.forEach((key,value) ->{
+            //点赞
+            if(value){
+
+
+            //取消点赞
+            }else {
+
+            }
+        });
+
+        //清除缓存
+        feedbackLikeRedisDAO.removeBatch(LIKED);
+        feedbackLikeRedisDAO.removeBatch(LIKED_CANCEL);
+    }
+
     private boolean isLiked(FeedbackLikeRedisVO redisDO) {
         Boolean isLiked = feedbackLikeRedisDAO.isMember(redisDO, LIKED);
 
@@ -72,7 +121,7 @@ public class FeedbackServiceLikeImpl implements FeedbackLikeService {
         //redis中没有点赞和取消点赞的数据从数据库查询
         if (!isCancelLiked) {
             FeedbackLikeDO feedbackLikeDO = feedbackLikeMapper.getByUidAndFeedbackId(redisDO);
-            return ObjectUtil.isNotNull(feedbackLikeDO) && ObjectUtil.equal(feedbackLikeDO.getLiked(), LIKED.getCode());
+            return ObjectUtil.isNotNull(feedbackLikeDO);
         }
 
         return false;
@@ -92,14 +141,19 @@ public class FeedbackServiceLikeImpl implements FeedbackLikeService {
         Set<String> keyList = feedbackLikeRedisDAO.list(likeEnum);
 
         for (String key : keyList) {
-            String commentId = key.split(":")[2];
+            String feedbackId = key.split(":")[2];
             Set<Long> uidSet = feedbackLikeRedisDAO.sGet(key);
             for (Long uid2 : uidSet) {
                 if (ObjectUtil.equal(uid2, uid)) {
-                    feedbackIds.add(Long.valueOf(commentId));
+                    feedbackIds.add(Long.valueOf(feedbackId));
                 }
             }
         }
+
+        Set<Long> mysqlSet = feedbackLikeMapper
+                .selectList(FeedbackLikeDO::getUid, uid).stream().map(FeedbackLikeDO::getFeedbackId).collect(Collectors.toSet());
+
+        feedbackIds.addAll(mysqlSet);
         return feedbackIds;
     }
 }

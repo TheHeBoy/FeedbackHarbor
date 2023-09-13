@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject;
 
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
+import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import lombok.Data;
 
 /**
@@ -9,7 +10,7 @@ import lombok.Data;
  * @date 2023-09-04
  */
 @Data
-public abstract class UserBaseDO extends BaseDO {
+public abstract class UserBaseDO extends TenantBaseDO {
     /**
      * 用户类型;
      */

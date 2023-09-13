@@ -52,8 +52,13 @@ public class FeedbackLikeRedisDAO {
         return stringRedisTemplate.opsForSet().remove(redisKey, entity.getUid());
     }
 
+    public Long removeBatch(FeedbackLikeEnum likeEnum) {
+        Set<String> keys = list(likeEnum);
+        return stringRedisTemplate.delete(keys);
+    }
+
     public Set<String> list(FeedbackLikeEnum likeEnum) {
-        String pattern = formatKey( "*", likeEnum);
+        String pattern = formatKey("*", likeEnum);
         RKeys keys = redissonClient.getKeys();
         Set<String> keyList = new HashSet<>();
         keys.getKeysByPattern(pattern).forEach(keyList::add);
@@ -65,7 +70,7 @@ public class FeedbackLikeRedisDAO {
                 .stream().map(Long::valueOf).collect(Collectors.toSet());
     }
 
-    public Long sSize(String feedbackId,FeedbackLikeEnum likeEnum){
+    public Long sSize(String feedbackId, FeedbackLikeEnum likeEnum) {
         String redisKey = formatKey(feedbackId, likeEnum);
         return stringRedisTemplate.opsForSet().size(redisKey);
     }

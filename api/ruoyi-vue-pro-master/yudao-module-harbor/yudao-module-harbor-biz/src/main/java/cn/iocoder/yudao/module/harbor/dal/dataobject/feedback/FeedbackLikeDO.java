@@ -17,12 +17,11 @@ import lombok.*;
 @TableName("harbor_feedback_like")
 @KeySequence("harbor_feedback_like_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedbackLikeDO extends BaseDO {
+public class FeedbackLikeDO {
 
     /**
      * 主键
@@ -38,8 +37,7 @@ public class FeedbackLikeDO extends BaseDO {
      */
     private Long uid;
     /**
-     * 是否点赞
-     * 枚举 {@link FeedbackLikeEnum}
+     * 多租户编号
      */
-    private Integer liked;
+    private Long tenantId;
 }

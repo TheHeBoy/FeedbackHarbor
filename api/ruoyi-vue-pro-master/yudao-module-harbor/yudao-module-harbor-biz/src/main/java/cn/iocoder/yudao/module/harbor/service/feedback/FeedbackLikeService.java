@@ -36,4 +36,10 @@ public interface FeedbackLikeService {
      * @return {@link List}<{@link Long}>
      */
     Set<Long> listByUid(Long uid);
+
+
+    /**
+     * 同步缓存中的反馈点赞数据到数据库中
+     */
+    void syncLike();
 }

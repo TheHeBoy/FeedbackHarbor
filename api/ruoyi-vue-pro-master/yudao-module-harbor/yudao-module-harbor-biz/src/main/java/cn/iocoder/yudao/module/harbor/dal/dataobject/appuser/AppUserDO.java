@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.appuser;
 
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
+import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import cn.iocoder.yudao.module.harbor.enums.appuser.AppUserTypeEnum;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
@@ -19,7 +20,7 @@ import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUserDO extends BaseDO {
+public class AppUserDO extends TenantBaseDO {
 
     /**
      * 主键
