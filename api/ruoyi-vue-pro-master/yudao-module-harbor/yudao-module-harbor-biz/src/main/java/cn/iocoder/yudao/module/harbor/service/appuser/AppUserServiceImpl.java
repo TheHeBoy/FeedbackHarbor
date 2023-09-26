@@ -1,16 +1,12 @@
 package cn.iocoder.yudao.module.harbor.service.appuser;
 
+import cn.iocoder.yudao.module.harbor.controller.app.appuser.vo.AppUserCreateReqVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 import org.springframework.validation.annotation.Validated;
-
-import java.util.*;
-
-import cn.iocoder.yudao.module.harbor.controller.admin.appuser.vo.*;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
-import cn.iocoder.yudao.framework.common.pojo.PageResult;
 
 import cn.iocoder.yudao.module.harbor.convert.appuser.AppUserConvert;
 import cn.iocoder.yudao.module.harbor.dal.mysql.appuser.AppUserMapper;
@@ -40,15 +36,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public void updateAppUser(AppUserUpdateReqVO updateReqVO) {
-        // 校验存在
-        validateAppUserExists(updateReqVO.getId());
-        // 更新
-        AppUserDO updateObj = AppUserConvert.INSTANCE.convert(updateReqVO);
-        appUserMapper.updateById(updateObj);
-    }
-
-    @Override
     public void deleteAppUser(Long id) {
         // 校验存在
         validateAppUserExists(id);
@@ -68,23 +55,13 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUserDO> getAppUserList(Collection<Long> ids) {
-        return appUserMapper.selectBatchIds(ids);
-    }
-
-    @Override
-    public PageResult<AppUserDO> getAppUserPage(AppUserPageReqVO pageReqVO) {
-        return appUserMapper.selectPage(pageReqVO);
-    }
-
-    @Override
-    public List<AppUserDO> getAppUserList(AppUserExportReqVO exportReqVO) {
-        return appUserMapper.selectList(exportReqVO);
-    }
-
-    @Override
     public AppUserDO getAppUserByUserName(String userName) {
         return appUserMapper.getAppUserByUserName(userName);
+    }
+
+    @Override
+    public AppUserDO getAppUserByUserOpenId(String openId) {
+        return appUserMapper.getAppUserByUserOpenId(openId);
     }
 
     @Override

@@ -3,7 +3,8 @@ package cn.iocoder.yudao.module.harbor.service.feedback;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
-import cn.iocoder.yudao.module.harbor.dal.redis.feedback.FeedbackLikeRedisDAO;
+import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
+import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +22,7 @@ import cn.iocoder.yudao.module.harbor.convert.feedback.FeedbackConvert;
 import cn.iocoder.yudao.module.harbor.dal.mysql.feedback.FeedbackMapper;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 import static cn.iocoder.yudao.module.harbor.enums.ErrorCodeConstants.*;
-import static cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackLikeEnum.LIKED;
-import static cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackLikeEnum.LIKED_CANCEL;
 
 /**
  * 用户反馈 Service 实现类
@@ -41,7 +39,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private AppUserService appUserService;
 
     @Resource
-    private FeedbackLikeRedisDAO feedbackLikeRedisDAO;
+    private LikeRedisDAO likeRedisDAO;
 
     @Override
     public Long createFeedback(FeedbackCreateReqVO createReqVO) {
@@ -93,7 +91,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO,Long uid) {
+    public FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid) {
         // 插入
         FeedbackDO feedback = FeedbackConvert.INSTANCE.convert(createReqVO);
         AppUserDO user = appUserService.getUser(uid);
@@ -109,8 +107,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public PageResult<FeedbackDO> getFeedbackPage(AppFeedbackPageReqVO pageVO) {
         PageResult<FeedbackDO> feedbackDOPageResult = feedbackMapper.selectPage(pageVO);
         feedbackDOPageResult.getList().forEach(e -> {
-            Long likeCount = getLikeCount(e.getId());
-            e.setLikes(e.getLikes() + likeCount);
+            e.setLikes(e.getLikes() + getLikeCount(e.getId()));
         });
         return feedbackDOPageResult;
     }
@@ -122,8 +119,8 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @return void
      */
     private Long getLikeCount(Long feedbackId) {
-        long count = feedbackLikeRedisDAO.sSize(String.valueOf(feedbackId), LIKED);
-        long cancelCount = feedbackLikeRedisDAO.sSize(String.valueOf(feedbackId), LIKED_CANCEL);
+        long count = likeRedisDAO.sSize(feedbackId, true, LikeBusTypeEnum.FEEDBACK);
+        long cancelCount = likeRedisDAO.sSize(feedbackId, false, LikeBusTypeEnum.FEEDBACK);
         return count - cancelCount;
     }
 }

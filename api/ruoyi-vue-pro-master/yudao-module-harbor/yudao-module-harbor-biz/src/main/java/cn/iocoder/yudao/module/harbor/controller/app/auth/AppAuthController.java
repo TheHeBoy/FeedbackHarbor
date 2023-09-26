@@ -8,6 +8,7 @@ import cn.iocoder.yudao.framework.security.core.annotations.PreAuthenticated;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthLoginReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthLoginRespVO;
+import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthSocialLoginReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthUserInfoRespVO;
 import cn.iocoder.yudao.module.harbor.convert.auth.AuthConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
@@ -15,6 +16,7 @@ import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import cn.iocoder.yudao.module.harbor.service.auth.AppAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +37,7 @@ import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUti
 public class AppAuthController {
 
     @Resource
-    private AppAuthService authService;
+    private AppAuthService appAuthService;
 
     @Resource
     private AppUserService appUserService;
@@ -45,30 +47,27 @@ public class AppAuthController {
 
 
     @PostMapping("/login")
-    @PermitAll
     @Operation(summary = "使用账号 + 密码登录")
     public CommonResult<AppAuthLoginRespVO> login(@RequestBody @Valid AppAuthLoginReqVO reqVO) {
-        return success(authService.login(reqVO));
+        return success(appAuthService.login(reqVO));
     }
 
     @PostMapping("/logout")
-    @PermitAll
     @Operation(summary = "登出系统")
     public CommonResult<Boolean> logout(HttpServletRequest request) {
         String token = SecurityFrameworkUtils.obtainAuthorization(request, securityProperties.getTokenHeader());
         if (StrUtil.isNotBlank(token)) {
-            authService.logout(token);
+            appAuthService.logout(token);
         }
         return success(true);
     }
 
     @PostMapping("/refresh-token")
-    @PermitAll
     @Operation(summary = "刷新令牌")
     @Parameter(name = "refreshToken", description = "刷新令牌", required = true)
     @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
     public CommonResult<AppAuthLoginRespVO> refreshToken(@RequestParam("refreshToken") String refreshToken) {
-        return success(authService.refreshToken(refreshToken));
+        return success(appAuthService.refreshToken(refreshToken));
     }
 
     @GetMapping("/get-user-info")
@@ -83,5 +82,25 @@ public class AppAuthController {
 
         // 2. 拼接结果返回
         return success(AuthConvert.INSTANCE.convert(user));
+    }
+
+    @GetMapping("/social-auth-redirect")
+    @PermitAll
+    @Operation(summary = "社交授权的跳转")
+    @Parameters({
+            @Parameter(name = "type", description = "社交类型", required = true),
+            @Parameter(name = "redirectUri", description = "回调路径")
+    })
+    public CommonResult<String> socialLogin(@RequestParam("type") Integer type,
+                                            @RequestParam("redirectUri") String redirectUri) {
+        return CommonResult.success(appAuthService.getAuthorizeUrl(type, redirectUri));
+    }
+
+    @RequestMapping("/social-login")
+    @PermitAll
+    @Operation(summary = "社交快捷登录，使用 code 授权码")
+    @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
+    public CommonResult<AppAuthLoginRespVO> socialQuickLogin(@RequestBody @Valid AppAuthSocialLoginReqVO reqVO) {
+        return success(appAuthService.socialLogin(reqVO));
     }
 }

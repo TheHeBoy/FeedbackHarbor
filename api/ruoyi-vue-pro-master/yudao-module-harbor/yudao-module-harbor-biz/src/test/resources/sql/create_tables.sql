@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS harbor_app_user;
 CREATE TABLE harbor_app_user
 (
     `id`           bigint   NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -9,13 +10,15 @@ CREATE TABLE harbor_app_user
     `user_type`    tinyint  NOT NULL COMMENT '用户类型',
     `username`     VARCHAR(255) COMMENT '用户账号',
     `password`     VARCHAR(100) COMMENT '密码',
-    `user_open_id` VARCHAR(255) COMMENT '登录态用户id',
+    `user_open_id` VARCHAR(255) COMMENT '外部用户id',
     `avatar`       VARCHAR(512) COMMENT '头像',
     `nickname`     VARCHAR(30) COMMENT '用户昵称',
     `status`       tinyint           DEFAULT 0 COMMENT '用户状态',
+    `tenant_id`    bigint COMMENT '租户编号(产品编号)',
     PRIMARY KEY (id)
 ) COMMENT = 'App用户表';
 
+DROP TABLE IF EXISTS harbor_comment;
 CREATE TABLE harbor_comment
 (
     `id`          bigint   NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -29,26 +32,14 @@ CREATE TABLE harbor_comment
     `feedback_id` bigint COMMENT '反馈id',
     `content`     VARCHAR(500) COMMENT '内容',
     `likes`       bigint            DEFAULT 0 COMMENT '点赞数',
+    `tenant_id`   bigint COMMENT '租户编号(产品编号)',
     `user_type`   tinyint  NOT NULL COMMENT '用户类型',
     `avatar`      VARCHAR(512) COMMENT '头像',
     `nickname`    VARCHAR(30) COMMENT '用户昵称',
     PRIMARY KEY (id)
 ) COMMENT = '评论表';
 
-CREATE TABLE harbor_comment_like
-(
-    `id`          bigint   NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `comment_id`  bigint COMMENT '评论id',
-    `uid`         bigint COMMENT '用户id',
-    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
-    `creator`     VARCHAR(64) COMMENT '创建者',
-    `updater`     VARCHAR(64) COMMENT '更新者',
-    `liked`       tinyint           DEFAULT 0 COMMENT '是否点赞',
-    `deleted`     tinyint  NOT NULL DEFAULT 0 COMMENT '是否删除',
-    PRIMARY KEY (id)
-) COMMENT = '评论点赞关联表';
-
+DROP TABLE IF EXISTS harbor_feedback;
 CREATE TABLE harbor_feedback
 (
     `id`            bigint   NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -61,24 +52,27 @@ CREATE TABLE harbor_feedback
     `content`       VARCHAR(500) COMMENT '内容',
     `likes`         bigint            DEFAULT 0 COMMENT '点赞数',
     `feedback_type` tinyint COMMENT '反馈类型',
+    `tenant_id`     bigint COMMENT '租户编号(产品编号)',
     `avatar`        VARCHAR(512) COMMENT '头像',
     `user_type`     tinyint  NOT NULL COMMENT '用户类型',
     `nickname`      VARCHAR(30) COMMENT '用户昵称',
     PRIMARY KEY (id)
 ) COMMENT = '反馈表';
 
-CREATE TABLE harbor_feedback_like
+DROP TABLE IF EXISTS harbor_like;
+CREATE TABLE harbor_like
 (
     `id`          bigint   NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `feedback_id` bigint COMMENT '反馈id',
-    `uid`         bigint COMMENT '用户id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
     `creator`     VARCHAR(64) COMMENT '创建者',
     `updater`     VARCHAR(64) COMMENT '更新者',
-    `liked`       tinyint           DEFAULT 0 COMMENT '是否点赞',
     `deleted`     tinyint  NOT NULL DEFAULT 0 COMMENT '是否删除',
+    `tenant_id`   bigint COMMENT '租户编号(产品编号)',
+    `rid`         bigint COMMENT '关联id',
+    `uid`         bigint COMMENT '用户id',
+    `state`       tinyint COMMENT '点赞状态',
+    `bus_type`    tinyint COMMENT '业务类型',
     PRIMARY KEY (id)
-) COMMENT = '反馈点赞关联表';
+) COMMENT = '';
 
-INSERT INTO `harbor_app_user` (`id`, `create_time`, `update_time`, `creator`, `updater`, `deleted`, `user_type`, `username`, `password`, `user_open_id`, `avatar`, `nickname`, `status`) VALUES (1, '2023-08-14 11:26:14', '2023-08-14 11:26:14', NULL, NULL, 0, 0, 'test', '123456', NULL, 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', 'hehong', 0);

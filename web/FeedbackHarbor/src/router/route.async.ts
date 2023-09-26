@@ -12,13 +12,13 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     component: () => import('@/views/home/index.vue'),
   },
   {
-    path: '/test',
-    name: 'test',
+    path: '/social-login',
+    name: '/social-login',
     meta: {
       title: '',
       icon: '',
     },
-    component: () => import('@/views/home/index copy.vue'),
+    component: () => import('@/views/socialLogin.vue'),
   },
 ];
 

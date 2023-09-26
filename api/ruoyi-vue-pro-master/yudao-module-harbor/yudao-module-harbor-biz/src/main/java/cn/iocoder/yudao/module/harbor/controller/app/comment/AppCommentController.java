@@ -36,7 +36,6 @@ public class AppCommentController {
 
     @GetMapping("/page")
     @Operation(summary = "获得评论分页")
-    @PermitAll
     public CommonResult<PageResult<AppCommentPageRespVO>> getCommentPage(@Valid AppCommentPageReqVO pageVO) {
         return success(commentService.getCommentPage(pageVO));
     }

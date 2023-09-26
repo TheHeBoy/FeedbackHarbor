@@ -2,18 +2,18 @@ import store from './index';
 import { getAccessToken, removeToken } from '@/utils/auth';
 import { CACHE_KEY, useCache } from '@/hooks/useCache';
 import { getUserInfo, logout } from '@/api/login';
-import { useloginStoreWithOut } from './login';
+import { getExp } from '@/utils/formatTime';
 
 const { wsCache } = useCache();
 
-export const useUserStore = defineStore('admin-user', {
+export const useUserStore = defineStore('app-user', {
   state: () => ({
     user: { id: -1, avatar: '', nickname: '', userType: -1 },
   }),
   getters: {
   },
   actions: {
-    async setUserInfoAction() {
+    async setUserInfoAction(expiresTime: number) {
       if (!getAccessToken()) {
         return null;
       }
@@ -22,7 +22,7 @@ export const useUserStore = defineStore('admin-user', {
         userInfo = await getUserInfo();
       }
 
-      wsCache.set(CACHE_KEY.USER, userInfo);
+      wsCache.set(CACHE_KEY.USER, userInfo, { exp: getExp(expiresTime) });
       this.user = userInfo;
     },
     async loginOut() {
@@ -41,13 +41,6 @@ export const useUserStore = defineStore('admin-user', {
     },
     isLogin() {
       return this.user.id != -1;
-    },
-    isLoginAndShwolog() {
-      const flag = this.isLogin()
-      if (!flag) {
-        useloginStoreWithOut().open();
-      }
-      return flag;
     }
   },
 });

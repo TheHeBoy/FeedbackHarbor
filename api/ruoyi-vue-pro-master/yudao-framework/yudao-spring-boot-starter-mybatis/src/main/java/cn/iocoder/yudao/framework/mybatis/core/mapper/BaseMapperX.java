@@ -119,8 +119,4 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
     default boolean saveOrUpdate(T entity) {
         return Db.saveOrUpdate(entity);
     }
-
-    default boolean saveOrUpdate(T entity, AbstractWrapper<T, ?, ?> updateWrapper) {
-        return Db.saveOrUpdate(entity,updateWrapper);
-    }
 }

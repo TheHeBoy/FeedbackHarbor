@@ -28,12 +28,10 @@
 </template>
 <script lang="ts" setup>
 import { FeedbackPageParams, FeedbackVO, getFeedbackPage } from '@/api/feedback';
-import { getFeedbackLikeList, feedbackLike, FeedbackLikeVO } from '@/api/feedback/like';
-import { useUserStoreWithOut } from '@/store/user';
+import { getLikeList, like } from '@/api/like';
 
 const feedBackDialog = ref<any>(null);
 const feedbackList = ref<FeedbackVO[]>([]);
-const userStore = useUserStoreWithOut();
 
 const feedbackClick = () => {
   feedBackDialog.value.show()
@@ -66,13 +64,13 @@ pageRequest();
 //点赞
 const feedbackLikeIds = ref<Number[]>([]);
 
-getFeedbackLikeList().then((data) => {
+getLikeList(0).then((data) => {
   feedbackLikeIds.value = data;
 })
 
 const likeClick = (feedback: FeedbackVO) => {
   const fid = feedback.id;
-  feedbackLike({ feedbackId: fid }).then((data) => {
+  like({ rid: fid, busType: 0 }).then((data) => {
     if (data) {
       feedbackLikeIds.value.push(fid);
       feedback.likes++;

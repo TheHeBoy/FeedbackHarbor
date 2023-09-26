@@ -22,7 +22,4 @@ public class AppAuthLoginRespVO {
 
     @Schema(description = "过期时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime expiresTime;
-
-    @Schema(description = "刷新令牌", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String refreshToken;
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <u-comment :config="config" page @submit="submit" @like="like" @show-info="">
+    <u-comment :config="config" page @submit="submit" @like="likeBtn" @show-info="">
     </u-comment>
     <div class="w-full text-center">
       <p v-if="loading">加载中</p>
@@ -18,6 +18,7 @@ import { CommentApi, ConfigApi, SubmitParamApi, UToast, dayjs } from '~/index'
 import { useUserStoreWithOut } from '@/store/user'
 import { FeedbackVO } from '@/api/feedback'
 import { formatDate } from '@/utils/formatTime'
+import { like, getLikeList } from '@/api/like';
 
 const props = defineProps({
   vModel: {
@@ -30,19 +31,12 @@ const useUserStore = useUserStoreWithOut();
 
 const { user } = storeToRefs(useUserStore);
 
-watch(user, () => {
-  config.user.id = user.value.id;
-  config.user.username = user.value.nickname;
-  config.user.avatar = user.value.avatar;
-});
-
 const config = reactive<ConfigApi>({
   user: {
     id: user.value.id,
     username: user.value.nickname,
     avatar: user.value.avatar,
-    // 评论id数组 建议:存储方式用户uid和评论id组成关系,根据用户uid来获取对应点赞评论id,然后加入到数组中返回
-    likeIds: []
+    likeIds: [] as string[]
   },
   emoji: emoji,
   comments: [],
@@ -55,47 +49,41 @@ const submit = ({ content, parentId, files, finish }: SubmitParamApi) => {
     feedbackId: props.vModel.id,
     parentId: parentId == null ? null : Number(parentId),
   }
-  if (useUserStore.isLoginAndShwolog()) {
-    createComment(createCommentVO).then((data) => {
-      const comment: CommentApi = {
-        id: data.id,
-        parentId: data.parentId,
-        uid: config.user.id,
-        content: content,
-        user: {
-          username: config.user.username,
-          avatar: config.user.avatar,
-          homeLink: '',
-        },
-        address: '',
-        likes: 0,
-        createTime: formatDate(data.createTime),
-        reply: null
-      }
-      finish(comment)
-      UToast({ message: '评论成功!', type: 'info' })
-    })
-  }
+  createComment(createCommentVO).then((data) => {
+    const comment: CommentApi = {
+      id: data.id,
+      parentId: data.parentId,
+      uid: config.user.id,
+      content: content,
+      user: {
+        username: config.user.username,
+        avatar: config.user.avatar,
+        homeLink: '',
+      },
+      address: '',
+      likes: 0,
+      createTime: formatDate(data.createTime),
+      reply: null
+    }
+    finish(comment)
+    UToast({ message: '评论成功!', type: 'info' })
+  })
 }
 
-const more = () => {
-  params.pageNo++;
-  commentPage();
+const likeBtn = (id: string, finish: () => void) => {
+  like({ rid: parseInt(id), busType: 1 }).then(() => {
+    finish();
+  });
 }
+
+getLikeList(1).then((data) => {
+  config.user.likeIds = data;
+})
+
 const loading = ref(false);
 const noMore = computed(() => config.comments.length >= config.total);
 const disabled = computed(() => loading.value || noMore.value);
-
-// 点赞按钮事件 将评论id返回后端判断是否点赞，然后在处理点赞状态
-const like = (id: string, finish: () => void) => {
-  console.log('点赞: ' + id)
-  setTimeout(() => {
-    finish()
-  }, 200)
-}
-
 let params = { pageNo: 1, pageSize: 5, feedbackId: props.vModel.id };
-
 const commentPage = () => {
   getCommentPage(params).then((data => {
     config.total = data.total;
@@ -140,6 +128,10 @@ const commentPage = () => {
     config.comments.push(...comments);
     loading.value = false;
   }))
+}
+const more = () => {
+  params.pageNo++;
+  commentPage();
 }
 commentPage();
 

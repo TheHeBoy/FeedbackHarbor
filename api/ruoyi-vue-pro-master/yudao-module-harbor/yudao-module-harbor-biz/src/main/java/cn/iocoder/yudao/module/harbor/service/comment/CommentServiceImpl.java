@@ -5,6 +5,8 @@ import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentPageRe
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentPageRespVO;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.ReplyVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
+import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
+import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Resource
     private AppUserService appUserService;
+
+    @Resource
+    private LikeRedisDAO likeRedisDAO;
 
     @Override
     public void deleteComment(Long id) {
@@ -77,7 +82,15 @@ public class CommentServiceImpl implements CommentService {
         //一级评论
         for (AppCommentPageRespVO commentParent : commentPage.getList()) {
             List<CommentDO> commentDOS = commentMapper.selectByPid(commentParent.getId());
+            //回复列表
             List<ReplyVO> replies = commentDOS.stream().map(CommentConvert.INSTANCE::convertReply).collect(Collectors.toList());
+
+            //添加点赞数
+            commentParent.setLikes(commentParent.getLikes() + getLikeCount(commentParent.getId()));
+            replies.forEach(e -> {
+                e.setLikes(e.getLikes() + getLikeCount(e.getId()));
+            });
+
             commentParent.setReplies(replies);
         }
         return commentPage;
@@ -89,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDO createComment(AppCommentCreateReqVO createReqVO,Long uid) {
+    public CommentDO createComment(AppCommentCreateReqVO createReqVO, Long uid) {
         CommentDO comment = CommentConvert.INSTANCE.convert(createReqVO);
         AppUserDO user = appUserService.getUser(uid);
         comment.setUid(user.getId());
@@ -100,4 +113,15 @@ public class CommentServiceImpl implements CommentService {
         return comment;
     }
 
+    /**
+     * 获取redis中的反馈点赞数量
+     *
+     * @param rid 评论id
+     * @return void
+     */
+    private Long getLikeCount(Long rid) {
+        long count = likeRedisDAO.sSize(rid, true, LikeBusTypeEnum.COMMENT);
+        long cancelCount = likeRedisDAO.sSize(rid, false, LikeBusTypeEnum.COMMENT);
+        return count - cancelCount;
+    }
 }

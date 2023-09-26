@@ -42,7 +42,7 @@ public class AppUserDO extends TenantBaseDO {
      */
     private String password;
     /**
-     * 登录态用户id
+     * 外部用户id，由外部唯一id和外部类型组成
      */
     private String userOpenId;
     /**

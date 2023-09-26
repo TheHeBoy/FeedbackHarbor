@@ -13,34 +13,44 @@
             <!-- <el-tag class="ml-1 mr-1 rounded-lg" type="danger">官方</el-tag> -->
             <div class="flex-grow"></div>
           </div>
-          <div>
+          <div style="white-space: pre-wrap">
             {{ vModel.content }}
           </div>
           <div class="flex justify-between">
             <span class="text-sm text-slate-400 mt-1">{{ formatDate(vModel.createTime) }}</span>
             <div>
               <el-popover trigger="click" placement="bottom">
-                <p>举报</p>
+                <el-button link size="small" class="w-full text-center">
+                  <el-icon>
+                    <reportSVG />
+                  </el-icon>
+                  <span class="ml-1">举报</span>
+                </el-button>
                 <template #reference>
                   <el-button link linksize="small">
                     <i-mdi-dots-vertical />
                   </el-button>
                 </template>
               </el-popover>
-              <el-button link size="small" @click="commentShow = !commentShow">评论</el-button>
+              <el-button link size="small" @click="commentShow = !commentShow">
+                <el-icon>
+                  <commentSVG />
+                </el-icon>
+                <span class="ml-1">12</span>
+              </el-button>
               <el-button link @click="likeClick">
-                <u-icon>
+                <el-icon>
                   <like v-if="props.feedbackLikeIds.map(String).indexOf(str(props.vModel.id)) == -1" />
                   <liked v-else color="#1e80ff" />
-                </u-icon>
+                </el-icon>
                 <span class="ml-1">{{ vModel.likes }}</span>
               </el-button>
             </div>
           </div>
         </div>
+        <Comment v-if="commentShow" :v-model="vModel" />
       </el-col>
     </el-row>
-    <Comment v-if="commentShow" :v-model="vModel" class="ml-6" />
   </el-card>
 </template>
 
@@ -50,7 +60,8 @@ import { FeedbackVO } from '@/api/feedback';
 import { formatDate } from '@/utils/formatTime';
 import liked from '@/assets/svg/LikedSVG.svg?component';
 import like from '@/assets/svg/LikeSVG.svg?component';
-import { number } from 'vue-types';
+import commentSVG from '@/assets/svg/commentSVG.svg?component';
+import reportSVG from '@/assets/svg/reportSVG.svg?component';
 import { str } from '~/util/basic';
 const commentShow = ref(false);
 const props = defineProps({
