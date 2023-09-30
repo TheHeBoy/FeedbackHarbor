@@ -12,16 +12,16 @@
             <span>{{ vModel.nickname }}</span>
             <!-- <el-tag class="ml-1 mr-1 rounded-lg" type="danger">官方</el-tag> -->
             <div class="flex-grow"></div>
+            <span class="text-sm text-slate-400 mt-1">{{ formatPast(vModel.createTime) }}</span>
           </div>
           <div style="white-space: pre-wrap">
             {{ vModel.content }}
           </div>
-          <div class="flex justify-between">
-            <span class="text-sm text-slate-400 mt-1">{{ formatDate(vModel.createTime) }}</span>
+          <div class="text-right">
             <div>
               <el-popover trigger="click" placement="bottom">
                 <el-button link size="small" class="w-full text-center">
-                  <el-icon>
+                  <el-icon :size="17">
                     <reportSVG />
                   </el-icon>
                   <span class="ml-1">举报</span>
@@ -33,13 +33,13 @@
                 </template>
               </el-popover>
               <el-button link size="small" @click="commentShow = !commentShow">
-                <el-icon>
+                <el-icon :size="17">
                   <commentSVG />
                 </el-icon>
-                <span class="ml-1">12</span>
+                <span class="ml-1">{{ vModel.commentNum }}</span>
               </el-button>
               <el-button link @click="likeClick">
-                <el-icon>
+                <el-icon :size="17">
                   <like v-if="props.feedbackLikeIds.map(String).indexOf(str(props.vModel.id)) == -1" />
                   <liked v-else color="#1e80ff" />
                 </el-icon>
@@ -57,7 +57,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { FeedbackVO } from '@/api/feedback';
-import { formatDate } from '@/utils/formatTime';
+import { formatPast } from '@/utils/formatTime';
 import liked from '@/assets/svg/LikedSVG.svg?component';
 import like from '@/assets/svg/LikeSVG.svg?component';
 import commentSVG from '@/assets/svg/commentSVG.svg?component';

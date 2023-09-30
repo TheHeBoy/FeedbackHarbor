@@ -17,7 +17,7 @@ import { createComment, createCommentVO, getCommentPage } from '@/api/comment'
 import { CommentApi, ConfigApi, SubmitParamApi, UToast, dayjs } from '~/index'
 import { useUserStoreWithOut } from '@/store/user'
 import { FeedbackVO } from '@/api/feedback'
-import { formatDate } from '@/utils/formatTime'
+import { formatDate, formatPast } from '@/utils/formatTime'
 import { like, getLikeList } from '@/api/like';
 
 const props = defineProps({
@@ -62,7 +62,7 @@ const submit = ({ content, parentId, files, finish }: SubmitParamApi) => {
       },
       address: '',
       likes: 0,
-      createTime: formatDate(data.createTime),
+      createTime: formatPast(data.createTime),
       reply: null
     }
     finish(comment)
@@ -98,7 +98,7 @@ const commentPage = () => {
           address: '',
           content: e.content,
           likes: e.likes,
-          createTime: formatDate(e.createTime),
+          createTime: formatPast(e.createTime),
           user: {
             username: e.nickname,
             avatar: e.avatar,
@@ -113,7 +113,7 @@ const commentPage = () => {
         address: '',
         content: commentVO.content,
         likes: commentVO.likes,
-        createTime: formatDate(commentVO.createTime),
+        createTime: formatPast(commentVO.createTime),
         user: {
           username: commentVO.nickname,
           avatar: commentVO.avatar,

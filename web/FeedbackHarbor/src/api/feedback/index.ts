@@ -10,6 +10,7 @@ export type FeedbackVO = {
   nickname: string;
   avatar: string;
   userType: number;
+  commentNum: number;
 };
 
 export type FeedbackPageParams = {

@@ -40,7 +40,6 @@ public class AppFeedbackController {
     @GetMapping("/page")
     @Operation(summary = "获得用户反馈分页")
     public CommonResult<PageResult<AppFeedbackRespVO>> getFeedbackPage(@Valid AppFeedbackPageReqVO pageVO) {
-        PageResult<FeedbackDO> pageResult = feedbackService.getFeedbackPage(pageVO);
-        return success(FeedbackConvert.INSTANCE.convertPageApp(pageResult));
+        return success(feedbackService.getFeedbackPage(pageVO));
     }
 }

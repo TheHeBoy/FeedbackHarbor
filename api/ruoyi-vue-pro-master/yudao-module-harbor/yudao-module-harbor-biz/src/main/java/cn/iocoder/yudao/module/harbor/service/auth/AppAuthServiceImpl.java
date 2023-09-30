@@ -141,6 +141,14 @@ public class AppAuthServiceImpl implements AppAuthService {
         return UserTypeEnum.MEMBER;
     }
 
+    /**
+     * 得到社交登录的用户信息
+     *
+     * @param type 社交应用类型
+     * @param code 授权码
+     * @param state 状态码
+     * @return {@link AuthUser}
+     */
     private AuthUser getAuthUser(Integer type, String code, String state) {
         AuthRequest authRequest = yudaoAuthRequestFactory.get(SocialTypeEnum.valueOfType(type).getSource());
         AuthCallback authCallback = AuthCallback.builder().code(code).state(state).build();

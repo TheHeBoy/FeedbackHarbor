@@ -34,11 +34,6 @@ public interface AppUserService {
      */
     AppUserDO getAppUser(Long id);
 
-    /**
-     * 通过用户名得到用户信息
-     *
-     * @return 用户信息
-     */
     AppUserDO getAppUserByUserName(String userName);
 
     AppUserDO getAppUserByUserOpenId(String openId);

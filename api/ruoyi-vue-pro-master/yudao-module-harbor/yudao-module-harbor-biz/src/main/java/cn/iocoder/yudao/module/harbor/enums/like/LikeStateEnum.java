@@ -5,6 +5,11 @@ import lombok.Getter;
 
 import static cn.hutool.core.util.ArrayUtil.firstMatch;
 
+/**
+ * 点赞状态
+ * @author hehong
+ * @date 2023-09-26
+ */
 @AllArgsConstructor
 @Getter
 public enum LikeStateEnum {

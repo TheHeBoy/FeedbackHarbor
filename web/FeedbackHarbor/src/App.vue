@@ -1,5 +1,13 @@
 <script setup lang="ts">
+import { useUserStoreWithOut } from './store/user';
+
 const isRouterAlive = ref(true);
+const userStore = useUserStoreWithOut();
+const isHeadAlive = ref(true);
+const headHide = () => {
+  isHeadAlive.value = false;
+};
+
 const reload = () => {
   isRouterAlive.value = false;
   nextTick(() => {
@@ -7,14 +15,12 @@ const reload = () => {
   });
 };
 
-
-const isHeadAlive = ref(true);
-const headHide = () => {
-  isHeadAlive.value = false;
-};
-
+//刷新页面
 provide("reload", reload);
+//隐藏头部
 provide("headHide", headHide);
+//设置用户信息，避免刷新丢失
+userStore.setUserInfoAction();
 
 </script>
 
@@ -26,7 +32,7 @@ provide("headHide", headHide);
         <router-view></router-view>
       </div>
       <TheFooter></TheFooter>
-      <LoginDialog></LoginDialog>
+      <LoginDialogSocial></LoginDialogSocial>
     </el-config-provider>
   </div>
 </template>

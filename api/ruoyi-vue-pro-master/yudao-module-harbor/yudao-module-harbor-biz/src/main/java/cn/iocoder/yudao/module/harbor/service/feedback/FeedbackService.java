@@ -6,6 +6,7 @@ import javax.validation.*;
 import cn.iocoder.yudao.module.harbor.controller.admin.feedback.vo.*;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
+import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.feedback.FeedbackDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 
@@ -65,5 +66,5 @@ public interface FeedbackService {
 
     FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid);
 
-    PageResult<FeedbackDO> getFeedbackPage(AppFeedbackPageReqVO pageVO);
+    PageResult<AppFeedbackRespVO> getFeedbackPage(AppFeedbackPageReqVO pageVO);
 }

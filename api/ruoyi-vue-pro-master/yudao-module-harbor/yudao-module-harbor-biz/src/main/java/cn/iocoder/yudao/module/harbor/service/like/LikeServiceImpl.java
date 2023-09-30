@@ -2,8 +2,6 @@ package cn.iocoder.yudao.module.harbor.service.like;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
-import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.harbor.controller.app.like.vo.AppLikeReqVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.comment.CommentDO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.feedback.FeedbackDO;
@@ -71,6 +69,13 @@ public class LikeServiceImpl implements LikeService {
         return like(true, busTypeEnum) - like(false, busTypeEnum);
     }
 
+    /**
+     * 同步redis到数据库中
+     *
+     * @param action      true-点赞 false-取消点赞
+     * @param busTypeEnum 业务枚举
+     * @return int
+     */
     private int like(boolean action, LikeBusTypeEnum busTypeEnum) {
         Set<String> keys = likeRedisDAO.list(action, busTypeEnum);
         // 用户id点赞列表
@@ -114,7 +119,7 @@ public class LikeServiceImpl implements LikeService {
 
         // 添加点赞状态
         List<LikeDO> likeSavaList = likes.stream()
-                .filter(e ->likeMapper.updateByUidAndRid(e, e.getUid(), e.getRid()) == 0)
+                .filter(e -> likeMapper.updateByUidAndRid(e, e.getUid(), e.getRid()) == 0)
                 .collect(Collectors.toList());
         likeMapper.insertBatch(likeSavaList);
 

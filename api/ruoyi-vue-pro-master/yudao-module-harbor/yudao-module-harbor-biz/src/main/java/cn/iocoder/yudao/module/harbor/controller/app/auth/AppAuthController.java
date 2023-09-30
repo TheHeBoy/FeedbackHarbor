@@ -45,7 +45,6 @@ public class AppAuthController {
     @Resource
     private SecurityProperties securityProperties;
 
-
     @PostMapping("/login")
     @Operation(summary = "使用账号 + 密码登录")
     public CommonResult<AppAuthLoginRespVO> login(@RequestBody @Valid AppAuthLoginReqVO reqVO) {

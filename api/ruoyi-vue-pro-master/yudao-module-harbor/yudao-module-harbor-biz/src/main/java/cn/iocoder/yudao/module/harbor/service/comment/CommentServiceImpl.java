@@ -97,6 +97,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Long getCommentNum(Long feedbackId) {
+        return commentMapper.selectCount(CommentDO::getFeedbackId, feedbackId);
+    }
+
+    @Override
     public List<CommentDO> getCommentList(CommentExportReqVO exportReqVO) {
         return commentMapper.selectList(exportReqVO);
     }

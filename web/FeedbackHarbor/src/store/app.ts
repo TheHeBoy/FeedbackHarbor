@@ -10,11 +10,7 @@ export const useAppStore = defineStore('app', {
       userInfo: 'userInfo',
     };
   },
-  getters: {
-    getUserInfo(): string {
-      return this.userInfo;
-    },
-  },
+  getters: {},
 });
 
 export default useAppStore();

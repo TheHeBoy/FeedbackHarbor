@@ -13,17 +13,19 @@ export const useUserStore = defineStore('app-user', {
   getters: {
   },
   actions: {
-    async setUserInfoAction(expiresTime: number) {
-      if (!getAccessToken()) {
-        return null;
+    async setUserInfoAction() {
+      let token = getAccessToken();
+      if (!token) {
+        return false;
       }
       let userInfo = wsCache.get(CACHE_KEY.USER);
       if (!userInfo) {
         userInfo = await getUserInfo();
       }
 
-      wsCache.set(CACHE_KEY.USER, userInfo, { exp: getExp(expiresTime) });
+      wsCache.set(CACHE_KEY.USER, userInfo, { exp: getExp(token.expiresTime) });
       this.user = userInfo;
+      return true;
     },
     async loginOut() {
       await logout()

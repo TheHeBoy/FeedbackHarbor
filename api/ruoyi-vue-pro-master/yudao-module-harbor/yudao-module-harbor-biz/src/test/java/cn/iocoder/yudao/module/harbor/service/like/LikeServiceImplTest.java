@@ -42,7 +42,6 @@ public class LikeServiceImplTest extends BaseDbAndRedisUnitTest {
     @MockBean
     private AppUserService appUserService;
 
-
     @Resource
     private FeedbackMapper feedbackMapper;
 

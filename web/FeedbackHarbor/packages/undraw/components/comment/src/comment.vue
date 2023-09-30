@@ -7,7 +7,7 @@
       <div class="content">
         <div class="avatar-box">
           <el-avatar :size="40" :src="config.user.avatar">
-            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+            登录
           </el-avatar>
         </div>
         <InputBox placeholder="输入评论（Enter换行，Ctrl + Enter发送）" content-btn="发表评论" />

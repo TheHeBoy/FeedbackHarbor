@@ -2,10 +2,13 @@ package cn.iocoder.yudao.module.harbor.service.feedback;
 
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
+import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.iocoder.yudao.module.harbor.job.FeedbackLikeJob;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
+import cn.iocoder.yudao.module.harbor.service.comment.CommentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,6 +43,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Resource
     private LikeRedisDAO likeRedisDAO;
+
+    @Resource
+    private CommentService commentService;
 
     @Override
     public Long createFeedback(FeedbackCreateReqVO createReqVO) {
@@ -104,12 +110,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public PageResult<FeedbackDO> getFeedbackPage(AppFeedbackPageReqVO pageVO) {
-        PageResult<FeedbackDO> feedbackDOPageResult = feedbackMapper.selectPage(pageVO);
-        feedbackDOPageResult.getList().forEach(e -> {
+    public PageResult<AppFeedbackRespVO> getFeedbackPage(AppFeedbackPageReqVO pageVO) {
+        PageResult<AppFeedbackRespVO> pageResult = FeedbackConvert.INSTANCE.convertPageApp(feedbackMapper.selectPage(pageVO));
+        pageResult.getList().forEach(e -> {
             e.setLikes(e.getLikes() + getLikeCount(e.getId()));
+            e.setCommentNum(commentService.getCommentNum(e.getId()));
         });
-        return feedbackDOPageResult;
+        return pageResult;
     }
 
     /**

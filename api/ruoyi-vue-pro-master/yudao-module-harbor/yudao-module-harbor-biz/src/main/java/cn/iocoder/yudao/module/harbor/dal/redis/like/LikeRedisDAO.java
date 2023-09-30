@@ -30,27 +30,58 @@ public class LikeRedisDAO {
     @Resource
     private RedissonClient redissonClient;
 
+    /**
+     * @param uid             用户id
+     * @param rid             关联id
+     * @param likeAction      ture-点赞 false-取消点赞
+     * @param likeBusTypeEnum 业务枚举
+     * @return {@link Boolean}
+     */
     public Boolean isMember(Long uid, Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
         String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
         return stringRedisTemplate.opsForSet().isMember(redisKey, String.valueOf(uid));
     }
 
+    /**
+     * @param uid             用户id
+     * @param rid             关联id
+     * @param likeAction      ture-点赞 false-取消点赞
+     * @param likeBusTypeEnum 业务枚举
+     * @return {@link Long}
+     */
     public Long set(Long uid, Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
         String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
         return stringRedisTemplate.opsForSet().add(redisKey, String.valueOf(uid));
     }
 
 
+    /**
+     * @param uid             用户id
+     * @param rid             关联id
+     * @param likeAction      ture-点赞 false-取消点赞
+     * @param likeBusTypeEnum 业务枚举
+     * @return {@link Long}
+     */
     public Long remove(Long uid, Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
         String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
         return stringRedisTemplate.opsForSet().remove(redisKey, String.valueOf(uid));
     }
 
+    /**
+     * @param likeAction      ture-点赞 false-取消点赞
+     * @param likeBusTypeEnum 业务枚举
+     * @return {@link Long}
+     */
     public Long removeBatch(boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
         Set<String> keys = list(likeAction, likeBusTypeEnum);
         return stringRedisTemplate.delete(keys);
     }
 
+    /**
+     * @param likeAction      ture-点赞 false-取消点赞
+     * @param likeBusTypeEnum 业务枚举
+     * @return {@link Set}<{@link String}>
+     */
     public Set<String> list(boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
         String pattern = formatKey("*", likeAction, likeBusTypeEnum);
         RKeys keys = redissonClient.getKeys();
@@ -59,11 +90,21 @@ public class LikeRedisDAO {
         return keyList;
     }
 
+    /**
+     * @param key key值
+     * @return {@link Set}<{@link Long}>
+     */
     public Set<Long> sGet(String key) {
         return Objects.requireNonNull(stringRedisTemplate.opsForSet().members(key))
                 .stream().map(Long::valueOf).collect(Collectors.toSet());
     }
 
+    /**
+     * @param rid             关联id
+     * @param likeAction      ture-点赞 false-取消点赞
+     * @param likeBusTypeEnum 业务枚举
+     * @return {@link Long}
+     */
     public Long sSize(Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
         String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
         return stringRedisTemplate.opsForSet().size(redisKey);

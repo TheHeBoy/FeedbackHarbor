@@ -7,13 +7,18 @@
     </button>
 
     <el-menu-item ref="homeMenuItem" index="/">首页</el-menu-item>
-    <el-menu-item index="/test">功能投票</el-menu-item>
+    <!-- <el-menu-item index="/test">功能投票</el-menu-item> -->
     <div class="flex-grow"></div>
     <div class="flex">
-      <el-tooltip :content="isDark ? t('change light') : t('change dark')" placement="top">
-        <button class="icon-btn mx-2 !outline-none" @click="toggleDark()">
-          <i-ph-cloud-moon-bold v-if="isDark" class="icon-footer" />
-          <i-ph-sun-horizon-bold v-else class="icon-footer" />
+      <!-- <el-tooltip :content="t('change lang')" placement="top">
+        <button class="icon-btn mx-2" @click="toggleLocales()">
+          <i-la-language class="icon-footer" />
+        </button>
+      </el-tooltip> -->
+      <el-tooltip class="ml-2" :content="isDark ? t('change light') : t('change dark')" placement="top">
+        <button class="icon-btn mx-3 !outline-none" @click="toggleDark()">
+          <i-ph-cloud-moon-bold v-if="isDark" class="w-6 h-6" />
+          <i-ph-sun-horizon-bold v-else class="w-6 h-6" />
         </button>
       </el-tooltip>
       <div class="ml-5">
@@ -22,7 +27,7 @@
         </div>
         <div v-else>
           <el-popover trigger="click" placement="bottom">
-            <el-button @click="logoutClick" link type="primary">退出登录</el-button>
+            <el-button @click="logoutClick" link size="small" class="w-full text-center">退出登录</el-button>
             <template #reference>
               <button>
                 <el-avatar :src="user.avatar" />
@@ -50,7 +55,6 @@ const userStore = useUserStoreWithOut();
 const layoutStore = useLayoutStoreWithOut();
 const appName = import.meta.env.VITE_APP_TITLE;
 const activeIndex = ref(layoutStore.activeIndex);
-userStore.setUserInfoAction();
 const { user } = storeToRefs(userStore);
 
 const homeMenuItem = ref<InstanceType<typeof ElMenuItem>>();
@@ -66,4 +70,10 @@ const logoutClick = () => {
     reload();
   })
 }
+
+
+const toggleLocales = () => {
+  const locales = availableLocales;
+  locale.value = locales[(locales.indexOf(locale.value) + 1) % locales.length];
+};
 </script>

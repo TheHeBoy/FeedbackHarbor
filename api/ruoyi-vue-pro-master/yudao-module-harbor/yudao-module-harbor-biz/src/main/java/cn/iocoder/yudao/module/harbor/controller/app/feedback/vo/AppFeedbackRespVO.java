@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class AppFeedbackRespVO {
 
     @Schema(description = "主键id")
-    private String id;
+    private Long id;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime createTime;
@@ -32,4 +32,7 @@ public class AppFeedbackRespVO {
 
     @Schema(description = "头像", example = "1")
     private String avatar;
+
+    @Schema(description = "评论数")
+    private Long commentNum;
 }

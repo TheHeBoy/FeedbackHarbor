@@ -10,7 +10,7 @@ import '@/assets/styles/index.scss';
 import UndrawUi from '~/index'
 import '~/styles/index.scss'
 const i18n = createI18n({
-  locale: 'en',
+  locale: 'zh-CN',
   messages,
 });
 

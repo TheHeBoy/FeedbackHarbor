@@ -52,7 +52,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       login({ username: loginData.loginForm.username, password: loginData.loginForm.password }).then((data) => {
         setToken(data);
-        userStore.setUserInfoAction(data.expiresTime);
+        userStore.setUserInfoAction();
         isShow.value = false;
         reload();
       });

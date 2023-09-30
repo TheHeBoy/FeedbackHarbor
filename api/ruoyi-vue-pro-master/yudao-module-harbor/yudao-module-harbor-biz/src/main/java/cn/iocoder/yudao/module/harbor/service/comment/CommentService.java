@@ -60,4 +60,11 @@ public interface CommentService {
     List<CommentDO> getCommentList(CommentExportReqVO exportReqVO);
 
     PageResult<AppCommentPageRespVO> getCommentPage(AppCommentPageReqVO pageVO);
+
+    /**
+     * 得到评论数量
+     * @param feedbackId 反馈id
+     * @return int
+     */
+    Long getCommentNum(Long feedbackId);
 }
