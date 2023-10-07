@@ -1,7 +1,4 @@
 <template>
-  <doc-alert title="代码生成" url="https://doc.iocoder.cn/new-feature/" />
-  <doc-alert title="单元测试" url="https://doc.iocoder.cn/unit-test/" />
-
   <!-- 搜索 -->
   <ContentWrap>
     <el-form

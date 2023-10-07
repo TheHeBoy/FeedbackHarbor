@@ -37,76 +37,76 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, reactive } from 'vue'
-import ContentBox from './content-box.vue'
-import { ReplyApi, ElPagination } from '~/index'
-import { InjectReplyBox, InjectReplyBoxApi } from '../key'
+import { computed, inject, reactive } from 'vue';
+import ContentBox from './content-box.vue';
+import { ReplyApi, ElPagination } from '~/index';
+import { InjectReplyBox, InjectReplyBoxApi } from '../key';
 
 interface Props {
-  data?: ReplyApi | null
-  id: string
+  data?: ReplyApi | null;
+  id: string;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 const state = reactive({
   loading: false,
   over: false,
   pageNum: 1,
-  pageSize: 5
-})
+  pageSize: 5,
+});
 
-const { replyPage, replyShowSize, comments } = inject(InjectReplyBox) as InjectReplyBoxApi
+const { replyPage, replyShowSize, comments } = inject(InjectReplyBox) as InjectReplyBoxApi;
 
-const { page } = inject(InjectReplyBox) as InjectReplyBoxApi
+const { page } = inject(InjectReplyBox) as InjectReplyBoxApi;
 
 // 分页操作
 const data = computed(() => {
   let data = {
     total: 0,
     length: 0,
-    list: [] as any[]
-  }
+    list: [] as any[],
+  };
   if (props.data) {
-    let length = props.data.list.length
+    let length = props.data.list.length;
     data = {
       total: props.data.total,
       length: length,
-      list: props.data.list
-    }
+      list: props.data.list,
+    };
   }
   if (!state.over) {
-    let tmp = data.list.slice(0, replyShowSize)
-    data.list = tmp
+    let tmp = data.list.slice(0, replyShowSize);
+    data.list = tmp;
   }
   if (page) {
-    data.list = data.list.slice(0, 5)
+    data.list = data.list.slice(0, 5);
   }
-  return data
-})
+  return data;
+});
 
 const replyMore = () => {
-  state.over = true
-}
+  state.over = true;
+};
 
 const finish = (val: any) => {
-  comments.value.forEach(e => {
-    if (e.id == props.id) {
+  comments.value.forEach((e) => {
+    if (e.id === Number(props.id)) {
       if (e.reply) {
-        e.reply = val
+        e.reply = val;
       }
     }
-  })
-}
+  });
+};
 
 const currentChange = (val: number) => {
-  state.pageNum = val
-  replyPage(props.id, val, state.pageSize, reply => finish(reply))
-}
+  state.pageNum = val;
+  replyPage(props.id, val, state.pageSize, (reply) => finish(reply));
+};
 
 const sizeChange = (val: number) => {
-  state.pageSize = val
-  replyPage(props.id, state.pageNum, val, reply => finish(reply))
-}
+  state.pageSize = val;
+  replyPage(props.id, state.pageNum, val, (reply) => finish(reply));
+};
 </script>
 
 <style lang="scss" scoped>

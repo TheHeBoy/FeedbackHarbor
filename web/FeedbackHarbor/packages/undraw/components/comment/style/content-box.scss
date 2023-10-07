@@ -30,13 +30,12 @@
         margin-right: 4px;
       }
     }
+  }
 
-    .time {
-      margin-left: auto;
-      font-size: 14px;
-      line-height: 22px;
-      color: #8a919f;
-    }
+  .time {
+    font-size: 14px;
+    line-height: 22px;
+    color: #8a919f;
   }
 }
 
@@ -56,7 +55,8 @@
       margin-right: 4px;
     }
   }
-  .item:hover, .active {
+  .item:hover,
+  .active {
     color: var(--u-color-primary);
   }
 }

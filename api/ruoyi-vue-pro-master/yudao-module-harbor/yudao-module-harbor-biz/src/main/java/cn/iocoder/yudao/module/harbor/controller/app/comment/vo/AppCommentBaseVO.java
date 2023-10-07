@@ -41,4 +41,7 @@ public class AppCommentBaseVO {
 
     @Schema(description = "创建时间")
     private LocalDateTime createTime;
+
+    @Schema(description = "评论图片集")
+    private String imgs;
 }

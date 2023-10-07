@@ -9,7 +9,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 /**
  * 用户反馈 Excel VO
  *
- *  芋道源码
  */
 @Data
 public class FeedbackExcelVO {
@@ -29,7 +28,7 @@ public class FeedbackExcelVO {
     @ExcelProperty("点赞数")
     private Long likes;
 
-    @ExcelProperty("反馈类型")
-    private Integer feedbackType;
+    @ExcelProperty("反馈标签id")
+    private Integer feedbackTagId;
 
 }

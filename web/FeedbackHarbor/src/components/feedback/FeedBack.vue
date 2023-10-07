@@ -7,17 +7,30 @@
         </div>
       </el-col>
       <el-col :span="23">
-        <div class="ml-5">
-          <div class="flex">
+        <div class="ml-7">
+          <div class="flex justify-between">
             <span>{{ vModel.nickname }}</span>
-            <!-- <el-tag class="ml-1 mr-1 rounded-lg" type="danger">官方</el-tag> -->
-            <div class="flex-grow"></div>
-            <span class="text-sm text-slate-400 mt-1">{{ formatPast(vModel.createTime) }}</span>
+            <div>
+              <i-mdi-tag-multiple :color="vModel.feedbackTag.color" class="w-5 h-5 mr-1" />
+              <span class="text-sm"> {{ vModel.feedbackTag.nameCh }}</span>
+            </div>
           </div>
-          <div style="white-space: pre-wrap">
-            {{ vModel.content }}
+          <div class="mt-2">
+            <div v-html="contents"></div>
+            <div class="imgbox" style="display: flex">
+              <template v-for="(url, index) in imgList" :key="index">
+                <ElImage
+                  :src="url"
+                  style="height: 72px; padding: 8px 4px"
+                  lazy
+                  :preview-src-list="imgList"
+                  :initial-index="index"
+                ></ElImage>
+              </template>
+            </div>
           </div>
-          <div class="text-right">
+          <div class="flex justify-between">
+            <span class="text-sm text-slate-400 mt-1">{{ formatPast(vModel.createTime, 'YYYY-MM-DD HH:mm') }}</span>
             <div>
               <el-popover trigger="click" placement="bottom">
                 <el-button link size="small" class="w-full text-center">
@@ -63,6 +76,9 @@ import like from '@/assets/svg/LikeSVG.svg?component';
 import commentSVG from '@/assets/svg/commentSVG.svg?component';
 import reportSVG from '@/assets/svg/reportSVG.svg?component';
 import { str } from '~/util/basic';
+import { useEmojiParse } from '~/hooks';
+import emoji from '@/types/emoji';
+
 const commentShow = ref(false);
 const props = defineProps({
   vModel: {
@@ -72,12 +88,18 @@ const props = defineProps({
   feedbackLikeIds: {
     type: Array as PropType<Number[]>,
     required: true,
-  }
+  },
 });
 
-const emit = defineEmits(['like'])
+const emit = defineEmits(['like']);
 const likeClick = () => {
   emit('like', props.vModel);
-}
+};
 
+const contents = computed(() => useEmojiParse(emoji.allEmoji, props.vModel.content));
+const imgList = computed(() => {
+  let temp = props.vModel.imgs;
+  if (!temp) return [];
+  return temp?.split('||');
+});
 </script>

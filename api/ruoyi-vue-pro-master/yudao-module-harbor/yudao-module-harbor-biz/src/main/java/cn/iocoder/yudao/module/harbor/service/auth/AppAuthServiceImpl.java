@@ -20,9 +20,11 @@ import cn.iocoder.yudao.module.harbor.convert.auth.AuthConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import cn.iocoder.yudao.module.system.enums.social.SocialTypeEnum;
+import com.xingyuv.jushauth.config.AuthConfig;
 import com.xingyuv.jushauth.model.AuthCallback;
 import com.xingyuv.jushauth.model.AuthResponse;
 import com.xingyuv.jushauth.model.AuthUser;
+import com.xingyuv.jushauth.request.AuthGoogleRequest;
 import com.xingyuv.jushauth.request.AuthRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -152,7 +154,6 @@ public class AppAuthServiceImpl implements AppAuthService {
     private AuthUser getAuthUser(Integer type, String code, String state) {
         AuthRequest authRequest = yudaoAuthRequestFactory.get(SocialTypeEnum.valueOfType(type).getSource());
         AuthCallback authCallback = AuthCallback.builder().code(code).state(state).build();
-
         AuthResponse<?> authResponse = authRequest.login(authCallback);
         log.info("[getAuthUser][请求社交平台 type({}) request({}) response({})]", type,
                 toJsonString(authCallback), toJsonString(authResponse));

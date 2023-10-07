@@ -5,9 +5,7 @@
 import WebStorageCache from 'web-storage-cache';
 
 export const CACHE_KEY = {
-  IS_DARK: 'isDark',
   USER: 'user',
-  LANG: 'lang',
 };
 
 type CacheType = 'localStorage' | 'sessionStorage';

@@ -6,7 +6,7 @@ export * from './element'
 export * from './hooks'
 export * from './util'
 
-const install =  (app: App) => {
+const install = (app: App) => {
   components.forEach(item => {
     app.use(item)
   })

@@ -18,12 +18,13 @@ export const useUserStore = defineStore('app-user', {
       if (!token) {
         return false;
       }
+
       let userInfo = wsCache.get(CACHE_KEY.USER);
-      if (!userInfo) {
+      if (!userInfo || this.user.id == -1) {
         userInfo = await getUserInfo();
       }
 
-      wsCache.set(CACHE_KEY.USER, userInfo, { exp: getExp(token.expiresTime) });
+      wsCache.set(CACHE_KEY.USER, userInfo);
       this.user = userInfo;
       return true;
     },
@@ -42,7 +43,7 @@ export const useUserStore = defineStore('app-user', {
       }
     },
     isLogin() {
-      return this.user.id != -1;
+      return wsCache.get(CACHE_KEY.USER) && getAccessToken() && this.user.id != -1;
     }
   },
 });

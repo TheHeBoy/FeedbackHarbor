@@ -208,10 +208,31 @@ justauth:
     GITEE:
       client-id: f407ceba670e9b118c9c08a7c497ae8d24ce622094862541755dcc98af07fb1f
       client-secret: da89c20352570ae317f14042543ddd8fc931303e4e653f081f1cb1b3d77faec1
-      redirectUri: http://localhost:8080/product/social-login?type=10 # gitee请求access_token需要回调地址
+      redirectUri: http://localhost:8080/product/social-login?type=10
+      ignore-check-redirect-uri: true
+    GOOGLE:
+      client-id: 146084332115-ic58upv7ec6r8p2im141n45jd1dl68ro.apps.googleusercontent.com
+      client-secret: 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
+      redirectUri: http://localhost:8080/product/social-login?type=20
+      ignore-check-redirect-uri: true
+    GITHUB:
+      client-id: ab29ff63b8a920aced77
+      client-secret: eae5169f4511dcc8d1eedf5680a6ce03ea57dc99
+      redirectUri: http://localhost:8080/product/social-login?type=30
       ignore-check-redirect-uri: true
   cache:
     type: REDIS
     prefix: 'social_auth_state:' # 缓存前缀，目前只对 Redis 缓存生效，默认 JUSTAUTH::STATE::
     timeout: 24h # 超时时长，目前只对 Redis 缓存生效，默认 3 分钟
+  http-config:
+    timeout: 15000
+    proxy:
+      GOOGLE:
+        type: SOCKS
+        hostname: 127.0.0.1
+        port: 10808
+      GITHUB:
+        type: SOCKS
+        hostname: 127.0.0.1
+        port: 10808
 

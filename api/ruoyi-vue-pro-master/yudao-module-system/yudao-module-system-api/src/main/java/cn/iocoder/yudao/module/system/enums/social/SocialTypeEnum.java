@@ -22,31 +22,15 @@ public enum SocialTypeEnum implements IntArrayValuable {
      */
     GITEE(10, "GITEE"),
     /**
-     * 钉钉
-     * 文档链接：https://developers.dingtalk.com/document/app/obtain-identity-credentials
+     * Google
+     * 文档链接：https://console.developers.google.com/apis/dashboard
      */
-    DINGTALK(20, "DINGTALK"),
-
+    GOOGLE(20, "GOOGLE"),
     /**
-     * 企业微信
-     * 文档链接：https://xkcoding.com/2019/08/06/use-justauth-integration-wechat-enterprise.html
+     * GitHub
+     * 文档链接：
      */
-    WECHAT_ENTERPRISE(30, "WECHAT_ENTERPRISE"),
-    /**
-     * 微信公众平台 - 移动端 H5
-     * 文档链接：https://www.cnblogs.com/juewuzhe/p/11905461.html
-     */
-    WECHAT_MP(31, "WECHAT_MP"),
-    /**
-     * 微信开放平台 - 网站应用 PC 端扫码授权登录
-     * 文档链接：https://justauth.wiki/guide/oauth/wechat_open/#_2-申请开发者资质认证
-     */
-    WECHAT_OPEN(32, "WECHAT_OPEN"),
-    /**
-     * 微信小程序
-     * 文档链接：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html
-     */
-    WECHAT_MINI_APP(34, "WECHAT_MINI_APP"),
+    GITHUB(30, "GITHUB"),
     ;
 
     public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(SocialTypeEnum::getType).toArray();

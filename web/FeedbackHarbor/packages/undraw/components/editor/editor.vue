@@ -40,145 +40,143 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue'
-import { isEmpty } from '~/util'
-import UToast from '../toast'
+import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+import { isEmpty } from '~/util';
+import UToast from '../toast';
 
 defineOptions({
-  name: 'UEditor'
-})
+  name: 'UEditor',
+});
 
 interface Props {
-  placeholder?: string
-  modelValue: string
-  minHeight?: number
-  imgList?: string[]
+  placeholder?: string;
+  modelValue: string;
+  minHeight?: number;
+  imgList?: string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  minHeight: 30
-})
+  minHeight: 64,
+});
 
-const range = ref<Range>()
-const editorRef = ref<HTMLDivElement>()
-const text = ref()
-const isLocked = ref(false)
-const active = ref(false)
-const imageRef = ref<HTMLDivElement>()
+const range = ref<Range>();
+const editorRef = ref<HTMLDivElement>();
+const text = ref();
+const isLocked = ref(false);
+const active = ref(false);
+const imageRef = ref<HTMLDivElement>();
 
-const { imgList } = toRefs(props)
+const { imgList } = toRefs(props);
 
-const minHeight = computed(() => props.minHeight + 'px')
+const minHeight = computed(() => props.minHeight + 'px');
 
-const padding = computed(() => (props.minHeight == 30 ? '4px 10px' : '8px 12px'))
+const padding = computed(() => (props.minHeight == 30 ? '4px 10px' : '8px 12px'));
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', val: string): void
-  (e: 'input', event: Event): void
-  (e: 'focus', event: Event): void
-  (e: 'blur', event: Event): void
-  (e: 'submit'): void
-}>()
+  (e: 'update:modelValue', val: string): void;
+  (e: 'input', event: Event): void;
+  (e: 'focus', event: Event): void;
+  (e: 'blur', event: Event): void;
+  (e: 'submit'): void;
+}>();
 
 watch(
   () => props.modelValue,
-  val => {
-    if (!isLocked.value) text.value = val
-  }
-)
+  (val) => {
+    if (!isLocked.value) text.value = val;
+  },
+);
 
 function onFocus(event: Event) {
-  emit('focus', event)
-  isLocked.value = true
-  active.value = true
+  emit('focus', event);
+  isLocked.value = true;
+  active.value = true;
 }
 
 function onBlur(event: Event) {
   // 记录光标
-  range.value = window.getSelection()?.getRangeAt(0)
-  emit('blur', event)
-  if (!editorRef.value?.innerHTML) active.value = false
-  isLocked.value = false
+  range.value = window.getSelection()?.getRangeAt(0);
+  emit('blur', event);
+  if (!editorRef.value?.innerHTML) active.value = false;
+  isLocked.value = false;
 }
 
 function onInput(event: Event) {
-  const { innerHTML } = event.target as HTMLDivElement
-  emit('update:modelValue', innerHTML)
-  emit('input', event)
+  const { innerHTML } = event.target as HTMLDivElement;
+  emit('update:modelValue', innerHTML);
+  emit('input', event);
 }
 
 function addText(val: string) {
-  let selection = window.getSelection()
+  let selection = window.getSelection();
   if (selection) {
-    selection.removeAllRanges()
+    selection.removeAllRanges();
     // 为空初始化光标
     if (!range.value) {
-      editorRef.value?.focus()
-      range.value = selection.getRangeAt(0)
+      editorRef.value?.focus();
+      range.value = selection.getRangeAt(0);
     }
     // 删除选中内容
-    range.value.deleteContents()
+    range.value.deleteContents();
 
     // 添加内容
-    range.value.insertNode(range.value.createContextualFragment(val))
+    range.value.insertNode(range.value.createContextualFragment(val));
 
-    range.value.collapse(false)
-    selection.addRange(range.value)
+    range.value.collapse(false);
+    selection.addRange(range.value);
 
-    emit('update:modelValue', editorRef.value?.innerHTML || '')
-    const event = editorRef.value as unknown as Event
-    emit('input', event)
+    emit('update:modelValue', editorRef.value?.innerHTML || '');
+    const event = editorRef.value as unknown as Event;
+    emit('input', event);
   }
 }
 
 function clear() {
   if (editorRef.value) {
-    editorRef.value.innerHTML = ''
-    emit('update:modelValue', editorRef.value.innerHTML)
-    active.value = false
+    editorRef.value.innerHTML = '';
+    emit('update:modelValue', editorRef.value.innerHTML);
+    active.value = false;
   }
 }
 
 function focus() {
   nextTick(() => {
-    editorRef.value?.focus()
-  })
+    editorRef.value?.focus();
+  });
 }
 
 const keyDown = (e: KeyboardEvent) => {
   if (e.ctrlKey && e.key == 'Enter') {
     //用户点击了ctrl+enter触发
-    // console.log('ctrl+enter')
     if (isEmpty(props.modelValue.replace(/&nbsp;|<br>| /g, ''))) {
-      UToast({ message: '内容不能为空', type: 'info' })
+      UToast({ message: '内容不能为空', type: 'info' });
     } else {
-      emit('submit')
+      emit('submit');
     }
   } else {
     //用户点击了enter触发
-    // console.log('enter')
   }
-}
+};
 
 // 移除图片
 const removeImg = (val: number) => {
-  imgList?.value?.splice(val, 1)
-}
+  imgList?.value?.splice(val, 1);
+};
 onMounted(() => {
   editorRef.value?.addEventListener('keyup', (event: Event) => {
-    const el = event.target as HTMLDivElement
+    const el = event.target as HTMLDivElement;
     if (el.innerHTML == '<br>') {
-      el.innerHTML = ''
+      el.innerHTML = '';
     }
-  })
-})
+  });
+});
 
 defineExpose({
   addText,
   clear,
   focus,
-  imageRef
-})
+  imageRef,
+});
 </script>
 
 <style lang="scss" scoped>

@@ -3,21 +3,18 @@ import { RouteRecordRaw } from 'vue-router';
 
 const asyncRoutes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    name: 'home',
-    meta: {
-      title: '',
-      icon: '',
-    },
-    component: () => import('@/views/home/index.vue'),
+    path: '/:productId?',
+    name: 'main',
+    component: () => import('@/views/main/index.vue'),
+  },
+  {
+    path: '/:productId?/roadmap',
+    name: 'roadmap',
+    component: () => import('@/views/roadmap/index.vue'),
   },
   {
     path: '/social-login',
     name: '/social-login',
-    meta: {
-      title: '',
-      icon: '',
-    },
     component: () => import('@/views/socialLogin.vue'),
   },
 ];

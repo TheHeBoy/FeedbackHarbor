@@ -2,11 +2,9 @@ import { createRouter, createWebHistory, Router, RouteRecordRaw } from 'vue-rout
 import NProgress from 'nprogress';
 import exceptionRoutes from '@/router/route.exception';
 import asyncRoutes from '@/router/route.async';
-import commonRoutes from '@/router/route.common';
+import { t } from '@wangeditor/editor';
 
 const routes: Array<RouteRecordRaw> = [
-  // 无鉴权的业务路由 ex:登录
-  ...commonRoutes,
   // 带鉴权的业务路由
   ...asyncRoutes,
   // 异常页必须放在路由匹配规则的最后

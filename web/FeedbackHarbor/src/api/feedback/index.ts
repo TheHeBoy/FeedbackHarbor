@@ -1,16 +1,18 @@
 import request from '@/api/http';
+import { FeedbackTagVO } from '../feedback-tag';
 
 export type FeedbackVO = {
   id: number;
   createTime: Date;
   content: string;
   likes: number;
-  feedbackType: number;
+  feedbackTag: FeedbackTagVO;
   uid: number;
   nickname: string;
   avatar: string;
   userType: number;
   commentNum: number;
+  imgs?: string;
 };
 
 export type FeedbackPageParams = {
@@ -20,7 +22,8 @@ export type FeedbackPageParams = {
 
 export type FeedbackCreateVO = {
   content: string;
-  feedbackType: number;
+  feedbackTagId: number;
+  imgs?: string;
 };
 
 export const createFeedback = (data: FeedbackCreateVO) => {

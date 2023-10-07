@@ -1,12 +1,20 @@
 <template>
-  <el-menu :default-active="activeIndex" :active="activeIndex" mode="horizontal" :router="true" :ellipsis="false"
-    class="flex items-center pl-20 pr-20" @select="handleSelect">
+  <el-menu
+    :default-active="activeIndex"
+    :active="activeIndex"
+    mode="horizontal"
+    :router="true"
+    :ellipsis="false"
+    class="flex items-center pl-20 pr-20"
+    @select="handleSelect"
+  >
     <button index="1" class="flex items-center mr-10" @click="homeMenuItem?.$.vnode.el?.click()">
-      <logo class="w-10 h-10 mr-5" />
+      <logo :color="isDark ? '#ffffff' : '#13227a'" class="w-10 h-10 mr-5" />
       <span class="text-xl font-bold">{{ appName }}</span>
     </button>
 
     <el-menu-item ref="homeMenuItem" index="/">首页</el-menu-item>
+    <el-menu-item index="/roadmap">产品计划</el-menu-item>
     <!-- <el-menu-item index="/test">功能投票</el-menu-item> -->
     <div class="flex-grow"></div>
     <div class="flex">
@@ -49,7 +57,6 @@ import { useUserStoreWithOut } from '@/store/user';
 import { logout } from '@/api/login';
 import { isDark, toggleDark } from '@/utils/dark';
 
-
 const { t, availableLocales, locale } = useI18n();
 const userStore = useUserStoreWithOut();
 const layoutStore = useLayoutStoreWithOut();
@@ -62,15 +69,14 @@ const homeMenuItem = ref<InstanceType<typeof ElMenuItem>>();
 const handleSelect = (key: string) => {
   layoutStore.setActiveIndex(key);
 };
-const reload = inject("reload") as Function;
+const reload = inject('reload') as Function;
 
 const logoutClick = () => {
   logout().then(async (data) => {
     await userStore.loginOut();
     reload();
-  })
-}
-
+  });
+};
 
 const toggleLocales = () => {
   const locales = availableLocales;

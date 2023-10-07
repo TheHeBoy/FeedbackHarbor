@@ -51,6 +51,7 @@ const getDetail = async () => {
   formLoading.value = true
   try {
     formData.value = await CodegenApi.getCodegenTable(id)
+    console.log(formData.value)
   } finally {
     formLoading.value = false
   }

@@ -13,7 +13,6 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 /**
  * 用户反馈 Service 接口
  * <p>
- * 芋道源码
  */
 public interface FeedbackService {
 

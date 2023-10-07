@@ -4,6 +4,7 @@ export type createCommentVO = {
   content: string;
   feedbackId: number;
   parentId: number | null;
+  imgs?: string;
 };
 
 export type FeedbackPageParams = {

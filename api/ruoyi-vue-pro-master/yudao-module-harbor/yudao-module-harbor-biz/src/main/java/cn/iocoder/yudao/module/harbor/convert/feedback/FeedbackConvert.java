@@ -14,7 +14,6 @@ import cn.iocoder.yudao.module.harbor.dal.dataobject.feedback.FeedbackDO;
 /**
  * 用户反馈 Convert
  *
- *  芋道源码
  */
 @Mapper
 public interface FeedbackConvert {
@@ -34,6 +33,7 @@ public interface FeedbackConvert {
     PageResult<FeedbackRespVO> convertPage(PageResult<FeedbackDO> page);
 
     PageResult<AppFeedbackRespVO> convertPageApp(PageResult<FeedbackDO> page);
+    AppFeedbackRespVO convertPageApp(FeedbackDO page);
 
     List<FeedbackExcelVO> convertList02(List<FeedbackDO> list);
 

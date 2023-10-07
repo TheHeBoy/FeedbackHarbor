@@ -12,6 +12,7 @@ const reload = () => {
   isRouterAlive.value = false;
   nextTick(() => {
     isRouterAlive.value = true;
+    userStore.setUserInfoAction();
   });
 };
 
@@ -19,7 +20,7 @@ const reload = () => {
 provide("reload", reload);
 //隐藏头部
 provide("headHide", headHide);
-//设置用户信息，避免刷新丢失
+//设置用户信息，避免页面刷新丢失
 userStore.setUserInfoAction();
 
 </script>
@@ -27,7 +28,9 @@ userStore.setUserInfoAction();
 <template>
   <div v-if="isRouterAlive">
     <el-config-provider>
-      <TheHead v-if="isHeadAlive"></TheHead>
+      <el-affix position="top" :offset="0">
+        <TheHead v-if="isHeadAlive"></TheHead>
+      </el-affix>
       <div class="m-5">
         <router-view></router-view>
       </div>

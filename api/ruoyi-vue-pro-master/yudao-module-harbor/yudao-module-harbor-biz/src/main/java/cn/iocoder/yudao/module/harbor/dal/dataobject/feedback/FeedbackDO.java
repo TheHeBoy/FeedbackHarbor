@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.*;
 /**
  * 用户反馈 DO
  *
- *  芋道源码
  */
 @TableName("harbor_feedback")
 @KeySequence("harbor_feedback_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -33,7 +32,11 @@ public class FeedbackDO extends UserBaseDO {
      */
     private Long likes;
     /**
-     * 反馈类型
+     * 反馈标签id
      */
-    private Integer feedbackType;
+    private Long feedbackTagId;
+    /**
+     * 图片集，以||分隔
+     */
+    private String imgs;
 }

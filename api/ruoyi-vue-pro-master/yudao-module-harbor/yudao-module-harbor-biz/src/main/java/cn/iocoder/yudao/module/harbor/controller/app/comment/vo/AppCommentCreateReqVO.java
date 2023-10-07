@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.validation.constraints.*;
+
 @Schema(description = "App - 评论创建 Request VO")
 @Data
 @ToString(callSuper = true)
@@ -13,8 +15,14 @@ public class AppCommentCreateReqVO {
     private Long parentId;
 
     @Schema(description = "反馈id")
+    @NotNull
     private Long feedbackId;
 
     @Schema(description = "内容")
+    @NotBlank
+    @Size(min = 1,max = 500)
     private String content;
+
+    @Schema(description = "反馈图片集")
+    private String imgs;
 }

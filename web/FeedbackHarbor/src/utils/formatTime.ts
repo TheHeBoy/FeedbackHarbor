@@ -124,7 +124,7 @@ export function formatAxis(param: Date): string {
  * @param ms 毫秒
  * @returns {string} 字符串
  */
-export function formatPast2(ms) {
+export function formatPast2(ms: number) {
   const day = Math.floor(ms / (24 * 60 * 60 * 1000));
   const hour = Math.floor(ms / (60 * 60 * 1000) - day * 24);
   const minute = Math.floor(ms / (60 * 1000) - day * 24 * 60 - hour * 60);

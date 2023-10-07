@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.harbor.controller.app.feedback.vo;
 
+import cn.iocoder.yudao.module.harbor.controller.app.feedbacktag.vo.AppFeedbackTagRespVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -21,8 +22,8 @@ public class AppFeedbackRespVO {
     @Schema(description = "点赞数")
     private Long likes;
 
-    @Schema(description = "反馈类型", example = "1")
-    private Integer feedbackType;
+    @Schema(description = "反馈标签id")
+    private AppFeedbackTagRespVO feedbackTag;
 
     @Schema(description = "用户id", example = "16979")
     private Long uid;
@@ -35,4 +36,7 @@ public class AppFeedbackRespVO {
 
     @Schema(description = "评论数")
     private Long commentNum;
+
+    @Schema(description = "评论图片集")
+    private String imgs;
 }

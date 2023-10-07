@@ -24,13 +24,13 @@ public interface FeedbackMapper extends BaseMapperX<FeedbackDO> {
                 .eqIfPresent(FeedbackDO::getUid, reqVO.getUid())
                 .eqIfPresent(FeedbackDO::getContent, reqVO.getContent())
                 .eqIfPresent(FeedbackDO::getLikes, reqVO.getLikes())
-                .eqIfPresent(FeedbackDO::getFeedbackType, reqVO.getFeedbackType())
+                .eqIfPresent(FeedbackDO::getFeedbackTagId, reqVO.getFeedbackTagId())
                 .orderByDesc(FeedbackDO::getId));
     }
 
     default PageResult<FeedbackDO> selectPage(AppFeedbackPageReqVO reqVO) {
         LambdaQueryWrapperX<FeedbackDO> wrapperX = new LambdaQueryWrapperX<FeedbackDO>()
-                .eqIfPresent(FeedbackDO::getFeedbackType, reqVO.getFeedbackType());
+                .eqIfPresent(FeedbackDO::getFeedbackTagId, reqVO.getFeedbackType());
 
         // 添加排序
         if (ObjectUtil.equal(reqVO.getOrder(), FeedbackOrderEnum.LIKES.getCode())) {
@@ -48,7 +48,7 @@ public interface FeedbackMapper extends BaseMapperX<FeedbackDO> {
                 .eqIfPresent(FeedbackDO::getUid, reqVO.getUid())
                 .eqIfPresent(FeedbackDO::getContent, reqVO.getContent())
                 .eqIfPresent(FeedbackDO::getLikes, reqVO.getLikes())
-                .eqIfPresent(FeedbackDO::getFeedbackType, reqVO.getFeedbackType())
+                .eqIfPresent(FeedbackDO::getFeedbackTagId, reqVO.getFeedbackTagId())
                 .orderByDesc(FeedbackDO::getId));
     }
 

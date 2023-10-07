@@ -3,7 +3,6 @@ import showCodeMessage from '@/api/code';
 import { formatJsonToUrlParams, instanceObject } from '@/utils/format';
 import { getAccessToken } from '@/utils/auth';
 import { useloginStoreWithOut } from '@/store/login';
-import { ElMessage } from 'element-plus';
 
 const BASE_PREFIX = import.meta.env.VITE_API_BASEURL;
 // 请求白名单，无须token的接口
@@ -55,6 +54,9 @@ axiosInstance.interceptors.response.use(
     } else if (code == 500) {
       ElMessage.error(showCodeMessage(data.msg));
       return Promise.reject(data.msg)
+    } else if (code == 400) {
+      ElMessage.error(showCodeMessage(data.msg));
+      return Promise.reject(data.msg)
     } else if (code == 0) {
       return data.data;
     }
@@ -86,7 +88,7 @@ const service = {
     return axiosInstance.delete(url, data);
   },
 
-  upload: (url: string, file: FormData | File) =>
+  upload: (url: string, file: FormData | File): Promise<any> =>
     axiosInstance.post(url, file, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),

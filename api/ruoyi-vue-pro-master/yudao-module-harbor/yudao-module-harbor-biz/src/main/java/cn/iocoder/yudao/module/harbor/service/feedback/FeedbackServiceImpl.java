@@ -3,12 +3,15 @@ package cn.iocoder.yudao.module.harbor.service.feedback;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
+import cn.iocoder.yudao.module.harbor.convert.feedbacktag.FeedbackTagConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
+import cn.iocoder.yudao.module.harbor.dal.dataobject.feedbacktag.FeedbackTagDO;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
 import cn.iocoder.yudao.module.harbor.job.FeedbackLikeJob;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import cn.iocoder.yudao.module.harbor.service.comment.CommentService;
+import cn.iocoder.yudao.module.harbor.service.feedbacktag.FeedbackTagService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -46,6 +49,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Resource
     private CommentService commentService;
+
+    @Resource
+    private FeedbackTagService feedbackTagService;
+
+    @Resource
+    private FeedbackTagConvert feedbackTagConvert;
 
     @Override
     public Long createFeedback(FeedbackCreateReqVO createReqVO) {
@@ -111,11 +120,26 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public PageResult<AppFeedbackRespVO> getFeedbackPage(AppFeedbackPageReqVO pageVO) {
-        PageResult<AppFeedbackRespVO> pageResult = FeedbackConvert.INSTANCE.convertPageApp(feedbackMapper.selectPage(pageVO));
-        pageResult.getList().forEach(e -> {
+        PageResult<FeedbackDO> entitiesPage = feedbackMapper.selectPage(pageVO);
+        ArrayList<AppFeedbackRespVO> respVOS = new ArrayList<>();
+        for (FeedbackDO feedbackDO : entitiesPage.getList()) {
+            AppFeedbackRespVO e = FeedbackConvert.INSTANCE.convertPageApp(feedbackDO);
+
+            // 合并缓存中的点赞数
             e.setLikes(e.getLikes() + getLikeCount(e.getId()));
+
+            // 评论数量
             e.setCommentNum(commentService.getCommentNum(e.getId()));
-        });
+
+            // 反馈标签
+            FeedbackTagDO feedbackTag = feedbackTagService.getFeedbackTag(feedbackDO.getFeedbackTagId());
+            e.setFeedbackTag(feedbackTagConvert.convertApp(feedbackTag));
+
+            respVOS.add(e);
+        }
+        PageResult<AppFeedbackRespVO> pageResult = new PageResult<>();
+        pageResult.setTotal(entitiesPage.getTotal());
+        pageResult.setList(respVOS);
         return pageResult;
     }
 

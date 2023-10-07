@@ -27,7 +27,7 @@ public class FeedbackPageReqVO extends PageParam {
     @Schema(description = "点赞数")
     private Long likes;
 
-    @Schema(description = "反馈类型", example = "1")
-    private Integer feedbackType;
+    @Schema(description = "反馈标签id")
+    private Long feedbackTagId;
 
 }

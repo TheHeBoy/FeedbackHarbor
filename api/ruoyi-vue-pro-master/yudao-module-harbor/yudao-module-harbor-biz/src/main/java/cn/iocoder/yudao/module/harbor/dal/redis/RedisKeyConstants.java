@@ -3,7 +3,8 @@ package cn.iocoder.yudao.module.harbor.dal.redis;
 /**
  * Harbor Redis Key 枚举类
  *
- *
+ * @author hehong
+ * @date 2023-09-09
  */
 public interface RedisKeyConstants {
 

@@ -40,4 +40,8 @@ public class CommentDO extends UserBaseDO {
      * 点赞数
      */
     private Long likes;
+    /**
+     * 图片集，以||分隔
+     */
+    private String imgs;
 }
