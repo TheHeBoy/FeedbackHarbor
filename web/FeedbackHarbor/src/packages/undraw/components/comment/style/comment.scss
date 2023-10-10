@@ -5,11 +5,11 @@
   // 设置的边框和内边距的值是包含在width内
   box-sizing: border-box;
   padding: 0 25px;
-  padding-bottom: 20px;
+  padding-bottom: 15px;
   margin-top: 15px;
 
   .comment-form {
-    padding-top: 20px;
+    padding-top: 2px;
     .header {
       .header-title {
         font-size: 18px;
@@ -29,7 +29,7 @@
   }
 
   .comment-list-wrapper {
-    padding: 40px 0 16px;
+    padding: 0 0 16px;
     .title {
       display: flex;
       align-items: center;

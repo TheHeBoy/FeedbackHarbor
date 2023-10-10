@@ -8,6 +8,9 @@ $padding: 4px 10px !default;
   color: var(--u-text-color-regular);
   border-radius: 4px;
   font-size: 14px;
+  max-height: 400px;
+  overflow: auto;
+  overflow-x: hidden;
 
   .rich-input {
     min-height: $minHeight;
@@ -27,14 +30,10 @@ $padding: 4px 10px !default;
     color: var(--u-text-color-placeholder);
   }
   .image-preview-box {
-    display: flex; 
+    display: flex;
     padding: 0 12px;
     .image-preview {
       position: relative;
-      img {
-        height: 64px;
-        min-width: 64px;
-      }
       .clean-btn {
         position: absolute;
         top: 0;
@@ -45,7 +44,7 @@ $padding: 4px 10px !default;
         }
       }
       .clean-btn:hover {
-        opacity: .8;
+        opacity: 0.8;
       }
     }
   }
@@ -54,7 +53,3 @@ $padding: 4px 10px !default;
   border-color: var(--u-color-primary);
   background: var(--u-bg-color);
 }
-
-// .active .rich-input {
-//   background: url('/static/img/commentBack.webp') no-repeat 95% -10px/19%;
-// }

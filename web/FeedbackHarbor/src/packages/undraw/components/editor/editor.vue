@@ -8,12 +8,13 @@
       @focus="onFocus"
       @input="onInput"
       @blur="onBlur"
+      @paste="textPlain"
       @keydown.enter="keyDown"
       v-html="text"
     ></div>
-    <div ref="imageRef" class="image-preview-box">
-      <div v-for="(url, index) in imgList" :key="index" class="image-preview">
-        <img :src="url" alt="" />
+    <div v-if="imgList.length > 0" ref="imageRef" class="image-preview-box flex-wrap">
+      <div v-for="(url, index) in imgUrls" :key="index" class="image-preview mr-1">
+        <el-image :src="url" class="w-16 h-16 mt-1" fit="fill" />
         <div class="clean-btn" @click="removeImg(index)">
           <svg
             data-v-48a7e3c5=""
@@ -36,12 +37,13 @@
           </svg>
         </div>
       </div>
+      <el-text type="info" class="!self-end">({{ imgList.length }}/{{ maxImg }})</el-text>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
-import { isEmpty } from '~/util';
+import { computed, nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { isEmpty, createObjectURL } from '~/util';
 import UToast from '../toast';
 
 defineOptions({
@@ -52,22 +54,27 @@ interface Props {
   placeholder?: string;
   modelValue: string;
   minHeight?: number;
-  imgList?: string[];
+  imgList?: File[];
+  // 字数限制
+  maxWords?: number;
+  maxImg?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   minHeight: 64,
+  maxWords: 500,
+  maxImg: 6,
+  imgList: () => [],
 });
 
 const range = ref<Range>();
 const editorRef = ref<HTMLDivElement>();
-const text = ref();
+const text = ref<string>();
 const isLocked = ref(false);
 const active = ref(false);
 const imageRef = ref<HTMLDivElement>();
 
-const { imgList } = toRefs(props);
-
+const imgUrls = computed(() => props.imgList.map((e) => createObjectURL(e)));
 const minHeight = computed(() => props.minHeight + 'px');
 
 const padding = computed(() => (props.minHeight == 30 ? '4px 10px' : '8px 12px'));
@@ -86,6 +93,18 @@ watch(
     if (!isLocked.value) text.value = val;
   },
 );
+
+function textPlain(e: any) {
+  e.preventDefault();
+  let text: string;
+  let clp = (e.originalEvent || e).clipboardData;
+  if (clp) {
+    text = clp.getData('text/plain') || '';
+    if (text !== '') {
+      document.execCommand('insertText', false, text);
+    }
+  }
+}
 
 function onFocus(event: Event) {
   emit('focus', event);

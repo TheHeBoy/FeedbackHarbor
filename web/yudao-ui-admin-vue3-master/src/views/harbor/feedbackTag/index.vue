@@ -26,15 +26,6 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="标签顺序" prop="sort">
-        <el-input
-          v-model="queryParams.sort"
-          placeholder="请输入标签顺序"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
       <el-form-item label="创建时间" prop="createTime">
         <el-date-picker
           v-model="queryParams.createTime"
@@ -76,11 +67,7 @@
       <el-table-column label="标签名中文" align="center" prop="nameCh" />
       <el-table-column label="标签名英语" align="center" prop="nameEn" />
       <el-table-column label="标签顺序" align="center" prop="sort" />
-      <el-table-column label="标签颜色" align="center" prop="color">
-        <template #default="scope">
-          <div :class="'bg-[' + scope.row.color + '] w-50 inline-block'">{{ scope.row.color }}</div>
-        </template>
-      </el-table-column>
+      <el-table-column label="标签颜色" align="center" prop="color" />
       <el-table-column
         label="创建时间"
         prop="createTime"
@@ -137,7 +124,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   id: null,
-  createTime: [],
+  createTime: [] as any,
   nameCh: null,
   nameEn: null,
   sort: null

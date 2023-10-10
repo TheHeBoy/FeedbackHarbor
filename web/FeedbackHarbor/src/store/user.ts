@@ -16,6 +16,7 @@ export const useUserStore = defineStore('app-user', {
     async setUserInfoAction() {
       let token = getAccessToken();
       if (!token) {
+        this.resetState();
         return false;
       }
 

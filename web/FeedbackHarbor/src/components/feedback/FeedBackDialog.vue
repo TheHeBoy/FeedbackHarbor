@@ -1,11 +1,11 @@
 <template>
-  <el-dialog v-model="isShow" width="700" title="反馈" :destroy-on-close="true">
+  <el-dialog v-model="isShow" width="700" title="反馈内容" :destroy-on-close="true">
     <el-form ref="ruleFormRef" hide-required-asterisk label-position="top" :model="modelData">
       <el-form-item label="反馈标签" prop="feedbackType">
         <el-radio-group v-model="modelData.feedbackTagId">
           <el-radio-button v-for="tag in feedbackTags" :label="tag.id">
             <template #default>
-              <i-mdi-tag-multiple :color="tag.color" class="w-6 h-6 mr-1" /> {{ tag.nameCh }}
+              <i-mdi-tag-multiple :color="tag.color" class="inline w-6 h-6 mr-1" /> {{ tag.nameCh }}
             </template>
           </el-radio-button>
         </el-radio-group>
@@ -44,13 +44,6 @@ const modelData = reactive({
 });
 
 const submit = async ({ content, parentId, reply, files, clear }: SubmitParam2Api) => {
-  console.log(content);
-
-  if (content.trim().length > 500) {
-    ElMessage.warning('反馈内容不能超过500字符');
-    return;
-  }
-
   if (content.trim().length < 5) {
     ElMessage.warning('反馈内容不能少于5字符');
     return;

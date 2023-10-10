@@ -29,7 +29,7 @@
             </el-avatar>
           </button>
         </div>
-        <InputBox placeholder="输入评论（Enter换行，Ctrl + Enter发送）" content-btn="发表评论" />
+        <InputBox placeholder="输入评论" content-btn="发表评论" />
       </div>
     </div>
     <!-- <div class="hot-list"></div> -->

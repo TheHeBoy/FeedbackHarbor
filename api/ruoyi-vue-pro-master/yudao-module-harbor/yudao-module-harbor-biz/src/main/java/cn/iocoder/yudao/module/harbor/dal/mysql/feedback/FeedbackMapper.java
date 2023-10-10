@@ -33,7 +33,7 @@ public interface FeedbackMapper extends BaseMapperX<FeedbackDO> {
                 .eqIfPresent(FeedbackDO::getFeedbackTagId, reqVO.getFeedbackType());
 
         // 添加排序
-        if (ObjectUtil.equal(reqVO.getOrder(), FeedbackOrderEnum.LIKES.getCode())) {
+        if (ObjectUtil.equal(reqVO.getOrder(), FeedbackOrderEnum.RECOMMEND.getCode())) {
             wrapperX.orderByDesc(FeedbackDO::getLikes);
         } else {
             wrapperX.orderByDesc(FeedbackDO::getId);

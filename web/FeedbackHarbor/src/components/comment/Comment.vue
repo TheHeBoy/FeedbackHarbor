@@ -11,7 +11,7 @@
     </u-comment>
     <div class="w-full text-center">
       <p v-if="loading">加载中</p>
-      <el-button v-if="!disabled" @click="more" link type="primary" class="m-auto">加载更多</el-button>
+      <el-button v-if="!disabled" @click="more" link type="primary">加载更多</el-button>
     </div>
   </div>
 </template>
@@ -21,7 +21,7 @@ import '~/styles/index.scss';
 import emoji from '@/types/emoji';
 import { PropType, reactive } from 'vue';
 import { createComment, createCommentVO, getCommentPage } from '@/api/comment';
-import { CommentApi, ConfigApi, SubmitParamApi, UToast, createObjectURL } from '~/index';
+import { CommentApi, ConfigApi, SubmitParamApi } from '~/index';
 import { useUserStoreWithOut } from '@/store/user';
 import { FeedbackVO } from '@/api/feedback';
 import { formatPast } from '@/utils/formatTime';
@@ -55,17 +55,12 @@ const config = reactive<ConfigApi>({
 let params = { pageNo: 1, pageSize: 5, feedbackId: props.vModel.id };
 
 const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
-  if (content.trim().length > 500) {
-    ElMessage.warning('反馈内容不能超过500字符');
-    return;
-  }
-
   if (content.trim().length == 0) {
-    ElMessage.warning('反馈内容不能为空');
+    ElMessage.warning('评论不能为空');
     return;
   }
 
-  let fileUrls: string;
+  let fileUrls: string | undefined;
   if (files && files.length > 0) {
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
@@ -77,8 +72,8 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
   const createCommentVO: createCommentVO = {
     content: content,
     feedbackId: props.vModel.id,
-    parentId: parentId == null ? null : Number(parentId),
-    imgs: undefined,
+    parentId: parentId ? Number(parentId) : undefined,
+    imgs: fileUrls,
   };
 
   createComment(createCommentVO).then((data) => {
@@ -99,7 +94,8 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
       reply: null,
     };
     finish(comment);
-    UToast({ message: '评论成功!', type: 'info' });
+    ElMessage.success('评论成功!');
+    props.vModel.commentNum++;
   });
 };
 

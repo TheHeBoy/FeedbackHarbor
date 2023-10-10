@@ -12,8 +12,8 @@ import javax.validation.constraints.*;
 public class AppFeedbackCreateReqVO {
 
     @Schema(description = "内容")
-    @NotEmpty
-    @Size(min = 5,max = 500)
+    @NotBlank
+    @Size(min = 5,max = 3000) //因为有换行符等，就设置为 &nbsp;的长度6 * 500
     private String content;
 
     @Schema(description = "反馈标签id")

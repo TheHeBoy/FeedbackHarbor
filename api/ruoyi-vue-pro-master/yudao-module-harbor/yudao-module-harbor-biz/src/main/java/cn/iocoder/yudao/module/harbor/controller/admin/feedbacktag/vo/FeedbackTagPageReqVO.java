@@ -24,8 +24,4 @@ public class FeedbackTagPageReqVO extends PageParam {
 
     @Schema(description = "标签名英语")
     private String nameEn;
-
-    @Schema(description = "标签顺序")
-    private Long sort;
-
 }

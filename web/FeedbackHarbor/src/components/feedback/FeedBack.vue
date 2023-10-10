@@ -11,23 +11,25 @@
           <div class="flex justify-between">
             <span>{{ vModel.nickname }}</span>
             <div>
-              <i-mdi-tag-multiple :color="vModel.feedbackTag.color" class="w-5 h-5 mr-1" />
+              <i-mdi-tag-multiple :color="vModel.feedbackTag.color" class="inline w-5 h-5 mr-1" />
               <span class="text-sm"> {{ vModel.feedbackTag.nameCh }}</span>
             </div>
           </div>
           <div class="mt-2">
-            <div v-html="contents"></div>
-            <div class="imgbox" style="display: flex">
-              <template v-for="(url, index) in imgList" :key="index">
-                <ElImage
-                  :src="url"
-                  style="height: 72px; padding: 8px 4px"
-                  lazy
-                  :preview-src-list="imgList"
-                  :initial-index="index"
-                ></ElImage>
-              </template>
-            </div>
+            <u-fold unfold line="10">
+              <div v-html="contents"></div>
+              <div class="flex flex-wrap">
+                <template v-for="(url, index) in imgList" :key="index">
+                  <ElImage
+                    :src="url"
+                    class="w-16 h-16 mr-1 mt-1"
+                    lazy
+                    :preview-src-list="imgList"
+                    :initial-index="index"
+                  ></ElImage>
+                </template>
+              </div>
+            </u-fold>
           </div>
           <div class="flex justify-between">
             <span class="text-sm text-slate-400 mt-1">{{ formatPast(vModel.createTime, 'YYYY-MM-DD HH:mm') }}</span>

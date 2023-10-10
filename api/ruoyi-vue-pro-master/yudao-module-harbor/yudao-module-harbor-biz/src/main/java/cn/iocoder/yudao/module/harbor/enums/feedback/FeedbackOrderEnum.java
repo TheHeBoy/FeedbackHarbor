@@ -17,7 +17,7 @@ import static cn.hutool.core.util.ArrayUtil.firstMatch;
 @Getter
 public enum FeedbackOrderEnum implements IntArrayValuable {
 
-    LIKES(0, "点赞"),
+    RECOMMEND(0, "推荐"),
     NEWEST(1, "最新"),
     ;
 

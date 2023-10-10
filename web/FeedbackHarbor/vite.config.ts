@@ -20,7 +20,7 @@ export default defineConfig((env) => {
         },
         {
           find: '~',
-          replacement: resolve('packages/undraw')
+          replacement: resolve('src/packages/undraw')
         }
       ],
     },

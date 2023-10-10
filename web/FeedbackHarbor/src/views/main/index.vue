@@ -1,26 +1,21 @@
 <template>
-  <div class="container w-full mx-auto main">
-    <div class="mx-auto flex w-[70%] min-w-250">
-      <div class="w-full">
+  <div class="container w-full mx-auto">
+    <div class="mx-auto flex w-[70%] min-w-200">
+      <div class="w-[75%]">
         <el-card class="box-card">
           <OrderTag class="h-10" @change="tagChange" />
         </el-card>
         <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-          <div v-for="feedback in feedbackList" :key="feedback.id" class="mt-5">
-            <FeedBack
-              @like="likeClick(feedback)"
-              :feedback-like-ids="feedbackLikeIds"
-              :v-model="feedback"
-              class="w-full"
-            />
+          <div v-for="feedback in feedbackList" :key="feedback.id" class="mt-4">
+            <FeedBack @like="likeClick(feedback)" :feedback-like-ids="feedbackLikeIds" :v-model="feedback" />
           </div>
         </div>
         <p v-if="loading">Loading...</p>
       </div>
-      <div class="ml-6">
+      <div class="pl-4 w-[25%] min-w-60">
         <el-affix position="top" :offset="70">
           <el-card class="box-card">
-            <el-button class="w-60 h-10" type="primary" @click="feedbackClick()">我要反馈</el-button>
+            <el-button class="w-full h-10" type="primary" @click="feedbackClick()">我要反馈</el-button>
           </el-card>
         </el-affix>
       </div>
@@ -55,7 +50,6 @@ const load = () => {
 };
 
 const submitFeedback = (data: FeedbackVO) => {
-  console.log(data);
   feedbackList.value.unshift(data);
 };
 

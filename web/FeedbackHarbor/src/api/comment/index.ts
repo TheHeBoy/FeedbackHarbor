@@ -3,7 +3,7 @@ import request from '@/api/http';
 export type createCommentVO = {
   content: string;
   feedbackId: number;
-  parentId: number | null;
+  parentId?: number;
   imgs?: string;
 };
 

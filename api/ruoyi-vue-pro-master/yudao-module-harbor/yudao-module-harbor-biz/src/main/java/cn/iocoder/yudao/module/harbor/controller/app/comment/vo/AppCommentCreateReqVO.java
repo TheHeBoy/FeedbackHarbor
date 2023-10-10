@@ -20,7 +20,7 @@ public class AppCommentCreateReqVO {
 
     @Schema(description = "内容")
     @NotBlank
-    @Size(min = 1,max = 500)
+    @Size(min = 1,max = 3000)//因为有换行符等，就设置为 &nbsp;的长度6 * 500
     private String content;
 
     @Schema(description = "反馈图片集")
