@@ -179,7 +179,7 @@ const keyDown = (e: KeyboardEvent) => {
 
 // 移除图片
 const removeImg = (val: number) => {
-  imgList?.value?.splice(val, 1);
+  props.imgList.splice(val, 1);
 };
 onMounted(() => {
   editorRef.value?.addEventListener('keyup', (event: Event) => {
