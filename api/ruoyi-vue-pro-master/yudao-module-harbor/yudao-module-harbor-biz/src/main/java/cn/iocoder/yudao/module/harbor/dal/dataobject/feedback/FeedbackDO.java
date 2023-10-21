@@ -1,6 +1,8 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.feedback;
 
+import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.UserBaseDO;
+import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackStateEnum;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
 
@@ -39,4 +41,10 @@ public class FeedbackDO extends UserBaseDO {
      * 图片集，以||分隔
      */
     private String imgs;
+
+    /**
+     * 反馈状态
+     * 枚举 {@link FeedbackStateEnum}
+     */
+    private Integer state;
 }

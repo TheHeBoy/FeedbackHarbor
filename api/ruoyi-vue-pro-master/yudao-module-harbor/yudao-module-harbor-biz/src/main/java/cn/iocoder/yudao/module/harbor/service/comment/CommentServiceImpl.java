@@ -1,9 +1,7 @@
 package cn.iocoder.yudao.module.harbor.service.comment;
 
-import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentCreateReqVO;
-import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentPageReqVO;
-import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentPageRespVO;
-import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.ReplyVO;
+import cn.iocoder.yudao.framework.common.pojo.PageParam;
+import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
@@ -79,19 +77,17 @@ public class CommentServiceImpl implements CommentService {
     public PageResult<AppCommentPageRespVO> getCommentPage(AppCommentPageReqVO pageReqVO) {
         PageResult<AppCommentPageRespVO> commentPage = CommentConvert.INSTANCE.convertPageApp(commentMapper.selectPage(pageReqVO));
 
-        //一级评论
+        // 一级评论
         for (AppCommentPageRespVO commentParent : commentPage.getList()) {
-            List<CommentDO> commentDOS = commentMapper.selectByPid(commentParent.getId());
-            //回复列表
-            List<ReplyVO> replies = commentDOS.stream().map(CommentConvert.INSTANCE::convertReply).collect(Collectors.toList());
-
-            //添加点赞数
+            // 添加点赞数
             commentParent.setLikes(commentParent.getLikes() + getLikeCount(commentParent.getId()));
-            replies.forEach(e -> {
-                e.setLikes(e.getLikes() + getLikeCount(e.getId()));
-            });
 
-            commentParent.setReplies(replies);
+            // 添加回复
+            AppReplyPageReqVO appReplyPageReqVO = new AppReplyPageReqVO();
+            appReplyPageReqVO.setCommentId(commentParent.getId());
+            appReplyPageReqVO.setPageSize(pageReqVO.getPageSize());
+            appReplyPageReqVO.setPageNo(0);
+            commentParent.setReplyPage(getReplyPage(appReplyPageReqVO));
         }
         return commentPage;
     }
@@ -99,6 +95,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long getCommentNum(Long feedbackId) {
         return commentMapper.selectCount(CommentDO::getFeedbackId, feedbackId);
+    }
+
+    @Override
+    public PageResult<ReplyVO> getReplyPage(AppReplyPageReqVO pageVO) {
+        PageResult<CommentDO> commentDOPageResult = commentMapper.selectReplyPage(pageVO, pageVO.getCommentId());
+
+        // 填充点赞数
+        commentDOPageResult.getList().forEach(e -> {
+            e.setLikes(e.getLikes() + getLikeCount(e.getId()));
+        });
+
+        return CommentConvert.INSTANCE.convertReplyPage(commentDOPageResult);
     }
 
     @Override

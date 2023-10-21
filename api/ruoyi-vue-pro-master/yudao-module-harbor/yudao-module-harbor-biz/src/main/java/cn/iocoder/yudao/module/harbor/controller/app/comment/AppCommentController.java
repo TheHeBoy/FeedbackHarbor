@@ -39,4 +39,10 @@ public class AppCommentController {
     public CommonResult<PageResult<AppCommentPageRespVO>> getCommentPage(@Valid AppCommentPageReqVO pageVO) {
         return success(commentService.getCommentPage(pageVO));
     }
+
+    @GetMapping("/replyPage")
+    @Operation(summary = "获得回复分页")
+    public CommonResult<PageResult<ReplyVO>> getReplyPage(@Valid AppReplyPageReqVO pageVO) {
+        return success(commentService.getReplyPage(pageVO));
+    }
 }

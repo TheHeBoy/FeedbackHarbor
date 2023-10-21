@@ -22,7 +22,6 @@ public interface FeedbackTagMapper extends BaseMapperX<FeedbackTagDO> {
                 .betweenIfPresent(FeedbackTagDO::getCreateTime, reqVO.getCreateTime())
                 .eqIfPresent(FeedbackTagDO::getNameCh, reqVO.getNameCh())
                 .eqIfPresent(FeedbackTagDO::getNameEn, reqVO.getNameEn())
-                .eqIfPresent(FeedbackTagDO::getSort, reqVO.getSort())
                 .orderByDesc(FeedbackTagDO::getId));
     }
 

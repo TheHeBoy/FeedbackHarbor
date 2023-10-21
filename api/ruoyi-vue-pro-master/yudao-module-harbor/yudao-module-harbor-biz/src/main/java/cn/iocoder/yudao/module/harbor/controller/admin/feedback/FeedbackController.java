@@ -43,14 +43,6 @@ public class FeedbackController {
         return success(feedbackService.createFeedback(createReqVO));
     }
 
-    @PutMapping("/update")
-    @Operation(summary = "更新用户反馈")
-    @PreAuthorize("@ss.hasPermission('uservoice:feedback:update')")
-    public CommonResult<Boolean> updateFeedback(@Valid @RequestBody FeedbackUpdateReqVO updateReqVO) {
-        feedbackService.updateFeedback(updateReqVO);
-        return success(true);
-    }
-
     @DeleteMapping("/delete")
     @Operation(summary = "删除用户反馈")
     @Parameter(name = "id", description = "编号", required = true)

@@ -29,7 +29,6 @@ public class AppUserDO extends TenantBaseDO {
     private Long id;
     /**
      * 用户类型
-     *
      * 枚举 {@link AppUserTypeEnum}
      */
     private Integer userType;
@@ -55,7 +54,6 @@ public class AppUserDO extends TenantBaseDO {
     private String nickname;
     /**
      * 用户状态
-     *
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;

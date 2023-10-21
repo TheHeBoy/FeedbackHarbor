@@ -1,0 +1,19 @@
+{
+  "name": "@harbor/components",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "@harbor/apis": "workspace:^",
+    "element-plus": "^2.2.0",
+    "vue": "^3.2.31"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.7",
+    "sass": "^1.49.7",
+    "typescript": "^4.9.3",
+    "unplugin-vue-define-options": "^1.3.3",
+    "vite-svg-loader": "^3.6.0",
+    "vue-tsc": "^1.2.0"
+  }
+}

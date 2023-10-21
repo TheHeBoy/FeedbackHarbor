@@ -66,15 +66,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void updateFeedback(FeedbackUpdateReqVO updateReqVO) {
-        // 校验存在
-        validateFeedbackExists(updateReqVO.getId());
-        // 更新
-        FeedbackDO updateObj = FeedbackConvert.INSTANCE.convert(updateReqVO);
-        feedbackMapper.updateById(updateObj);
-    }
-
-    @Override
     public void deleteFeedback(Long id) {
         // 校验存在
         validateFeedbackExists(id);

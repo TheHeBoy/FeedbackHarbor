@@ -31,10 +31,11 @@ public interface CommentConvert {
     List<CommentRespVO> convertList(List<CommentDO> list);
 
     PageResult<CommentRespVO> convertPage(PageResult<CommentDO> page);
+    PageResult<ReplyVO> convertReplyPage(PageResult<CommentDO> page);
 
     PageResult<AppCommentPageRespVO> convertPageApp(PageResult<CommentDO> page);
 
-    ReplyVO convertReply(CommentDO bean);
+    List<ReplyVO> convertListReply(List<CommentDO> list);
 
     List<CommentExcelVO> convertList02(List<CommentDO> list);
 

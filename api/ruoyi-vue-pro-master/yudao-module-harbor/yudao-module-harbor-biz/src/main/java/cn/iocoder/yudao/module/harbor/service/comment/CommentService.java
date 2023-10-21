@@ -4,9 +4,7 @@ import java.util.*;
 import javax.validation.*;
 
 import cn.iocoder.yudao.module.harbor.controller.admin.comment.vo.*;
-import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentCreateReqVO;
-import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentPageReqVO;
-import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentPageRespVO;
+import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.comment.CommentDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 
@@ -67,4 +65,11 @@ public interface CommentService {
      * @return int
      */
     Long getCommentNum(Long feedbackId);
+
+    /**
+     * 回复分页
+     * @param pageVO 分页参数
+     * @return 分页结果
+     */
+    PageResult<ReplyVO> getReplyPage(AppReplyPageReqVO pageVO);
 }

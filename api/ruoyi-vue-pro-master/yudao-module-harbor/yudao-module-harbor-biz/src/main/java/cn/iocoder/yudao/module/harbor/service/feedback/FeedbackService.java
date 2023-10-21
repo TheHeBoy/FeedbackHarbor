@@ -25,13 +25,6 @@ public interface FeedbackService {
     Long createFeedback(@Valid FeedbackCreateReqVO createReqVO);
 
     /**
-     * 更新用户反馈
-     *
-     * @param updateReqVO 更新信息
-     */
-    void updateFeedback(@Valid FeedbackUpdateReqVO updateReqVO);
-
-    /**
      * 删除用户反馈
      *
      * @param id 编号
