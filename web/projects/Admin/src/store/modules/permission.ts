@@ -34,7 +34,7 @@ export const usePermissionStore = defineStore('permission', {
     async generateRoutes(): Promise<unknown> {
       return new Promise<void>(async (resolve) => {
         // 获得菜单列表，它在登录的时候，setUserInfoAction 方法中已经进行获取
-        let res: AppCustomRouteRecordRaw[];
+        let res: AppCustomRouteRecordRaw[] = [];
         if (wsCache.get(CACHE_KEY.ROLE_ROUTERS)) {
           res = wsCache.get(CACHE_KEY.ROLE_ROUTERS) as AppCustomRouteRecordRaw[];
         }
