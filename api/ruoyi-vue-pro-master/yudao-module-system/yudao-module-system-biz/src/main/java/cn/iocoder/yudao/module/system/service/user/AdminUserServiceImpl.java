@@ -210,6 +210,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         permissionService.processUserDeleted(id);
         // 删除用户岗位
         userPostMapper.deleteByUserId(id);
+        // 删除普通用户
+        appUserApi.deleteAppUser(id);
     }
 
     @Override

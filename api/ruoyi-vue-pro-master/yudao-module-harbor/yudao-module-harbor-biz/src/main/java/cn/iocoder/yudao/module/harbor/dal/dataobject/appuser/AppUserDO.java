@@ -1,11 +1,10 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.appuser;
 
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
-import cn.iocoder.yudao.module.harbor.enums.appuser.AppUserTypeEnum;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
-import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 
 /**
  * App用户 DO
@@ -29,7 +28,7 @@ public class AppUserDO extends TenantBaseDO {
     private Long id;
     /**
      * 用户类型
-     * 枚举 {@link AppUserTypeEnum}
+     * 枚举 {@link UserTypeEnum}
      */
     private Integer userType;
     /**
@@ -41,7 +40,7 @@ public class AppUserDO extends TenantBaseDO {
      */
     private String password;
     /**
-     * 外部用户id，由外部唯一id和外部类型组成
+     * 外部用户id
      */
     private String userOpenId;
     /**

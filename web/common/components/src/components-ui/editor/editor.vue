@@ -12,8 +12,16 @@
       @keydown.enter="keyDown"
       v-html="text"
     ></div>
-    <div v-if="imgList.length > 0" ref="imageRef" class="image-preview-box flex-wrap">
-      <div v-for="(url, index) in imgUrls" :key="index" class="image-preview mr-1">
+    <div
+      v-if="imgList.length > 0"
+      ref="imageRef"
+      class="image-preview-box flex-wrap"
+    >
+      <div
+        v-for="(url, index) in imgUrls"
+        :key="index"
+        class="image-preview mr-1"
+      >
         <el-image :src="url" class="w-16 h-16 mt-1" fit="fill" />
         <div class="clean-btn" @click="removeImg(index)">
           <svg
@@ -37,17 +45,19 @@
           </svg>
         </div>
       </div>
-      <el-text type="info" class="!self-end">({{ imgList.length }}/{{ maxImg }})</el-text>
+      <el-text type="info" class="!self-end"
+        >({{ imgList.length }}/{{ maxImg }})
+      </el-text>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
-import { isEmpty, createObjectURL } from '../../util';
-import {ElMessage} from "element-plus";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { isEmpty, createObjectURL } from "../../util";
+import { ElMessage } from "element-plus";
 
 defineOptions({
-  name: 'UEditor',
+  name: "UEditor",
 });
 
 interface Props {
@@ -75,23 +85,25 @@ const active = ref(false);
 const imageRef = ref<HTMLDivElement>();
 
 const imgUrls = computed(() => props.imgList.map((e) => createObjectURL(e)));
-const minHeight = computed(() => props.minHeight + 'px');
+const minHeight = computed(() => props.minHeight + "px");
 
-const padding = computed(() => (props.minHeight == 30 ? '4px 10px' : '8px 12px'));
+const padding = computed(() =>
+  props.minHeight == 30 ? "4px 10px" : "8px 12px"
+);
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', val: string): void;
-  (e: 'input', event: Event): void;
-  (e: 'focus', event: Event): void;
-  (e: 'blur', event: Event): void;
-  (e: 'submit'): void;
+  (e: "update:modelValue", val: string): void;
+  (e: "input", event: Event): void;
+  (e: "focus", event: Event): void;
+  (e: "blur", event: Event): void;
+  (e: "submit"): void;
 }>();
 
 watch(
   () => props.modelValue,
   (val) => {
     if (!isLocked.value) text.value = val;
-  },
+  }
 );
 
 function textPlain(e: any) {
@@ -99,15 +111,15 @@ function textPlain(e: any) {
   let text: string;
   let clp = (e.originalEvent || e).clipboardData;
   if (clp) {
-    text = clp.getData('text/plain') || '';
-    if (text !== '') {
-      document.execCommand('insertText', false, text);
+    text = clp.getData("text/plain") || "";
+    if (text !== "") {
+      document.execCommand("insertText", false, text);
     }
   }
 }
 
 function onFocus(event: Event) {
-  emit('focus', event);
+  emit("focus", event);
   isLocked.value = true;
   active.value = true;
 }
@@ -115,15 +127,15 @@ function onFocus(event: Event) {
 function onBlur(event: Event) {
   // 记录光标
   range.value = window.getSelection()?.getRangeAt(0);
-  emit('blur', event);
+  emit("blur", event);
   if (!editorRef.value?.innerHTML) active.value = false;
   isLocked.value = false;
 }
 
 function onInput(event: Event) {
   const { innerHTML } = event.target as HTMLDivElement;
-  emit('update:modelValue', innerHTML);
-  emit('input', event);
+  emit("update:modelValue", innerHTML);
+  emit("input", event);
 }
 
 function addText(val: string) {
@@ -144,16 +156,16 @@ function addText(val: string) {
     range.value.collapse(false);
     selection.addRange(range.value);
 
-    emit('update:modelValue', editorRef.value?.innerHTML || '');
+    emit("update:modelValue", editorRef.value?.innerHTML || "");
     const event = editorRef.value as unknown as Event;
-    emit('input', event);
+    emit("input", event);
   }
 }
 
 function clear() {
   if (editorRef.value) {
-    editorRef.value.innerHTML = '';
-    emit('update:modelValue', editorRef.value.innerHTML);
+    editorRef.value.innerHTML = "";
+    emit("update:modelValue", editorRef.value.innerHTML);
     active.value = false;
   }
 }
@@ -165,12 +177,12 @@ function focus() {
 }
 
 const keyDown = (e: KeyboardEvent) => {
-  if (e.ctrlKey && e.key == 'Enter') {
+  if (e.ctrlKey && e.key == "Enter") {
     //用户点击了ctrl+enter触发
-    if (isEmpty(props.modelValue.replace(/&nbsp;|<br>| /g, ''))) {
-      ElMessage.warning('内容不能为空');
+    if (isEmpty(props.modelValue.replace(/&nbsp;|<br>| /g, ""))) {
+      ElMessage.warning("内容不能为空");
     } else {
-      emit('submit');
+      emit("submit");
     }
   } else {
     //用户点击了enter触发
@@ -182,10 +194,10 @@ const removeImg = (val: number) => {
   props.imgList.splice(val, 1);
 };
 onMounted(() => {
-  editorRef.value?.addEventListener('keyup', (event: Event) => {
+  editorRef.value?.addEventListener("keyup", (event: Event) => {
     const el = event.target as HTMLDivElement;
-    if (el.innerHTML == '<br>') {
-      el.innerHTML = '';
+    if (el.innerHTML == "<br>") {
+      el.innerHTML = "";
     }
   });
 });
@@ -199,7 +211,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-@use './style/index.scss' with (
+@use "./style/index.scss" with (
   $minHeight: v-bind(minHeight),
   $padding: v-bind(padding)
 );

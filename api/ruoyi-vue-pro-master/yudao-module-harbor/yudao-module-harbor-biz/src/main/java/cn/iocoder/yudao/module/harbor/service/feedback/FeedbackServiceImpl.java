@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.harbor.service.feedback;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentBaseVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
@@ -146,8 +147,10 @@ public class FeedbackServiceImpl implements FeedbackService {
      */
     private void fillUserInfo(AppFeedbackBaseVO vo) {
         AppUserDO user = appUserService.getUser(vo.getUid());
-        vo.setAvatar(user.getAvatar());
-        vo.setNickname(user.getNickname());
-        vo.setUserType(user.getUserType());
+        if(ObjectUtil.isNotNull(user)){
+            vo.setAvatar(user.getAvatar());
+            vo.setNickname(user.getNickname());
+            vo.setUserType(user.getUserType());
+        }
     }
 }

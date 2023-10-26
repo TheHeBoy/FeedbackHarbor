@@ -20,8 +20,16 @@ public interface AppUserMapper extends BaseMapperX<AppUserDO> {
         return selectOne(AppUserDO::getUserType, userName);
     }
 
-    default AppUserDO getAppUserByUserOpenId(String openId){
-        return selectOne(AppUserDO::getUserOpenId, openId);
+    default AppUserDO getAppUserByUserOpenId(String openId, Integer userType) {
+        return selectOne(AppUserDO::getUserOpenId, openId,
+                AppUserDO::getUserType, userType);
+
+    }
+
+    default int deleteByOpenIdAndType(String openId, Integer userType) {
+        return delete(new LambdaQueryWrapperX<AppUserDO>()
+                .eq(AppUserDO::getUserOpenId, openId)
+                .eq(AppUserDO::getUserType, userType));
 
     }
 }

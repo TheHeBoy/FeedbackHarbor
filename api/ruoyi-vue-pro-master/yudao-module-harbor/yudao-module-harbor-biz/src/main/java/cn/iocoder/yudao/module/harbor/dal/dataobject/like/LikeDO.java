@@ -1,7 +1,6 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.like;
 
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
-import cn.iocoder.yudao.module.harbor.enums.appuser.AppUserTypeEnum;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeStateEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;

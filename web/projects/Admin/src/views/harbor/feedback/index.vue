@@ -227,8 +227,7 @@ const handleExport = async () => {
   }
 };
 
-const onRowClick = (row: any, _column: any, event: any) => {
-  console.log(event.target);
+const onRowClick = (row: any) => {
   if (drawer.value == false) {
     drawer.value = true;
   }

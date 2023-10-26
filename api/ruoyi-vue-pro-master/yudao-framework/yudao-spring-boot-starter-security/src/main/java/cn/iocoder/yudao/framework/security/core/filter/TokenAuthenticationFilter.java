@@ -28,6 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static cn.iocoder.yudao.framework.common.enums.UserTypeEnum.ADMIN;
+import static cn.iocoder.yudao.framework.common.enums.UserTypeEnum.APP;
+
 /**
  * Token 过滤器，验证 token 的有效性
  * 验证通过后，获得 {@link LoginUser} 信息，并加入到 Spring Security 上下文
@@ -82,13 +85,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 return null;
             }
             // 管理员访问 App 的请求路径时，登录信息转换为 appUser 信息
-            if (ObjectUtil.equal(accessToken.getUserType(), UserTypeEnum.ADMIN.getValue()) && ObjectUtil.equal(userType, UserTypeEnum.APP.getValue())) {
+            if (ObjectUtil.equal(accessToken.getUserType(), ADMIN.getValue()) && ObjectUtil.equal(userType, APP.getValue())) {
                 AppUserRespDTO appUser = appUserApi.getAppUser(accessToken.getUserId());
+                if (ObjectUtil.isNull(appUser)) {
+                    throw new AccessDeniedException("管理员关联的用户不存在");
+                }
                 return new LoginUser()
                         .setId(appUser.getId())
-                        .setUserType(UserTypeEnum.APP.getValue())
+                        .setUserType(APP.getValue())
                         .setTenantId(accessToken.getTenantId())
-                        .setScopes(accessToken.getScopes());
+                        .setScopes(null);
             }
 
             // 用户类型不匹配

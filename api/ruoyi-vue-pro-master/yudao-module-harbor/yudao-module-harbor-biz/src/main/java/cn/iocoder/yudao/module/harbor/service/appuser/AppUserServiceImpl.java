@@ -50,18 +50,18 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserDO getAppUser(Long id) {
-        return appUserMapper.selectById(id);
-    }
-
-    @Override
     public AppUserDO getAppUserByUserName(String userName) {
         return appUserMapper.getAppUserByUserName(userName);
     }
 
     @Override
-    public AppUserDO getAppUserByUserOpenId(String openId) {
-        return appUserMapper.getAppUserByUserOpenId(openId);
+    public AppUserDO getByOpenIdAndType(String openId, Integer userType) {
+        return appUserMapper.getAppUserByUserOpenId(openId, userType);
+    }
+
+    @Override
+    public int deleteByOpenIdAndType(String openId, Integer userType) {
+        return appUserMapper.deleteByOpenIdAndType(openId, userType);
     }
 
     @Override

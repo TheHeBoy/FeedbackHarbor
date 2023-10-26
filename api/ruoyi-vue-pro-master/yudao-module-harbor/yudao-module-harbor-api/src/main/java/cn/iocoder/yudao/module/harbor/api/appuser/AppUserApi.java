@@ -21,8 +21,15 @@ public interface AppUserApi {
      *
      * @param adminId  Admin ID
      * @param nickname 用户昵称
-     * @param avatar 用户头像
+     * @param avatar   用户头像
      * @return 用户对象信息
      */
     AppUserRespDTO createAppUser(Long adminId, String nickname, String avatar);
+
+    /**
+     * 删除 App user
+     *
+     * @param adminId Admin ID
+     */
+    public void deleteAppUser(Long adminId);
 }

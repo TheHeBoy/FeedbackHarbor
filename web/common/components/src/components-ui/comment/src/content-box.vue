@@ -1,47 +1,12 @@
 <template>
   <div class="comment" :class="{ reply: props.reply }">
-    <div class="comment-sub">
-      <UserCard :uid="str(data.uid)">
-        <a
-          :href="data.user.homeLink"
-          target="_blank"
-          class="no-underline"
-          style="display: block"
-        >
-          <el-avatar
-            style="margin-top: 5px"
-            :size="40"
-            fit="cover"
-            :src="data.user.avatar"
-          >
-            <img
-              src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
-            />
-          </el-avatar>
-        </a>
-      </UserCard>
-    </div>
+    <UUserAvatar :avatar="data.user.avatar" />
     <div class="comment-primary">
       <div class="comment-main">
-        <template v-if="slots.info">
-          <Info />
-        </template>
-        <div v-else class="user-info">
-          <UserCard :uid="str(data.uid)">
-            <a
-              :href="data.user.homeLink"
-              target="_blank"
-              class="no-underline"
-              style="display: block"
-            >
-              <div class="username">
-                <span class="name" style="max-width: 10em">{{
-                  data.user.username
-                }}</span>
-              </div>
-            </a>
-          </UserCard>
-        </div>
+        <UUserNickNameInfo
+            :nick-name="data.user.username"
+            :type="data.user.type"
+        />
         <div class="content">
           <u-fold unfold>
             <div v-html="contents"></div>
@@ -158,13 +123,12 @@ import {
   InjectionEmojiApi,
   UFold,
   UIcon,
-  CommentApi,
+  CommentApi, UUserAvatar, UUserNickNameInfo,
 } from "../../../components-ui";
 import type { InputBoxApi } from "./tools/input-box.vue";
 import { ElAvatar, ElImage } from "element-plus";
 import { useEmojiParse } from "../../../hooks";
 import { str, isEmpty, dayjs } from "../../../util";
-import UserCard from "./tools/user-card.vue";
 import { InjectContentBox, InjectContentBoxApi, InjectSlots } from "../key";
 
 interface Props {

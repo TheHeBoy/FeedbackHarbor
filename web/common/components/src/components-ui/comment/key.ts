@@ -18,7 +18,6 @@ export interface InjectInputBoxApi {
   upload: boolean;
   submit: ({ content, parentId, files, clear }: SubmitParam2Api) => void;
   focus: () => void;
-  alwaysShow?: boolean; // 用于一直显示操作栏
 }
 
 export const InjectInputBox: InjectionKey<InjectInputBoxApi> = Symbol();

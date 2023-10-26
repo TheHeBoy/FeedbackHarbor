@@ -27,11 +27,11 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+import static cn.iocoder.yudao.framework.common.enums.UserTypeEnum.THIRD_PARTY;
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.json.JsonUtils.toJsonString;
 import static cn.iocoder.yudao.module.harbor.enums.ErrorCodeConstants.AUTH_LOGIN_BAD_CREDENTIALS;
 import static cn.iocoder.yudao.module.harbor.enums.ErrorCodeConstants.AUTH_LOGIN_USER_DISABLED;
-import static cn.iocoder.yudao.module.harbor.enums.appuser.AppUserTypeEnum.THIRD_PARTY;
 import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 
 @Service
@@ -86,9 +86,9 @@ public class AppAuthServiceImpl implements AppAuthService {
     public AppAuthLoginRespVO socialLogin(AppAuthSocialLoginReqVO reqVO) {
         AuthUser authUser = getAuthUser(reqVO.getType(), reqVO.getCode(), reqVO.getState());
 
-        String openId = authUser.getUuid() + "-" +authUser.getSource();
+        String openId = authUser.getUuid() + "-" + authUser.getSource();
 
-        AppUserDO appUserDO = appUserService.getAppUserByUserOpenId(openId);
+        AppUserDO appUserDO = appUserService.getByOpenIdAndType(openId, THIRD_PARTY.getValue());
 
         Long userId;
         //用户不存在则自动创建
@@ -97,7 +97,7 @@ public class AppAuthServiceImpl implements AppAuthService {
             createReqVO.setAvatar(authUser.getAvatar());
             createReqVO.setNickname(authUser.getNickname());
             createReqVO.setUserOpenId(openId);
-            createReqVO.setUserType(THIRD_PARTY.getCode());
+            createReqVO.setUserType(THIRD_PARTY.getValue());
             userId = appUserService.createAppUser(createReqVO);
         } else {
             userId = appUserDO.getId();
@@ -142,8 +142,8 @@ public class AppAuthServiceImpl implements AppAuthService {
     /**
      * 得到社交登录的用户信息
      *
-     * @param type 社交应用类型
-     * @param code 授权码
+     * @param type  社交应用类型
+     * @param code  授权码
      * @param state 状态码
      * @return {@link AuthUser}
      */

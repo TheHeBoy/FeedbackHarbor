@@ -69,6 +69,7 @@ const config = reactive<ConfigApi>({
     id: props.userInfo.id,
     username: props.userInfo.nickname,
     avatar: props.userInfo.avatar,
+    type: props.userInfo.userType,
     likeIds: [],
   } as UserApi,
   emoji: emoji,
@@ -119,6 +120,7 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
         username: config.user.username,
         avatar: config.user.avatar,
         homeLink: "",
+        type: config.user.type,
       },
       address: "",
       likes: 0,
@@ -152,6 +154,7 @@ function convert(data: any, replyData?: any): CommentApi {
       username: data.nickname,
       avatar: data.avatar,
       homeLink: "",
+      type: data.userType,
     },
     reply:
       replyData && replyData.total > 0
@@ -188,7 +191,7 @@ const replyPage = async ({
   pageSize,
   finish,
 }: ReplyPageParamApi) => {
-  console.log("why")
+  console.log("why");
   let data = await getReplyPage({
     pageNo: pageNum,
     pageSize: pageSize,

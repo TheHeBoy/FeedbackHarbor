@@ -18,5 +18,6 @@ public interface AppUserConvert {
 
     AppUserDO convert(AppUserCreateReqVO bean);
 
+    AppUserRespDTO convertApi(AppUserCreateReqVO appUserDO);
     AppUserRespDTO convertApi(AppUserDO appUserDO);
 }

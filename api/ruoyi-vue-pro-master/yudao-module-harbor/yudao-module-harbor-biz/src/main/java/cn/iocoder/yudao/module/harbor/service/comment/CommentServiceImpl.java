@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.harbor.service.comment;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
 import cn.iocoder.yudao.module.harbor.convert.feedback.FeedbackConvert;
@@ -134,8 +135,10 @@ public class CommentServiceImpl implements CommentService {
      */
     private void fillUserInfo(AppCommentBaseVO vo) {
         AppUserDO user = appUserService.getUser(vo.getUid());
-        vo.setAvatar(user.getAvatar());
-        vo.setNickname(user.getNickname());
-        vo.setUserType(user.getUserType());
+        if (ObjectUtil.isNotNull(user)) {
+            vo.setAvatar(user.getAvatar());
+            vo.setNickname(user.getNickname());
+            vo.setUserType(user.getUserType());
+        }
     }
 }

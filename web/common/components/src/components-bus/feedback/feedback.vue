@@ -1,12 +1,15 @@
 <template>
   <el-row class="w-full">
     <el-col :span="1">
-      <el-avatar :src="vModel.avatar" />
+      <UUserAvatar :avatar="vModel.avatar" />
     </el-col>
     <el-col :span="23">
       <div class="ml-7">
         <div class="flex justify-between">
-          <span>{{ vModel.nickname }}</span>
+          <UUserNickNameInfo
+            :nick-name="vModel.nickname"
+            :type="vModel.userType"
+          />
           <div>
             <i-mdi-tag-multiple
               :color="vModel.feedbackTag.color"
@@ -64,7 +67,11 @@
 
 <script lang="ts" setup>
 import { onMounted, PropType, ref, computed, watch, nextTick } from "vue";
-import { UImageContext } from "../../components-ui";
+import {
+  UImageContext,
+  UUserNickNameInfo,
+  UUserAvatar,
+} from "../../components-ui";
 import reportSVG from "./svg/reportSVG.svg?component";
 import likeSVG from "./svg/likeSVG.svg?component";
 import likeNoSVG from "./svg/likeNoSVG.svg?component";

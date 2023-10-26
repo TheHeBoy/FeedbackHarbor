@@ -1,13 +1,14 @@
 package cn.iocoder.yudao.module.harbor.service.appuser;
 
 import javax.validation.*;
+
 import cn.iocoder.yudao.module.harbor.controller.app.appuser.vo.AppUserCreateReqVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 
 /**
  * App用户 Service 接口
- *
- *  hehong
+ * <p>
+ * hehong
  */
 public interface AppUserService {
 
@@ -26,17 +27,11 @@ public interface AppUserService {
      */
     void deleteAppUser(Long id);
 
-    /**
-     * 获得App用户
-     *
-     * @param id 编号
-     * @return App用户
-     */
-    AppUserDO getAppUser(Long id);
-
     AppUserDO getAppUserByUserName(String userName);
 
-    AppUserDO getAppUserByUserOpenId(String openId);
+    AppUserDO getByOpenIdAndType(String openId, Integer userType);
+
+    int deleteByOpenIdAndType(String openId, Integer userType);
 
     /**
      * 获取用户
