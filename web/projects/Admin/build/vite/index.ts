@@ -6,6 +6,8 @@ import progress from 'vite-plugin-progress';
 import EslintPlugin from 'vite-plugin-eslint';
 import PurgeIcons from 'vite-plugin-purge-icons';
 import { ViteEjsPlugin } from 'vite-plugin-ejs';
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
 // @ts-ignore
 import ElementPlus from 'unplugin-element-plus/vite';
 import AutoImport from 'unplugin-auto-import/vite';
@@ -15,6 +17,7 @@ import viteCompression from 'vite-plugin-compression';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
+import svgLoader from 'vite-svg-loader';
 
 export function createVitePlugins() {
   const root = process.cwd();
@@ -30,6 +33,7 @@ export function createVitePlugins() {
     WindiCSS(),
     progress(),
     PurgeIcons(),
+    svgLoader(),
     ElementPlus({}),
     AutoImport({
       include: [
@@ -69,7 +73,7 @@ export function createVitePlugins() {
       include: [/\.vue$/, /\.vue\?vue/],
       dts: 'src/types/auto-components.d.ts',
       // 自定义组件的解析器
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver(), IconsResolver()],
       exclude: [/[\\/]node_modules[\\/]/],
     }),
     EslintPlugin({
@@ -101,6 +105,10 @@ export function createVitePlugins() {
       promiseExportName: '__tla',
       // The function to generate import names of top-level await promise in each chunk module
       promiseImportName: (i) => `__tla_${i}`,
+    }),
+    Icons({
+      compiler: 'vue3',
+      autoInstall: true,
     }),
   ];
 }

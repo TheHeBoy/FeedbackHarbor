@@ -25,7 +25,7 @@ public interface MailSendService {
                                String templateCode, Map<String, Object> templateParams);
 
     /**
-     * 发送单条邮件给用户 APP 的用户
+     * 发送单条邮件给用户 ADMIN 的用户
      *
      * @param mail 邮箱
      * @param userId 用户编码

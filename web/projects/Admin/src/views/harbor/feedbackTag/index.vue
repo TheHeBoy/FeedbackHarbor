@@ -117,7 +117,7 @@
   <FeedbackTagForm ref="formRef" @success="getList" />
 </template>
 
-<script setup lang="ts" name="FeedbackTag">
+<script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime';
 import download from '@/utils/download';
 import * as FeedbackTagApi from '@/api/harbor/feedbackTag';

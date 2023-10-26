@@ -80,7 +80,7 @@ class NotifySendServiceImplTest extends BaseMockitoUnitTest {
                 .thenReturn(content);
         // mock NotifyMessageService 的方法
         Long messageId = randomLongId();
-        when(notifyMessageService.createNotifyMessage(eq(userId), eq(UserTypeEnum.MEMBER.getValue()),
+        when(notifyMessageService.createNotifyMessage(eq(userId), eq(UserTypeEnum.APP.getValue()),
                 eq(template), eq(content), eq(templateParams))).thenReturn(messageId);
 
         // 调用

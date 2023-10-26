@@ -15,7 +15,7 @@ import static cn.hutool.core.util.ArrayUtil.*;
 public enum CodegenSceneEnum {
 
     ADMIN(1, "管理后台", "admin", ""),
-    APP(2, "用户 APP", "app", "App");
+    APP(2, "用户 ADMIN", "app", "App");
 
     /**
      * 场景

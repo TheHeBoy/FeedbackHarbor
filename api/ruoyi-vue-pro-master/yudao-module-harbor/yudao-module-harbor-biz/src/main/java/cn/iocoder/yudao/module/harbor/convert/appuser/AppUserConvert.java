@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.harbor.convert.appuser;
 
+import cn.iocoder.yudao.module.harbor.api.appuser.dto.AppUserRespDTO;
 import cn.iocoder.yudao.module.harbor.controller.app.appuser.vo.AppUserCreateReqVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -17,4 +18,5 @@ public interface AppUserConvert {
 
     AppUserDO convert(AppUserCreateReqVO bean);
 
+    AppUserRespDTO convertApi(AppUserDO appUserDO);
 }

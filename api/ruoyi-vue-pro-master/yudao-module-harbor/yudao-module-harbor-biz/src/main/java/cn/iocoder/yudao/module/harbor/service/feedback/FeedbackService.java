@@ -15,29 +15,12 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
  * <p>
  */
 public interface FeedbackService {
-
-    /**
-     * 创建用户反馈
-     *
-     * @param createReqVO 创建信息
-     * @return 编号
-     */
-    Long createFeedback(@Valid FeedbackCreateReqVO createReqVO);
-
     /**
      * 删除用户反馈
      *
      * @param id 编号
      */
     void deleteFeedback(Long id);
-
-    /**
-     * 获得用户反馈
-     *
-     * @param id 编号
-     * @return 用户反馈
-     */
-    FeedbackDO getFeedback(Long id);
 
 
     /**
@@ -46,17 +29,10 @@ public interface FeedbackService {
      * @param pageReqVO 分页查询
      * @return 用户反馈分页
      */
-    PageResult<FeedbackDO> getFeedbackPage(FeedbackPageReqVO pageReqVO);
+    PageResult<FeedbackRespVO> getFeedbackPage(FeedbackPageReqVO pageReqVO);
 
-    /**
-     * 获得用户反馈列表, 用于 Excel 导出
-     *
-     * @param exportReqVO 查询条件
-     * @return 用户反馈列表
-     */
-    List<FeedbackDO> getFeedbackList(FeedbackExportReqVO exportReqVO);
 
-    FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid);
+    AppFeedbackRespVO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid);
 
     PageResult<AppFeedbackRespVO> getFeedbackPage(AppFeedbackPageReqVO pageVO);
 }

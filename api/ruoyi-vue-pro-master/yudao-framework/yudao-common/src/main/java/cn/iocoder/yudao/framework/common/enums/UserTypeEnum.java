@@ -14,8 +14,9 @@ import java.util.Arrays;
 @Getter
 public enum UserTypeEnum implements IntArrayValuable {
 
-    MEMBER(1, "会员"), // 面向 c 端，普通用户
-    ADMIN(2, "管理员"),
+    ADMIN(1, "管理员"),
+    // 面向 c 端
+    APP(2, "普通用户"),
     ;
 
     public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(UserTypeEnum::getValue).toArray();

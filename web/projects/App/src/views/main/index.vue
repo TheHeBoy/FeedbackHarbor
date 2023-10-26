@@ -6,9 +6,11 @@
           <OrderTag @change="tagChange" />
         </el-card>
         <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-          <div v-for="feedback in feedbackList" :key="feedback.id" class="mt-4">
-            <UFeedback :v-model="feedback" :userInfo="user" />
-          </div>
+          <template v-for="feedback in feedbackList" :key="feedback.id">
+            <el-card class="box-card mt-4">
+              <UFeedback :v-model="feedback" :userInfo="user" />
+            </el-card>
+          </template>
         </div>
         <p v-if="loading">Loading...</p>
       </div>
@@ -83,6 +85,5 @@ const resetList = () => {
 onMounted(() => {
   pageRequest();
 });
-
 </script>
 <style lang="scss" scoped></style>

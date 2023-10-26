@@ -1,50 +1,49 @@
 import { service } from './service';
 
-import { config } from './config';
+import { ApiBase } from '@harbor/apis';
+import { AxiosRequestConfig } from 'axios';
 
-const { default_headers } = config;
+// 添加请求路径前缀
+async function request(option: AxiosRequestConfig, apiUrl?: string) {
+  if (apiUrl) {
+    option.baseURL = import.meta.env.VITE_BASE_URL + apiUrl;
+  }
+  return service(option);
+}
 
-const request = (option: any) => {
-  const { url, method, params, data, headersType, responseType } = option;
-  return service({
-    url: url,
-    method,
-    params,
-    data,
-    responseType: responseType,
-    headers: {
-      'Content-Type': headersType || default_headers,
-    },
-  });
-};
 export default {
-  get: async <T = any>(option: any) => {
-    const res = await request({ method: 'GET', ...option });
-    return res.data as unknown as T;
+  get: async (option: AxiosRequestConfig, apiUrl?: string) => {
+    const res = await request({ method: 'GET', ...option }, apiUrl);
+    return res.data;
   },
-  post: async <T = any>(option: any) => {
-    const res = await request({ method: 'POST', ...option });
-    return res.data as unknown as T;
+  post: async (option: AxiosRequestConfig, apiUrl?: string) => {
+    const res = await request({ method: 'POST', ...option }, apiUrl);
+    return res.data;
   },
-  postOriginal: async <T = any>(option: any) => {
-    const res = await request({ method: 'POST', ...option });
-    return res as unknown as T;
+  postOriginal: async (option: AxiosRequestConfig, apiUrl?: string) => {
+    const res = await request({ method: 'POST', ...option }, apiUrl);
+    return res;
   },
-  delete: async <T = any>(option: any) => {
-    const res = await request({ method: 'DELETE', ...option });
-    return res.data as unknown as T;
+  delete: async (option: AxiosRequestConfig, apiUrl?: string) => {
+    const res = await request({ method: 'DELETE', ...option }, apiUrl);
+    return res.data;
   },
-  put: async <T = any>(option: any) => {
-    const res = await request({ method: 'PUT', ...option });
-    return res.data as unknown as T;
+  put: async (option: AxiosRequestConfig, apiUrl?: string) => {
+    const res = await request({ method: 'PUT', ...option }, apiUrl);
+    return res.data;
   },
-  download: async <T = any>(option: any) => {
-    const res = await request({ method: 'GET', responseType: 'blob', ...option });
-    return res as unknown as Promise<T>;
+  download: async (option: AxiosRequestConfig, apiUrl?: string) => {
+    return await request({ method: 'GET', responseType: 'blob', ...option }, apiUrl);
   },
-  upload: async <T = any>(option: any) => {
-    option.headersType = 'multipart/form-data';
-    const res = await request({ method: 'POST', ...option });
-    return res as unknown as Promise<T>;
+  upload: async (option: AxiosRequestConfig, apiUrl?: string) => {
+    const data = await request(
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        ...option,
+      },
+      apiUrl,
+    );
+    return data.data;
   },
-};
+} as ApiBase;

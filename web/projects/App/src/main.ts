@@ -4,7 +4,6 @@ import router from '@/router/index';
 import store from '@/store';
 import App from './App.vue';
 import 'virtual:windi.css';
-// Devtools: https://windicss.org/integrations/vite.html#design-in-devtools
 import 'virtual:windi-devtools';
 import '@/assets/styles/index.scss';
 import { initApi } from '@harbor/apis';

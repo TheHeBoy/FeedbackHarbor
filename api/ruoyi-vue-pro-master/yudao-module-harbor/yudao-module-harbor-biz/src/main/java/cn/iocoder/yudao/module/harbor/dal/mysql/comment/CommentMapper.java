@@ -20,33 +20,6 @@ import cn.iocoder.yudao.module.harbor.controller.admin.comment.vo.*;
 @Mapper
 public interface CommentMapper extends BaseMapperX<CommentDO> {
 
-    default PageResult<CommentDO> selectPage(CommentPageReqVO reqVO) {
-        return selectPage(reqVO, new LambdaQueryWrapperX<CommentDO>()
-                .betweenIfPresent(CommentDO::getCreateTime, reqVO.getCreateTime())
-                .eqIfPresent(CommentDO::getParentId, reqVO.getParentId())
-                .eqIfPresent(CommentDO::getUid, reqVO.getUid())
-                .eqIfPresent(CommentDO::getFeedbackId, reqVO.getFeedbackId())
-                .eqIfPresent(CommentDO::getContent, reqVO.getContent())
-                .eqIfPresent(CommentDO::getLikes, reqVO.getLikes())
-                .eqIfPresent(CommentDO::getUserType, reqVO.getUserType())
-                .eqIfPresent(CommentDO::getAvatar, reqVO.getAvatar())
-                .likeIfPresent(CommentDO::getNickname, reqVO.getNickname())
-                .orderByDesc(CommentDO::getId));
-    }
-
-    default List<CommentDO> selectList(CommentExportReqVO reqVO) {
-        return selectList(new LambdaQueryWrapperX<CommentDO>()
-                .betweenIfPresent(CommentDO::getCreateTime, reqVO.getCreateTime())
-                .eqIfPresent(CommentDO::getParentId, reqVO.getParentId())
-                .eqIfPresent(CommentDO::getUid, reqVO.getUid())
-                .eqIfPresent(CommentDO::getFeedbackId, reqVO.getFeedbackId())
-                .eqIfPresent(CommentDO::getContent, reqVO.getContent())
-                .eqIfPresent(CommentDO::getLikes, reqVO.getLikes())
-                .eqIfPresent(CommentDO::getUserType, reqVO.getUserType())
-                .eqIfPresent(CommentDO::getAvatar, reqVO.getAvatar())
-                .likeIfPresent(CommentDO::getNickname, reqVO.getNickname())
-                .orderByDesc(CommentDO::getId));
-    }
 
     default PageResult<CommentDO> selectPage(AppCommentPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommentDO>()
@@ -54,13 +27,6 @@ public interface CommentMapper extends BaseMapperX<CommentDO> {
                 .isNull(CommentDO::getParentId)
                 .orderByDesc(CommentDO::getId));
     }
-
-
-    default List<CommentDO> selectByPid(Long pid) {
-        return selectList(new LambdaQueryWrapperX<CommentDO>()
-                .eqIfPresent(CommentDO::getParentId, pid));
-    }
-
 
     default PageResult<CommentDO> selectReplyPage(PageParam pageVO, Long commentId) {
         return selectPage(pageVO, new LambdaQueryWrapperX<CommentDO>()

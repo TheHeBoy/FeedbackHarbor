@@ -29,7 +29,7 @@ import javax.validation.Valid;
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
-@Tag(name = "用户 APP - 认证")
+@Tag(name = "用户 ADMIN - 认证")
 @RestController
 @RequestMapping("/harbor/auth")
 @Validated

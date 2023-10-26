@@ -7,7 +7,7 @@
       <div class="content">
         <div class="avatar-box">
           <button @click="$emit('userAvatar')">
-            <el-avatar :size="40">
+            <el-avatar :size="40" :src="config.user.avatar">
               <UIcon :size="25">
                 <svg
                   t="1696230292343"

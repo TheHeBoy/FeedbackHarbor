@@ -76,7 +76,7 @@ public class SmsSendServiceImpl implements SmsSendService {
             mobile = memberService.getMemberUserMobile(userId);
         }
         // 执行发送
-        return sendSingleSms(mobile, userId, UserTypeEnum.MEMBER.getValue(), templateCode, templateParams);
+        return sendSingleSms(mobile, userId, UserTypeEnum.APP.getValue(), templateCode, templateParams);
     }
 
     @Override

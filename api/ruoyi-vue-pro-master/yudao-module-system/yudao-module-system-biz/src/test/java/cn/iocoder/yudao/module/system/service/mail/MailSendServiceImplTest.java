@@ -136,7 +136,7 @@ public class MailSendServiceImplTest extends BaseMockitoUnitTest {
         when(mailAccountService.getMailAccountFromCache(eq(template.getAccountId()))).thenReturn(account);
         // mock MailLogService 的方法
         Long mailLogId = randomLongId();
-        when(mailLogService.createMailLog(eq(userId), eq(UserTypeEnum.MEMBER.getValue()), eq(mail),
+        when(mailLogService.createMailLog(eq(userId), eq(UserTypeEnum.APP.getValue()), eq(mail),
                 eq(account), eq(template), eq(content), eq(templateParams), eq(true))).thenReturn(mailLogId);
 
         // 调用

@@ -1,8 +1,11 @@
 package cn.iocoder.yudao.module.harbor.service.comment;
 
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.*;
+import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
+import cn.iocoder.yudao.module.harbor.convert.feedback.FeedbackConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
+import cn.iocoder.yudao.module.harbor.dal.dataobject.feedback.FeedbackDO;
+import cn.iocoder.yudao.module.harbor.dal.dataobject.feedbacktag.FeedbackTagDO;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
@@ -12,9 +15,6 @@ import javax.annotation.Resource;
 
 import org.springframework.validation.annotation.Validated;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import cn.iocoder.yudao.module.harbor.controller.admin.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.comment.CommentDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
@@ -23,7 +23,6 @@ import cn.iocoder.yudao.module.harbor.convert.comment.CommentConvert;
 import cn.iocoder.yudao.module.harbor.dal.mysql.comment.CommentMapper;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 import static cn.iocoder.yudao.module.harbor.enums.ErrorCodeConstants.*;
 
 /**
@@ -59,28 +58,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDO getComment(Long id) {
-        return commentMapper.selectById(id);
-    }
-
-    @Override
-    public List<CommentDO> getCommentList(Collection<Long> ids) {
-        return commentMapper.selectBatchIds(ids);
-    }
-
-    @Override
-    public PageResult<CommentDO> getCommentPage(CommentPageReqVO pageReqVO) {
-        return commentMapper.selectPage(pageReqVO);
-    }
-
-    @Override
     public PageResult<AppCommentPageRespVO> getCommentPage(AppCommentPageReqVO pageReqVO) {
         PageResult<AppCommentPageRespVO> commentPage = CommentConvert.INSTANCE.convertPageApp(commentMapper.selectPage(pageReqVO));
 
         // 一级评论
         for (AppCommentPageRespVO commentParent : commentPage.getList()) {
-            // 添加点赞数
-            commentParent.setLikes(commentParent.getLikes() + getLikeCount(commentParent.getId()));
+
+            fill(commentParent);
 
             // 添加回复
             AppReplyPageReqVO appReplyPageReqVO = new AppReplyPageReqVO();
@@ -98,32 +82,28 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public PageResult<ReplyVO> getReplyPage(AppReplyPageReqVO pageVO) {
+    public PageResult<AppReplyVO> getReplyPage(AppReplyPageReqVO pageVO) {
         PageResult<CommentDO> commentDOPageResult = commentMapper.selectReplyPage(pageVO, pageVO.getCommentId());
 
-        // 填充点赞数
-        commentDOPageResult.getList().forEach(e -> {
-            e.setLikes(e.getLikes() + getLikeCount(e.getId()));
-        });
+        // 填充
+        PageResult<AppReplyVO> pageResult = CommentConvert.INSTANCE.convertReplyPage(commentDOPageResult);
+        pageResult.getList().forEach(this::fill);
 
-        return CommentConvert.INSTANCE.convertReplyPage(commentDOPageResult);
+        return pageResult;
     }
 
-    @Override
-    public List<CommentDO> getCommentList(CommentExportReqVO exportReqVO) {
-        return commentMapper.selectList(exportReqVO);
-    }
 
     @Override
-    public CommentDO createComment(AppCommentCreateReqVO createReqVO, Long uid) {
-        CommentDO comment = CommentConvert.INSTANCE.convert(createReqVO);
-        AppUserDO user = appUserService.getUser(uid);
-        comment.setUid(user.getId());
-        comment.setAvatar(user.getAvatar());
-        comment.setNickname(user.getNickname());
-        comment.setUserType(user.getUserType());
-        commentMapper.insert(comment);
-        return comment;
+    public AppCommentRespVO createComment(AppCommentCreateReqVO createReqVO, Long uid) {
+        CommentDO commentDO = CommentConvert.INSTANCE.convert(createReqVO);
+        commentDO.setUid(uid);
+        commentMapper.insert(commentDO);
+
+        // 填充用户信息
+        commentDO = commentMapper.selectById(commentDO.getId());
+        AppCommentRespVO respVO = CommentConvert.INSTANCE.convertApp(commentDO);
+        fillUserInfo(respVO);
+        return CommentConvert.INSTANCE.convertApp(commentDO);
     }
 
     /**
@@ -136,5 +116,26 @@ public class CommentServiceImpl implements CommentService {
         long count = likeRedisDAO.sSize(rid, true, LikeBusTypeEnum.COMMENT);
         long cancelCount = likeRedisDAO.sSize(rid, false, LikeBusTypeEnum.COMMENT);
         return count - cancelCount;
+    }
+
+    /**
+     * 填充点赞数和用户信息
+     */
+    private void fill(AppCommentBaseVO vo) {
+        // 合并缓存中的点赞数
+        vo.setLikes(vo.getLikes() + getLikeCount(vo.getId()));
+
+        // 用户信息
+        fillUserInfo(vo);
+    }
+
+    /**
+     * 填充用户信息
+     */
+    private void fillUserInfo(AppCommentBaseVO vo) {
+        AppUserDO user = appUserService.getUser(vo.getUid());
+        vo.setAvatar(user.getAvatar());
+        vo.setNickname(user.getNickname());
+        vo.setUserType(user.getUserType());
     }
 }

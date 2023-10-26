@@ -61,7 +61,6 @@ interface Props {
   parentId?: string;
   reply?: CommentApi;
   minHeight?: number;
-  alwaysShow?: boolean; // 用于一直显示操作栏
 }
 
 const props = withDefaults(defineProps<Props>(), {});
@@ -84,7 +83,7 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
-const {upload, submit, focus} = inject(InjectInputBox) as InjectInputBoxApi;
+const {upload, submit, focus, alwaysShow} = inject(InjectInputBox) as InjectInputBoxApi;
 const emoji = inject(InjectionEmojiApi) as EmojiApi;
 
 // 提交评论的数据

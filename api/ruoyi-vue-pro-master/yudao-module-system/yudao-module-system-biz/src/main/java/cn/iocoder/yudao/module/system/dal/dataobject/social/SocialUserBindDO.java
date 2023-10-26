@@ -9,7 +9,7 @@ import lombok.*;
 
 /**
  * 社交用户的绑定
- * 即 {@link SocialUserDO} 与 UserDO 的关联表
+ * 即 {@link SocialUserDO} 与 AdminUserDO 的关联表
  *
  *
  */
@@ -30,7 +30,7 @@ public class SocialUserBindDO extends BaseDO {
     /**
      * 关联的用户编号
      *
-     * 关联 UserDO 的编号
+     * 关联 AdminUserDO 的编号
      */
     private Long userId;
     /**

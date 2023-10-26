@@ -1,6 +1,5 @@
 package cn.iocoder.yudao.module.harbor.service.comment;
 
-import java.util.*;
 import javax.validation.*;
 
 import cn.iocoder.yudao.module.harbor.controller.admin.comment.vo.*;
@@ -15,7 +14,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
  */
 public interface CommentService {
 
-    CommentDO createComment(@Valid AppCommentCreateReqVO createReqVO, Long uid);
+    AppCommentRespVO createComment(@Valid AppCommentCreateReqVO createReqVO, Long uid);
 
 
     /**
@@ -25,37 +24,6 @@ public interface CommentService {
      */
     void deleteComment(Long id);
 
-    /**
-     * 获得评论
-     *
-     * @param id 编号
-     * @return 评论
-     */
-    CommentDO getComment(Long id);
-
-    /**
-     * 获得评论列表
-     *
-     * @param ids 编号
-     * @return 评论列表
-     */
-    List<CommentDO> getCommentList(Collection<Long> ids);
-
-    /**
-     * 获得评论分页
-     *
-     * @param pageReqVO 分页查询
-     * @return 评论分页
-     */
-    PageResult<CommentDO> getCommentPage(CommentPageReqVO pageReqVO);
-
-    /**
-     * 获得评论列表, 用于 Excel 导出
-     *
-     * @param exportReqVO 查询条件
-     * @return 评论列表
-     */
-    List<CommentDO> getCommentList(CommentExportReqVO exportReqVO);
 
     PageResult<AppCommentPageRespVO> getCommentPage(AppCommentPageReqVO pageVO);
 
@@ -71,5 +39,5 @@ public interface CommentService {
      * @param pageVO 分页参数
      * @return 分页结果
      */
-    PageResult<ReplyVO> getReplyPage(AppReplyPageReqVO pageVO);
+    PageResult<AppReplyVO> getReplyPage(AppReplyPageReqVO pageVO);
 }

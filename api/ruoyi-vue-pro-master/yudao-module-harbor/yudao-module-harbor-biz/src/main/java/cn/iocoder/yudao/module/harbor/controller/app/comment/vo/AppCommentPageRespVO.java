@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.util.List;
-
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "App - 评论 Response VO")
 @Data
@@ -15,5 +13,5 @@ import java.util.List;
 public class AppCommentPageRespVO extends AppCommentBaseVO{
 
     @Schema(description = "回复分页集合")
-    private PageResult<ReplyVO> replyPage;
+    private PageResult<AppReplyVO> replyPage;
 }

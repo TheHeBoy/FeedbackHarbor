@@ -13,5 +13,5 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
-public class ReplyVO extends AppCommentBaseVO{
+public class AppReplyVO extends AppCommentBaseVO{
 }

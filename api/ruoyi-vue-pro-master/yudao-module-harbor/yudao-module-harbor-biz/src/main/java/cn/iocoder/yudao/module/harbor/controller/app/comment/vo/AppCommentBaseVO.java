@@ -15,13 +15,13 @@ public class AppCommentBaseVO {
     @Schema(description = "主键id")
     private Long id;
 
-    @Schema(description = "父节点", example = "524")
+    @Schema(description = "父节点")
     private Long parentId;
 
-    @Schema(description = "用户id", example = "21744")
+    @Schema(description = "用户id")
     private Long uid;
 
-    @Schema(description = "反馈id", example = "21567")
+    @Schema(description = "反馈id")
     private Long feedbackId;
 
     @Schema(description = "内容")
@@ -30,13 +30,13 @@ public class AppCommentBaseVO {
     @Schema(description = "点赞数")
     private Long likes;
 
-    @Schema(description = "用户类型;")
+    @Schema(description = "用户类型")
     private Integer userType;
 
-    @Schema(description = "头像;")
+    @Schema(description = "头像")
     private String avatar;
 
-    @Schema(description = "用户昵称;", example = "赵六")
+    @Schema(description = "用户昵称")
     private String nickname;
 
     @Schema(description = "创建时间")

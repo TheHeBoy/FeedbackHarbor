@@ -1,5 +1,4 @@
 /// <reference types="vite/client" />
-/// <reference types="vite-svg-loader" />
 
 // 声明自动引入的 vue 组件
 declare module '*.vue' {

@@ -78,7 +78,7 @@ const service: ApiBase = {
   },
   postOriginal: async (option: AxiosRequestConfig, apiUrl?: string) => {
     const res = await request({ method: 'POST', ...option }, apiUrl);
-    return res.data;
+    return res;
   },
   delete: async (option: AxiosRequestConfig, apiUrl?: string) => {
     const res = await request({ method: 'DELETE', ...option }, apiUrl);

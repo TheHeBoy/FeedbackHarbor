@@ -15,7 +15,6 @@
         <UInputBox
           ref="commentRef"
           placeholder="输入反馈内容"
-          alwaysShow
           content-btn="提交反馈"
           :min-height="150"
         />
@@ -80,6 +79,7 @@ const inputBoxParam: InjectInputBoxApi = {
   upload: true,
   submit: submit,
   focus: () => {},
+  alwaysShow: true,
 };
 
 const feedbackTags = ref<FeedbackTagVO[]>([]);

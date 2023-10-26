@@ -41,7 +41,8 @@ import '@/plugins/tongji'; // 百度统计
 import Logger from '@/utils/Logger';
 
 import VueDOMPurifyHTML from 'vue-dompurify-html'; // 解决v-html 的安全隐患
-
+import request from '@/config/axios';
+import { initApi } from '@harbor/apis';
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App);
@@ -65,6 +66,8 @@ const setupAll = async () => {
   app.use(VueDOMPurifyHTML);
 
   app.mount('#app');
+
+  initApi(request);
 };
 
 setupAll();

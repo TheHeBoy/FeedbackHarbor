@@ -1,84 +1,70 @@
 <template>
-  <el-card class="box-card">
-    <el-row class="w-full">
-      <el-col :span="1">
-        <el-avatar :src="vModel.avatar" />
-      </el-col>
-      <el-col :span="23">
-        <div class="ml-7">
-          <div class="flex justify-between">
-            <span>{{ vModel.nickname }}</span>
-            <div>
-              <i-mdi-tag-multiple
-                :color="vModel.feedbackTag.color"
-                class="inline w-5 h-5 mr-1"
-              />
-              <span class="text-sm"> {{ vModel.feedbackTag.nameCh }}</span>
-            </div>
-          </div>
-          <div class="mt-2">
-            <UFold unfold line="10">
-              <div v-html="contents"></div>
-              <div class="flex flex-wrap">
-                <template v-for="(url, index) in imgList" :key="index">
-                  <ElImage
-                    :src="url"
-                    class="w-16 h-16 mr-1 mt-1"
-                    lazy
-                    :preview-src-list="imgList"
-                    :initial-index="index"
-                  ></ElImage>
-                </template>
-              </div>
-            </UFold>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-sm text-slate-400 mt-1">{{
-              formatPast(vModel.createTime, "YYYY-MM-DD HH:mm")
-            }}</span>
-            <div>
-              <el-popover trigger="click" placement="bottom">
-                <el-button link size="small" class="w-full text-center">
-                  <reportSVG class="icon-btn" />
-                  <span class="ml-1">举报</span>
-                </el-button>
-                <template #reference>
-                  <el-button link linksize="small">
-                    <i-mdi-dots-vertical />
-                  </el-button>
-                </template>
-              </el-popover>
-              <el-button link size="small" @click="commentShow = !commentShow">
-                <commentSVG class="icon-btn" />
-                <span class="ml-1">{{ vModel.commentNum }}</span>
-              </el-button>
-              <el-button link @click="onLike(vModel)">
-                <likeNoSVG
-                  class="icon-btn"
-                  v-if="
-                    feedbackLikeIds.map(String).indexOf(str(vModel.id)) == -1
-                  "
-                />
-                <likeSVG v-else class="icon-btn" color="#1e80ff" />
-                <span class="ml-1">{{ vModel.likes }}</span>
-              </el-button>
-            </div>
+  <el-row class="w-full">
+    <el-col :span="1">
+      <el-avatar :src="vModel.avatar" />
+    </el-col>
+    <el-col :span="23">
+      <div class="ml-7">
+        <div class="flex justify-between">
+          <span>{{ vModel.nickname }}</span>
+          <div>
+            <i-mdi-tag-multiple
+              :color="vModel.feedbackTag.color"
+              class="inline w-5 h-5 mr-1"
+            />
+            <span class="text-sm"> {{ vModel.feedbackTag.nameCh }}</span>
           </div>
         </div>
-        <UHarborComment
-          class="ml-8"
-          v-if="commentShow"
-          :user-info="userInfo"
-          :v-model="vModel"
-        />
-      </el-col>
-    </el-row>
-  </el-card>
+        <div class="mt-2">
+          <UImageContext :contents="contents" :imgs="vModel.imgs" />
+        </div>
+        <div class="flex justify-between">
+          <span class="text-sm text-slate-400 mt-1">{{
+            formatPast(vModel.createTime, "YYYY-MM-DD HH:mm")
+          }}</span>
+          <div>
+            <el-popover trigger="click" placement="bottom">
+              <el-button link size="small" class="w-full text-center">
+                <reportSVG class="icon-btn" />
+                <span class="ml-1">举报</span>
+              </el-button>
+              <template #reference>
+                <el-button link linksize="small">
+                  <i-mdi-dots-vertical />
+                </el-button>
+              </template>
+            </el-popover>
+            <el-button
+              link
+              size="small"
+              @click="isCommentShow = !isCommentShow"
+            >
+              <commentSVG class="icon-btn" />
+              <span class="ml-1">{{ vModel.commentNum }}</span>
+            </el-button>
+            <el-button link @click="onLike(vModel)">
+              <likeNoSVG
+                class="icon-btn"
+                v-if="feedbackLikeIds.map(String).indexOf(str(vModel.id)) == -1"
+              />
+              <likeSVG v-else class="icon-btn" color="#1e80ff" />
+              <span class="ml-1">{{ vModel.likes }}</span>
+            </el-button>
+          </div>
+        </div>
+      </div>
+      <UHarborComment
+        v-if="isCommentShow"
+        :user-info="userInfo"
+        :v-model="vModel"
+      />
+    </el-col>
+  </el-row>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType, ref, computed } from "vue";
-import { UFold } from "../../components-ui";
+import { onMounted, PropType, ref, computed, watch, nextTick } from "vue";
+import { UImageContext } from "../../components-ui";
 import reportSVG from "./svg/reportSVG.svg?component";
 import likeSVG from "./svg/likeSVG.svg?component";
 import likeNoSVG from "./svg/likeNoSVG.svg?component";
@@ -103,20 +89,32 @@ const props = defineProps({
     type: Object as PropType<UserInfo>,
     required: true,
   },
+  // 评论控件默认是否展示
+  commentShow: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const emit = defineEmits<{}>();
+const emit = defineEmits(["update:commentShow"]);
 
-// 评论控件展示
-const commentShow = ref(false);
 // 用户已点赞反馈集合
 const feedbackLikeIds = ref<Number[]>([]);
+const isCommentShow = ref(props.commentShow);
 
-onMounted(() => {
-  getLikeList(0).then((data) => {
-    feedbackLikeIds.value = data;
-  });
-});
+// 刷新评论组件
+watch(
+  () => props.vModel,
+  () => {
+    if (isCommentShow.value === true) {
+      isCommentShow.value = false;
+      nextTick(() => {
+        isCommentShow.value = true;
+      });
+    }
+  }
+);
+
 const onLike = (feedback: FeedbackVO) => {
   let fid = feedback.id;
   like({ rid: fid, busType: 0 }).then((data) => {
@@ -136,10 +134,10 @@ const contents = computed(() =>
   useEmojiParse(emoji.allEmoji, props.vModel.content)
 );
 
-const imgList = computed(() => {
-  let temp = props.vModel.imgs;
-  if (!temp) return [];
-  return temp?.split("||");
+onMounted(() => {
+  getLikeList(0).then((data) => {
+    feedbackLikeIds.value = data;
+  });
 });
 </script>
 <style lang="scss" scoped>

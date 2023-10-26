@@ -120,7 +120,7 @@ public class SmsSendServiceImplTest extends BaseMockitoUnitTest {
         when(smsChannelService.getSmsChannel(eq(template.getChannelId()))).thenReturn(smsChannel);
         // mock SmsLogService 的方法
         Long smsLogId = randomLongId();
-        when(smsLogService.createSmsLog(eq(mobile), eq(userId), eq(UserTypeEnum.MEMBER.getValue()), eq(Boolean.TRUE), eq(template),
+        when(smsLogService.createSmsLog(eq(mobile), eq(userId), eq(UserTypeEnum.APP.getValue()), eq(Boolean.TRUE), eq(template),
                 eq(content), eq(templateParams))).thenReturn(smsLogId);
 
         // 调用

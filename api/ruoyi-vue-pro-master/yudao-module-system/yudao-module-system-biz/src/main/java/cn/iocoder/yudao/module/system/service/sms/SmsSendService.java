@@ -27,7 +27,7 @@ public interface SmsSendService {
                               String templateCode, Map<String, Object> templateParams);
 
     /**
-     * 发送单条短信给用户 APP 的用户
+     * 发送单条短信给用户 ADMIN 的用户
      *
      * 在 mobile 为空时，使用 userId 加载对应会员的手机号
      *

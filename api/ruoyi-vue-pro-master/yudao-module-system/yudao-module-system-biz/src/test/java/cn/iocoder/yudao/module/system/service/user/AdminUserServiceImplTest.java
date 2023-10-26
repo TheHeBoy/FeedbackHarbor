@@ -739,10 +739,10 @@ public class AdminUserServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testValidateUserList_success() {
         // mock 数据
-        AdminUserDO userDO = randomAdminUserDO().setStatus(CommonStatusEnum.ENABLE.getStatus());
-        userMapper.insert(userDO);
+        AdminUserDO adminUserDO = randomAdminUserDO().setStatus(CommonStatusEnum.ENABLE.getStatus());
+        userMapper.insert(adminUserDO);
         // 准备参数
-        List<Long> ids = singletonList(userDO.getId());
+        List<Long> ids = singletonList(adminUserDO.getId());
 
         // 调用，无需断言
         userService.validateUserList(ids);
@@ -760,14 +760,14 @@ public class AdminUserServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testValidateUserList_notEnable() {
         // mock 数据
-        AdminUserDO userDO = randomAdminUserDO().setStatus(CommonStatusEnum.DISABLE.getStatus());
-        userMapper.insert(userDO);
+        AdminUserDO adminUserDO = randomAdminUserDO().setStatus(CommonStatusEnum.DISABLE.getStatus());
+        userMapper.insert(adminUserDO);
         // 准备参数
-        List<Long> ids = singletonList(userDO.getId());
+        List<Long> ids = singletonList(adminUserDO.getId());
 
         // 调用, 并断言异常
         assertServiceException(() -> userService.validateUserList(ids), USER_IS_DISABLE,
-                userDO.getNickname());
+                adminUserDO.getNickname());
     }
 
     // ========== 随机对象 ==========

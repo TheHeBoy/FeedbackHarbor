@@ -1,13 +1,13 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.comment;
 
-import cn.iocoder.yudao.module.harbor.dal.dataobject.UserBaseDO;
+import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * 评论 DO
- *
- *  hehong
+ * <p>
+ * hehong
  */
 @TableName("harbor_comment")
 @KeySequence("harbor_comment_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.annotation.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDO extends UserBaseDO {
+public class CommentDO extends TenantBaseDO {
 
     /**
      * 主键
@@ -44,4 +44,8 @@ public class CommentDO extends UserBaseDO {
      * 图片集，以||分隔
      */
     private String imgs;
+    /**
+     * 用户id
+     */
+    private Long uid;
 }

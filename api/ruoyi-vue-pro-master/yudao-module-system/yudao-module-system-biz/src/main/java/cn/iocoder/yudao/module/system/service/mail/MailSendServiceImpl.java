@@ -72,7 +72,7 @@ public class MailSendServiceImpl implements MailSendService {
             mail = memberService.getMemberUserEmail(userId);
         }
         // 执行发送
-        return sendSingleMail(mail, userId, UserTypeEnum.MEMBER.getValue(), templateCode, templateParams);
+        return sendSingleMail(mail, userId, UserTypeEnum.APP.getValue(), templateCode, templateParams);
     }
 
     @Override

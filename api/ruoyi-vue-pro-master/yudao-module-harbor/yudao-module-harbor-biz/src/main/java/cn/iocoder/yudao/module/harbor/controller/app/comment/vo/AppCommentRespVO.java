@@ -7,6 +7,6 @@ import lombok.ToString;
 @Schema(description = "App - 评论 Response VO")
 @Data
 @ToString(callSuper = true)
-public class AppCommentRespVO {
+public class AppCommentRespVO extends AppCommentBaseVO{
 
 }

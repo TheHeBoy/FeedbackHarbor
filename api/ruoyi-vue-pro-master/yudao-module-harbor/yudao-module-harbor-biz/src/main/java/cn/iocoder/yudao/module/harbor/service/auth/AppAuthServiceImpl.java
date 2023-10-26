@@ -7,12 +7,10 @@ import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.social.core.YudaoAuthRequestFactory;
 import cn.iocoder.yudao.module.harbor.controller.app.appuser.vo.AppUserCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthSocialLoginReqVO;
-import cn.iocoder.yudao.module.harbor.enums.appuser.AppUserTypeEnum;
 import cn.iocoder.yudao.module.system.api.oauth2.OAuth2TokenApi;
 import cn.iocoder.yudao.module.system.api.oauth2.dto.OAuth2AccessTokenCreateReqDTO;
 import cn.iocoder.yudao.module.system.api.oauth2.dto.OAuth2AccessTokenRespDTO;
 import cn.iocoder.yudao.module.system.api.social.SocialUserApi;
-import cn.iocoder.yudao.module.system.enums.logger.LoginLogTypeEnum;
 import cn.iocoder.yudao.module.system.enums.oauth2.OAuth2ClientConstants;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthLoginReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthLoginRespVO;
@@ -20,11 +18,9 @@ import cn.iocoder.yudao.module.harbor.convert.auth.AuthConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import cn.iocoder.yudao.module.system.enums.social.SocialTypeEnum;
-import com.xingyuv.jushauth.config.AuthConfig;
 import com.xingyuv.jushauth.model.AuthCallback;
 import com.xingyuv.jushauth.model.AuthResponse;
 import com.xingyuv.jushauth.model.AuthUser;
-import com.xingyuv.jushauth.request.AuthGoogleRequest;
 import com.xingyuv.jushauth.request.AuthRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -140,7 +136,7 @@ public class AppAuthServiceImpl implements AppAuthService {
     }
 
     private UserTypeEnum getUserType() {
-        return UserTypeEnum.MEMBER;
+        return UserTypeEnum.APP;
     }
 
     /**

@@ -45,11 +45,7 @@ public class AppFeedbackController {
     @PreAuthenticated
     @Operation(summary = "创建用户反馈")
     public CommonResult<AppFeedbackRespVO> createFeedback(@Valid @RequestBody AppFeedbackCreateReqVO createReqVO) {
-        FeedbackDO feedbackDO = feedbackService.createFeedback(createReqVO, getLoginUserId());
-        AppFeedbackRespVO feedbackRespVO = FeedbackConvert.INSTANCE.convertPageApp(feedbackDO);
-        FeedbackTagDO feedbackTag = feedbackTagService.getFeedbackTag(feedbackDO.getFeedbackTagId());
-        feedbackRespVO.setFeedbackTag(feedbackTagConvert.convertApp(feedbackTag));
-        return success(feedbackRespVO);
+        return success(feedbackService.createFeedback(createReqVO, getLoginUserId()));
     }
 
     @GetMapping("/page")

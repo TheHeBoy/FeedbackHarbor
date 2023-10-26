@@ -16,7 +16,7 @@ import { resetRouter } from '@/router';
 import { useCache } from '@/hooks/web/useCache';
 
 const tenantEnable = import.meta.env.VITE_APP_TENANT_ENABLE;
-const { result_code, base_url, request_timeout } = config;
+const { result_code, base_url, request_timeout, default_headers } = config;
 
 // 需要忽略的提示。忽略后，自动 Promise.reject('error')
 const ignoreMsgs = [
@@ -32,12 +32,14 @@ let requestList: any[] = [];
 let isRefreshToken = false;
 // 请求白名单，无须token的接口
 const whiteList: string[] = ['/login', '/refresh-token'];
-
 // 创建axios实例
 const service: AxiosInstance = axios.create({
   baseURL: base_url, // api 的 base_url
   timeout: request_timeout, // 请求超时时间
   withCredentials: false, // 禁用 Cookie 等信息
+  headers: {
+    'Content-Type': default_headers,
+  },
 });
 
 // request拦截器

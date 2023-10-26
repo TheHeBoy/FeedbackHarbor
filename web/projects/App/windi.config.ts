@@ -1,1 +1,1 @@
-module.exports = require('@harbor/config/windi/windi.config.cjs');
+module.exports = require('../../config/windi/windi.config.js');

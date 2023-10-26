@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
@@ -30,7 +29,7 @@ public class AppCommentController {
     @PostMapping("/create")
     @PreAuthenticated
     @Operation(summary = "创建评论")
-    public CommonResult<CommentDO> createComment(@Valid @RequestBody AppCommentCreateReqVO createReqVO) {
+    public CommonResult<AppCommentRespVO> createComment(@Valid @RequestBody AppCommentCreateReqVO createReqVO) {
         return success(commentService.createComment(createReqVO, getLoginUserId()));
     }
 
@@ -42,7 +41,7 @@ public class AppCommentController {
 
     @GetMapping("/replyPage")
     @Operation(summary = "获得回复分页")
-    public CommonResult<PageResult<ReplyVO>> getReplyPage(@Valid AppReplyPageReqVO pageVO) {
+    public CommonResult<PageResult<AppReplyVO>> getReplyPage(@Valid AppReplyPageReqVO pageVO) {
         return success(commentService.getReplyPage(pageVO));
     }
 }

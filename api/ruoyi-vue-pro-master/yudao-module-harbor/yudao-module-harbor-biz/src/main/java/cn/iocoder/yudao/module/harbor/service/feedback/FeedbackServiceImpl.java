@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.harbor.service.feedback;
 
+import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.AppCommentBaseVO;
+import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
@@ -57,15 +59,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     private FeedbackTagConvert feedbackTagConvert;
 
     @Override
-    public Long createFeedback(FeedbackCreateReqVO createReqVO) {
-        // 插入
-        FeedbackDO feedback = FeedbackConvert.INSTANCE.convert(createReqVO);
-        feedbackMapper.insert(feedback);
-        // 返回
-        return feedback.getId();
-    }
-
-    @Override
     public void deleteFeedback(Long id) {
         // 校验存在
         validateFeedbackExists(id);
@@ -80,33 +73,29 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public FeedbackDO getFeedback(Long id) {
-        FeedbackDO feedbackDO = feedbackMapper.selectById(id);
-        feedbackDO.setLikes(feedbackDO.getLikes() + getLikeCount(feedbackDO.getId()));
-        return feedbackDO;
+    public PageResult<FeedbackRespVO> getFeedbackPage(FeedbackPageReqVO pageReqVO) {
+        PageResult<FeedbackDO> entitiesPage = feedbackMapper.selectPage(pageReqVO);
+        ArrayList<FeedbackRespVO> respVOS = new ArrayList<>();
+        for (FeedbackDO feedbackDO : entitiesPage.getList()) {
+            FeedbackRespVO vo = FeedbackConvert.INSTANCE.convert(feedbackDO);
+            fill(vo, feedbackDO);
+            respVOS.add(vo);
+        }
+        return new PageResult<>(respVOS, entitiesPage.getTotal());
     }
 
     @Override
-    public PageResult<FeedbackDO> getFeedbackPage(FeedbackPageReqVO pageReqVO) {
-        return feedbackMapper.selectPage(pageReqVO);
-    }
-
-    @Override
-    public List<FeedbackDO> getFeedbackList(FeedbackExportReqVO exportReqVO) {
-        return feedbackMapper.selectList(exportReqVO);
-    }
-
-    @Override
-    public FeedbackDO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid) {
+    public AppFeedbackRespVO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid) {
         // 插入
-        FeedbackDO feedback = FeedbackConvert.INSTANCE.convert(createReqVO);
-        AppUserDO user = appUserService.getUser(uid);
-        feedback.setUid(user.getId());
-        feedback.setAvatar(user.getAvatar());
-        feedback.setNickname(user.getNickname());
-        feedback.setUserType(user.getUserType());
-        feedbackMapper.insert(feedback);
-        return feedbackMapper.selectById(feedback.getId());
+        FeedbackDO feedbackDO = FeedbackConvert.INSTANCE.convert(createReqVO);
+        feedbackDO.setUid(uid);
+        feedbackMapper.insert(feedbackDO);
+
+        // 填充用户信息
+        feedbackDO = feedbackMapper.selectById(feedbackDO.getId());
+        AppFeedbackRespVO feedbackRespVO = FeedbackConvert.INSTANCE.convertApp(feedbackDO);
+        fillUserInfo(feedbackRespVO);
+        return feedbackRespVO;
     }
 
     @Override
@@ -114,24 +103,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         PageResult<FeedbackDO> entitiesPage = feedbackMapper.selectPage(pageVO);
         ArrayList<AppFeedbackRespVO> respVOS = new ArrayList<>();
         for (FeedbackDO feedbackDO : entitiesPage.getList()) {
-            AppFeedbackRespVO e = FeedbackConvert.INSTANCE.convertPageApp(feedbackDO);
-
-            // 合并缓存中的点赞数
-            e.setLikes(e.getLikes() + getLikeCount(e.getId()));
-
-            // 评论数量
-            e.setCommentNum(commentService.getCommentNum(e.getId()));
-
-            // 反馈标签
-            FeedbackTagDO feedbackTag = feedbackTagService.getFeedbackTag(feedbackDO.getFeedbackTagId());
-            e.setFeedbackTag(feedbackTagConvert.convertApp(feedbackTag));
-
-            respVOS.add(e);
+            AppFeedbackRespVO vo = FeedbackConvert.INSTANCE.convertApp(feedbackDO);
+            fill(vo, feedbackDO);
+            respVOS.add(vo);
         }
-        PageResult<AppFeedbackRespVO> pageResult = new PageResult<>();
-        pageResult.setTotal(entitiesPage.getTotal());
-        pageResult.setList(respVOS);
-        return pageResult;
+        return new PageResult<>(respVOS, entitiesPage.getTotal());
     }
 
     /**
@@ -144,5 +120,34 @@ public class FeedbackServiceImpl implements FeedbackService {
         long count = likeRedisDAO.sSize(feedbackId, true, LikeBusTypeEnum.FEEDBACK);
         long cancelCount = likeRedisDAO.sSize(feedbackId, false, LikeBusTypeEnum.FEEDBACK);
         return count - cancelCount;
+    }
+
+    /**
+     * 填充点赞数、评论数量、用户信息和反馈标签
+     */
+    private void fill(AppFeedbackBaseVO vo, FeedbackDO feedbackDO) {
+        // 合并缓存中的点赞数
+        vo.setLikes(vo.getLikes() + getLikeCount(vo.getId()));
+
+        // 评论数量
+        vo.setCommentNum(commentService.getCommentNum(vo.getId()));
+
+        // 反馈标签
+        FeedbackTagDO feedbackTag = feedbackTagService.getFeedbackTag(feedbackDO.getFeedbackTagId());
+        vo.setFeedbackTag(feedbackTagConvert.convertApp(feedbackTag));
+
+        // 用户信息
+        fillUserInfo(vo);
+    }
+
+
+    /**
+     * 填充用户信息
+     */
+    private void fillUserInfo(AppFeedbackBaseVO vo) {
+        AppUserDO user = appUserService.getUser(vo.getUid());
+        vo.setAvatar(user.getAvatar());
+        vo.setNickname(user.getNickname());
+        vo.setUserType(user.getUserType());
     }
 }

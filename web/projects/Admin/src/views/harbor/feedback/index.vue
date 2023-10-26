@@ -82,13 +82,13 @@
 
   <!-- 列表 -->
   <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="内容" align="center" prop="content" />
+    <el-table v-loading="loading" :data="list" @row-click="onRowClick" highlight-current-row>
+      <el-table-column label="反馈信息">
+        <template #default="scope">
+          <UImageContext :contents="scope.row.content" :unfold="false" :line="3" />
+        </template>
+      </el-table-column>
       <el-table-column label="点赞数" align="center" prop="likes" />
-      <el-table-column label="头像" align="center" prop="avatar" />
-      <el-table-column label="用户类型" align="center" prop="userType" />
-      <el-table-column label="用户昵称" align="center" prop="nickname" />
-      <el-table-column label="图片集" align="center" prop="imgs" />
       <el-table-column label="反馈状态" align="center" prop="state" />
       <el-table-column
         label="创建时间"
@@ -98,36 +98,55 @@
       />
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <u-feedback />
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['harbor:feedback:delete']"
-          >
-            删除
-          </el-button>
+          <div @click.stop>
+            <el-button
+              link
+              type="danger"
+              @click="handleDelete(scope.row.id)"
+              v-hasPermi="['harbor:feedback:delete']"
+            >
+              删除
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <Pagination
-      :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <div class="w-full flex justify-center">
+      <Pagination
+        :total="total"
+        v-model:page="queryParams.pageNo"
+        v-model:limit="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </div>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
   <FeedbackForm ref="formRef" @success="getList" />
+
+  <el-drawer
+    :close-on-click-modal="false"
+    :modal="false"
+    class="min-w-150 pointer-events-auto"
+    :show-close="true"
+    modal-class="drawer-modal"
+    title="反馈信息"
+    direction="rtl"
+    destroy-on-close
+    v-model="drawer"
+  >
+    <UFeedback :v-model="feedbackRow" commentShow :user-info="useUserStore().getUser" />
+  </el-drawer>
 </template>
 
-<script setup lang="ts" name="Feedback">
+<script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime';
 import download from '@/utils/download';
 import * as FeedbackApi from '@/api/harbor/feedback';
 import FeedbackForm from './FeedbackForm.vue';
+import { UFeedback, UImageContext } from '@harbor/components';
+import { useUserStore } from '@/store/modules/user';
 
 const message = useMessage(); // 消息弹窗
 const { t } = useI18n(); // 国际化
@@ -138,7 +157,7 @@ const list = ref([]); // 列表的数据
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  createTime: [] as any,
+  createTime: [],
   content: null,
   avatar: null,
   userType: null,
@@ -147,6 +166,8 @@ const queryParams = reactive({
 });
 const queryFormRef = ref(); // 搜索的表单
 const exportLoading = ref(false); // 导出的加载中
+const drawer = ref(false);
+const feedbackRow = ref(); //点击的行数据
 
 /** 查询列表 */
 const getList = async () => {
@@ -206,8 +227,26 @@ const handleExport = async () => {
   }
 };
 
+const onRowClick = (row: any, _column: any, event: any) => {
+  console.log(event.target);
+  if (drawer.value == false) {
+    drawer.value = true;
+  }
+  feedbackRow.value = row;
+};
+
 /** 初始化 **/
 onMounted(() => {
   getList();
 });
 </script>
+<style lang="scss" scoped>
+.active-row {
+  --el-table-tr-bg-color: var(--el-color-info-light-9);
+}
+</style>
+<style lang="scss">
+.drawer-modal {
+  pointer-events: none;
+}
+</style>

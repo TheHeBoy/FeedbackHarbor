@@ -51,8 +51,7 @@ export const useUserStore = defineStore('admin-user', {
         return null;
       }
       let userInfo = wsCache.get(CACHE_KEY.USER);
-      const roleRouters = wsCache.get(CACHE_KEY.ROLE_ROUTERS);
-      if (!userInfo || !roleRouters) {
+      if (!userInfo) {
         userInfo = await getInfo();
       }
       this.permissions = userInfo.permissions;

@@ -1,3 +1,17 @@
 {
-  "name": "web"
+  "name": "@harbor/web",
+  "scripts": {
+    "app": "pnpm --filter @harbor/app",
+    "admin": "pnpm --filter @harbor/admin"
+  },
+  "dependencies": {
+    "element-plus": "2.3.7"
+  },
+  "devDependencies": {
+    "vite-svg-loader": "^3.6.0",
+    "unplugin-icons": "^0.14.8",
+    "@iconify/json": "^2.0.29",
+    "@iconify/iconify": "^3.1.1",
+    "unplugin-vue-components": "^0.21.1"
+  }
 }
