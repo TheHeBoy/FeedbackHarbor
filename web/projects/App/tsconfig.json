@@ -30,7 +30,6 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "../Admin/src/types/auto-imports.d.ts"
   ],
   // 编译器默认排除的编译文件
   "exclude": [

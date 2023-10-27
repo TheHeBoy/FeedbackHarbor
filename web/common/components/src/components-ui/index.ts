@@ -6,3 +6,4 @@ export * from "./emoji";
 export * from "./ImageContext";
 export * from "./UserNickNameInfo";
 export * from "./UserAvatar";
+export * from "./FeedbackTag";

@@ -11,14 +11,7 @@ const root = process.cwd()
 function pathResolve(dir: string) {
   return resolve(root, '.', dir)
 }
-const path = require('path');
 
-const harborApisModulePath = resolve('@harbor/apis');
-const harborApisModuleDir = dirname(harborApisModulePath);
-console.log('Directory of @harbor/apis:', harborApisModuleDir);
-
-
-console.log(harborApisModulePath)
 // https://vitejs.dev/config/
 export default ({command, mode}: ConfigEnv): UserConfig => {
   let env = {} as any

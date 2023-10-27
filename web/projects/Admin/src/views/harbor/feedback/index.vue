@@ -83,31 +83,43 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" @row-click="onRowClick" highlight-current-row>
-      <el-table-column label="反馈信息">
+      <el-table-column label="反馈信息" width="500">
         <template #default="scope">
-          <UImageContext :contents="scope.row.content" :unfold="false" :line="3" />
+          <div class="flex w-full">
+            <UUserAvatar :avatar="scope.row.avatar" :uid="scope.row.uid" />
+            <div class="ml-2">
+              <div class="flex justify-between">
+                <UUserNickNameInfo :nick-name="scope.row.nickname" :type="scope.row.userType" />
+              </div>
+              <div class="mt-2">
+                <UImageContext :contents="scope.row.content" :imgs="scope.row.imgs" />
+              </div>
+            </div>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="点赞数" align="center" prop="likes" />
+      <el-table-column label="反馈标签" align="center" width="150">
+        <template #default="scope">
+          <UFeedbackTag :feedback-tag="scope.row.feedbackTag" />
+        </template>
+      </el-table-column>
       <el-table-column label="反馈状态" align="center" prop="state" />
       <el-table-column
-        label="创建时间"
+        label="反馈时间"
         align="center"
         prop="createTime"
         :formatter="dateFormatter"
       />
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <div @click.stop>
-            <el-button
-              link
-              type="danger"
-              @click="handleDelete(scope.row.id)"
-              v-hasPermi="['harbor:feedback:delete']"
-            >
-              删除
-            </el-button>
-          </div>
+          <el-button
+            link
+            type="danger"
+            @click.stop="handleDelete(scope.row.id)"
+            v-hasPermi="['harbor:feedback:delete']"
+          >
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -126,11 +138,9 @@
   <FeedbackForm ref="formRef" @success="getList" />
 
   <el-drawer
-    :close-on-click-modal="false"
-    :modal="false"
-    class="min-w-150 pointer-events-auto"
-    :show-close="true"
     modal-class="drawer-modal"
+    class="min-w-150"
+    :show-close="true"
     title="反馈信息"
     direction="rtl"
     destroy-on-close
@@ -145,7 +155,13 @@ import { dateFormatter } from '@/utils/formatTime';
 import download from '@/utils/download';
 import * as FeedbackApi from '@/api/harbor/feedback';
 import FeedbackForm from './FeedbackForm.vue';
-import { UFeedback, UImageContext } from '@harbor/components';
+import {
+  UFeedback,
+  UFeedbackTag,
+  UImageContext,
+  UUserAvatar,
+  UUserNickNameInfo,
+} from '@harbor/components';
 import { useUserStore } from '@/store/modules/user';
 
 const message = useMessage(); // 消息弹窗
@@ -158,11 +174,11 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   createTime: [],
-  content: null,
-  avatar: null,
-  userType: null,
-  nickname: null,
-  state: null,
+  content: undefined,
+  avatar: undefined,
+  userType: undefined,
+  nickname: undefined,
+  state: undefined,
 });
 const queryFormRef = ref(); // 搜索的表单
 const exportLoading = ref(false); // 导出的加载中
@@ -228,9 +244,7 @@ const handleExport = async () => {
 };
 
 const onRowClick = (row: any) => {
-  if (drawer.value == false) {
-    drawer.value = true;
-  }
+  drawer.value = true;
   feedbackRow.value = row;
 };
 
@@ -246,6 +260,6 @@ onMounted(() => {
 </style>
 <style lang="scss">
 .drawer-modal {
-  pointer-events: none;
+  background: rgba(0, 0, 0, 0);
 }
 </style>

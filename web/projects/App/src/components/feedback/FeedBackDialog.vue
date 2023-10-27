@@ -79,7 +79,6 @@ const inputBoxParam: InjectInputBoxApi = {
   upload: true,
   submit: submit,
   focus: () => {},
-  alwaysShow: true,
 };
 
 const feedbackTags = ref<FeedbackTagVO[]>([]);

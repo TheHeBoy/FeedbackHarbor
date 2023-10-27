@@ -1,7 +1,7 @@
 <template>
   <el-row class="w-full">
     <el-col :span="1">
-      <UUserAvatar :avatar="vModel.avatar" />
+      <UUserAvatar :avatar="vModel.avatar" :uid="vModel.uid" />
     </el-col>
     <el-col :span="23">
       <div class="ml-7">
@@ -10,13 +10,7 @@
             :nick-name="vModel.nickname"
             :type="vModel.userType"
           />
-          <div>
-            <i-mdi-tag-multiple
-              :color="vModel.feedbackTag.color"
-              class="inline w-5 h-5 mr-1"
-            />
-            <span class="text-sm"> {{ vModel.feedbackTag.nameCh }}</span>
-          </div>
+          <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
         </div>
         <div class="mt-2">
           <UImageContext :contents="contents" :imgs="vModel.imgs" />
@@ -71,6 +65,7 @@ import {
   UImageContext,
   UUserNickNameInfo,
   UUserAvatar,
+  UFeedbackTag,
 } from "../../components-ui";
 import reportSVG from "./svg/reportSVG.svg?component";
 import likeSVG from "./svg/likeSVG.svg?component";

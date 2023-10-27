@@ -38,10 +38,10 @@ const props = defineProps({
   imgs: {
     type: String, // 以 || 分割
   },
-  line:{
+  line: {
     type: Number,
     default: () => 10,
-  }
+  },
 });
 
 const imgList = computed(() => {
