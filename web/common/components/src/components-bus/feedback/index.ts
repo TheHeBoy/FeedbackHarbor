@@ -1,5 +1,4 @@
 import UFeedback from "./feedback.vue";
-import { withInstall } from "../../util";
 
 export type UserInfo = {
   id: number;

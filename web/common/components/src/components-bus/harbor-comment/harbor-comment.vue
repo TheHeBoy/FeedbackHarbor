@@ -29,10 +29,9 @@ import {
   like,
   getLikeList,
   uploadFiles,
-  getReplyPage,
-  ReplyPageParams,
+  getReplyPage
 } from "@harbor/apis";
-import { formatPast, isNull } from "../../util";
+import { formatPast } from "../../util";
 import { ElMessage } from "element-plus";
 import {
   UComment,
@@ -59,7 +58,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<{}>();
+const emit = defineEmits<{
+  (e: "submit", content: String): void;
+}>();
 
 const loading = ref(false);
 const noMore = computed(() => config.comments.length >= config.total);
@@ -131,6 +132,7 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
     finish(comment);
     ElMessage.success("评论成功!");
     props.vModel.commentNum++;
+    emit("submit", content);
   });
 };
 

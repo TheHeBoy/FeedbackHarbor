@@ -9,6 +9,7 @@ import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackPage
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.feedback.FeedbackDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackReplyStateEnum;
 
 /**
  * 用户反馈 Service 接口

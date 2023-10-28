@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
-import presets from './presets/presets';
+import build from './build/vite';
 // https://vitejs.dev/config/
 export default defineConfig((env) => {
   // env 环境变量
@@ -8,7 +8,7 @@ export default defineConfig((env) => {
   return {
     base: viteEnv.VITE_BASE,
     // 插件
-    plugins: [presets(env)],
+    plugins: [build(env)],
     // 别名设置
     resolve: {
       alias: [

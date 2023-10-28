@@ -1,7 +1,7 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.feedback;
 
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
-import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackStateEnum;
+import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackReplyStateEnum;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
 
@@ -41,10 +41,10 @@ public class FeedbackDO extends TenantBaseDO {
      */
     private String imgs;
     /**
-     * 反馈状态
-     * 枚举 {@link FeedbackStateEnum}
+     * 反馈回复状态
+     * 枚举 {@link FeedbackReplyStateEnum}
      */
-    private Integer state;
+    private Integer replyState;
     /**
      * 用户id
      */

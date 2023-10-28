@@ -1,15 +1,19 @@
 package cn.iocoder.yudao.module.harbor.service.comment;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
 import cn.iocoder.yudao.module.harbor.convert.feedback.FeedbackConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.feedback.FeedbackDO;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.feedbacktag.FeedbackTagDO;
+import cn.iocoder.yudao.module.harbor.dal.mysql.feedback.FeedbackMapper;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
+import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackReplyStateEnum;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
+import cn.iocoder.yudao.module.harbor.service.feedback.FeedbackService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,6 +47,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Resource
     private LikeRedisDAO likeRedisDAO;
+
+    @Resource
+    private FeedbackMapper feedbackMapper;
 
     @Override
     public void deleteComment(Long id) {
@@ -104,6 +111,11 @@ public class CommentServiceImpl implements CommentService {
         commentDO = commentMapper.selectById(commentDO.getId());
         AppCommentRespVO respVO = CommentConvert.INSTANCE.convertApp(commentDO);
         fillUserInfo(respVO);
+
+        // 如果时管理员用户，修改反馈回复状态为已回复
+        if (ObjectUtil.equal(respVO.getUserType(), UserTypeEnum.ADMIN.getValue())) {
+            feedbackMapper.updateReplyState(createReqVO.getFeedbackId(), FeedbackReplyStateEnum.REPLIED);
+        }
         return CommentConvert.INSTANCE.convertApp(commentDO);
     }
 

@@ -1,6 +1,4 @@
 /**
- * Created by 芋道源码
- *
  * 枚举类
  */
 
@@ -81,4 +79,9 @@ export const SystemUserSocialTypeEnum = {
     source: 'wechat_enterprise',
     img: 'https://s1.ax1x.com/2022/05/22/OzMrzn.png',
   },
+};
+
+export const HarborFeedbackReplayState = {
+  NO_REPLY: 0, // 待回复
+  REPLIED: 1, // 已回复
 };

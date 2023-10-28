@@ -19,33 +19,14 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="用户类型" prop="userType">
-        <el-select
-          v-model="queryParams.userType"
-          placeholder="请选择用户类型"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="nickname">
-        <el-input
-          v-model="queryParams.nickname"
-          placeholder="请输入用户昵称"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="反馈状态" prop="state">
-        <el-select
-          v-model="queryParams.state"
-          placeholder="请选择反馈状态"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
+      <el-form-item label="回复状态" prop="replyState">
+        <el-select v-model="queryParams.replyState" placeholder="请选择回复状态" clearable>
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.HARBOR_REPLY_STATE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -98,12 +79,16 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="反馈标签" align="center" width="150">
+      <el-table-column label="反馈标签" align="center">
         <template #default="scope">
           <UFeedbackTag :feedback-tag="scope.row.feedbackTag" />
         </template>
       </el-table-column>
-      <el-table-column label="反馈状态" align="center" prop="state" />
+      <el-table-column label="回复状态" align="center" width="150">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.HARBOR_REPLY_STATE" :value="scope.row.replyState as number" />
+        </template>
+      </el-table-column>
       <el-table-column
         label="反馈时间"
         align="center"
@@ -120,6 +105,7 @@
           >
             删除
           </el-button>
+          <el-button link type="danger">回复</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -146,13 +132,19 @@
     destroy-on-close
     v-model="drawer"
   >
-    <UFeedback :v-model="feedbackRow" commentShow :user-info="useUserStore().getUser" />
+    <UFeedback
+      :v-model="feedbackRow"
+      commentShow
+      :user-info="useUserStore().getUser"
+      @submit="feedbackRow.replyState == HarborFeedbackReplayState.NO_REPLY ? getList() : null"
+    />
   </el-drawer>
 </template>
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime';
 import download from '@/utils/download';
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict';
 import * as FeedbackApi from '@/api/harbor/feedback';
 import FeedbackForm from './FeedbackForm.vue';
 import {
@@ -163,6 +155,7 @@ import {
   UUserNickNameInfo,
 } from '@harbor/components';
 import { useUserStore } from '@/store/modules/user';
+import { HarborFeedbackReplayState } from '@/utils/constants';
 
 const message = useMessage(); // 消息弹窗
 const { t } = useI18n(); // 国际化
@@ -178,7 +171,7 @@ const queryParams = reactive({
   avatar: undefined,
   userType: undefined,
   nickname: undefined,
-  state: undefined,
+  replyState: undefined,
 });
 const queryFormRef = ref(); // 搜索的表单
 const exportLoading = ref(false); // 导出的加载中
@@ -187,6 +180,7 @@ const feedbackRow = ref(); //点击的行数据
 
 /** 查询列表 */
 const getList = async () => {
+  console.log('test');
   loading.value = true;
   try {
     const data = await FeedbackApi.getFeedbackPage(queryParams);

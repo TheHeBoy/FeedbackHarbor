@@ -54,13 +54,14 @@
         v-if="isCommentShow"
         :user-info="userInfo"
         :v-model="vModel"
+        @submit="$emit('submit')"
       />
     </el-col>
   </el-row>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType, ref, computed, watch, nextTick } from "vue";
+import { onMounted, PropType, ref, computed } from "vue";
 import {
   UImageContext,
   UUserNickNameInfo,
@@ -98,24 +99,13 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:commentShow"]);
+const emit = defineEmits<{
+  (e: "submit", content: String): void;
+}>();
 
 // 用户已点赞反馈集合
 const feedbackLikeIds = ref<Number[]>([]);
 const isCommentShow = ref(props.commentShow);
-
-// 刷新评论组件
-watch(
-  () => props.vModel,
-  () => {
-    if (isCommentShow.value === true) {
-      isCommentShow.value = false;
-      nextTick(() => {
-        isCommentShow.value = true;
-      });
-    }
-  }
-);
 
 const onLike = (feedback: FeedbackVO) => {
   let fid = feedback.id;

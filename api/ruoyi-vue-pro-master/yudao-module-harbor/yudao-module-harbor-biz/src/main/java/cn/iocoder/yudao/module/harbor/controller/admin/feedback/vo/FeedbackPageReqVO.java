@@ -18,14 +18,8 @@ public class FeedbackPageReqVO extends PageParam {
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
 
-    @Schema(description = "用户id", example = "16979")
-    private Long uid;
-
-    @Schema(description = "内容")
-    private String content;
-
-    @Schema(description = "点赞数")
-    private Long likes;
+    @Schema(description = "回复状态")
+    private Integer replyState;
 
     @Schema(description = "反馈标签id")
     private Long feedbackTagId;

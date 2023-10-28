@@ -3,7 +3,7 @@
     <div class="mx-auto flex w-[70%] min-w-200">
       <div class="w-[75%]">
         <el-card class="box-card">
-          <OrderTag @change="tagChange" />
+          <SortTag @change="sortChange" />
         </el-card>
         <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
           <template v-for="feedback in feedbackList" :key="feedback.id">
@@ -68,7 +68,7 @@ const pageRequest = () => {
   });
 };
 
-const tagChange = (val: number) => {
+const sortChange = (val: number) => {
   if (val) {
     resetList();
     pageParams.order = val;

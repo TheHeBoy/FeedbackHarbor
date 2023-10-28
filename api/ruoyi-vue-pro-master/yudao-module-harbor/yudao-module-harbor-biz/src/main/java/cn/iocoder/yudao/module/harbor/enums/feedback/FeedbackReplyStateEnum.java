@@ -9,25 +9,25 @@ import java.util.Arrays;
 import static cn.hutool.core.util.ArrayUtil.firstMatch;
 
 /**
- * 反馈状态
+ * 反馈回复状态
  * @author hehong
  * @date 2023-09-25
  */
 @AllArgsConstructor
 @Getter
-public enum FeedbackStateEnum implements IntArrayValuable {
+public enum FeedbackReplyStateEnum implements IntArrayValuable {
 
-    REPLIED(0, "已回复"),
-    NO_REPLY(1, "未回复"),
+    NO_REPLY(0, "待回复"),
+    REPLIED(1, "已回复"),
     ;
 
     private final Integer code;
 
     private final String name;
 
-    public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(FeedbackStateEnum::getCode).toArray();
+    public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(FeedbackReplyStateEnum::getCode).toArray();
 
-    public static FeedbackStateEnum valueOf(Integer code) {
+    public static FeedbackReplyStateEnum valueOf(Integer code) {
         return firstMatch(sceneEnum -> sceneEnum.getCode().equals(code), values());
     }
 

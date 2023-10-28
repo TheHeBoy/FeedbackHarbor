@@ -4,7 +4,7 @@
     "preinstall": "npx only-allow pnpm",
     "app": "pnpm --filter @harbor/app",
     "admin": "pnpm --filter @harbor/admin",
-    "install": "pnpm --recursive --parallel --stream install"
+    "install": "pnpm --recursive --stream install"
   },
   "dependencies": {
     "element-plus": "2.3.7"

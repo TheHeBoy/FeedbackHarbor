@@ -36,6 +36,7 @@ declare module '@vue/runtime-core' {
     OrderTag: typeof import('./components/actionbar/OrderTag.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SortTag: typeof import('./components/actionbar/SortTag.vue')['default']
     TheFooter: typeof import('./components/layout/TheFooter.vue')['default']
     TheHead: typeof import('./components/layout/TheHead.vue')['default']
   }
