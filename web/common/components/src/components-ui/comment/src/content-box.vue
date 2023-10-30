@@ -4,8 +4,8 @@
     <div class="comment-primary">
       <div class="comment-main">
         <UUserNickNameInfo
-            :nick-name="data.user.username"
-            :type="data.user.type"
+          :nick-name="data.user.username"
+          :type="data.user.type"
         />
         <div class="content">
           <u-fold unfold>
@@ -97,7 +97,7 @@
           </div>
         </div>
         <div v-if="state.active">
-          <InputBox
+          <UImageInputBox
             ref="commentRef"
             :parent-id="str(id)"
             :placeholder="`回复 @${data.user.username}...`"
@@ -106,6 +106,7 @@
             style="margin-top: 12px"
             @hide="hide"
             @close="state.active = false"
+            @submit="submit"
           />
         </div>
       </div>
@@ -117,19 +118,20 @@
 
 <script setup lang="ts">
 import { computed, inject, nextTick, ref, reactive, h } from "vue";
-import InputBox from "./tools/input-box.vue";
 import {
-  EmojiApi,
-  InjectionEmojiApi,
   UFold,
   UIcon,
-  CommentApi, UUserAvatar, UUserNickNameInfo,
+  CommentApi,
+  UUserAvatar,
+  InjectSubmit,
+  UUserNickNameInfo,
 } from "../../../components-ui";
-import type { InputBoxApi } from "./tools/input-box.vue";
-import { ElAvatar, ElImage } from "element-plus";
+import { ElImage } from "element-plus";
 import { useEmojiParse } from "../../../hooks";
 import { str, isEmpty, dayjs } from "../../../util";
 import { InjectContentBox, InjectContentBoxApi, InjectSlots } from "../key";
+import { UImageInputBox } from "../../index";
+import emoji from "../../../types/emoji";
 
 interface Props {
   reply?: boolean;
@@ -139,11 +141,13 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const submit = inject(InjectSubmit);
+
 const state = reactive({
   active: false,
 });
 
-const commentRef = ref<InputBoxApi>();
+const commentRef = ref();
 const btnRef = ref<HTMLDivElement>();
 
 const imgList = computed(() => {
@@ -152,7 +156,6 @@ const imgList = computed(() => {
   return temp?.split("||");
 });
 
-const { allEmoji } = inject(InjectionEmojiApi) as EmojiApi;
 const { like, user, relativeTime } = inject(
   InjectContentBox
 ) as InjectContentBoxApi;
@@ -178,13 +181,13 @@ function hide(event: Event) {
 
 //工具slots
 const slots = inject(InjectSlots) as any;
-// 用户信息卡槽
-const Info = () => h("div", slots.info(props.data));
 
 //操作栏卡槽
 const Operate = () => h("div", slots.operate(props.data));
 
-const contents = computed(() => useEmojiParse(allEmoji, props.data.content));
+const contents = computed(() =>
+  useEmojiParse(emoji.allEmoji, props.data.content)
+);
 </script>
 
 <style lang="scss" scoped>

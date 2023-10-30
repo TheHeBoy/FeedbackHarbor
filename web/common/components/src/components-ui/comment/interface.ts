@@ -35,7 +35,6 @@ export interface UserApi {
 
 export interface ConfigApi {
   user: UserApi;
-  emoji: EmojiApi;
   comments: CommentApi[];
   total: number;
   replyShowSize?: number;

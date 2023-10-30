@@ -14,13 +14,9 @@ export interface SubmitParam2Api {
   clear: () => void;
 }
 
-export interface InjectInputBoxApi {
-  upload: boolean;
-  submit: ({ content, parentId, files, clear }: SubmitParam2Api) => void;
-  focus: () => void;
-}
-
-export const InjectInputBox: InjectionKey<InjectInputBoxApi> = Symbol();
+export const InjectSubmit: InjectionKey<
+  ({ content, parentId, files, clear }: SubmitParam2Api) => void
+> = Symbol();
 
 // 内容盒子
 export interface InjectContentBoxApi {

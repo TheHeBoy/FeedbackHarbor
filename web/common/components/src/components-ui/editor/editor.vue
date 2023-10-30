@@ -10,6 +10,7 @@
       @blur="onBlur"
       @paste="textPlain"
       @keydown.enter="keyDown"
+      autofocus
       v-html="text"
     ></div>
     <div

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="isShow" width="700" title="反馈内容" :destroy-on-close="true">
+  <el-dialog v-model="isShow" width="700" title="反馈内容" :destroy-on-close="true" @open="open">
     <el-form ref="ruleFormRef" hide-required-asterisk label-position="top" :model="modelData">
       <el-form-item label="反馈标签" prop="feedbackType">
         <el-radio-group v-model="modelData.feedbackTagId">
@@ -12,11 +12,12 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="反馈内容" prop="content">
-        <UInputBox
-          ref="commentRef"
+        <UImageInputBox
+          ref="inputBoxRef"
           placeholder="输入反馈内容"
           content-btn="提交反馈"
           :min-height="150"
+          @submit="submit"
         />
       </el-form-item>
     </el-form>
@@ -26,18 +27,12 @@
 <script lang="ts" setup>
 import { FormInstance } from 'element-plus';
 import { FeedbackCreateVO, createFeedback, uploadFiles } from '@harbor/apis';
-import UInputBox from '@harbor/components/src/components-ui/comment/src/tools/input-box.vue';
-import {
-  InjectInputBox,
-  InjectInputBoxApi,
-  SubmitParam2Api,
-  InjectionEmojiApi,
-} from '@harbor/components';
-import emoji from '@harbor/components/src/types/emoji';
+import { UImageInputBox, SubmitParam2Api } from '@harbor/components';
 import { FeedbackTagVO, getFeedbackTagList } from '@/api/feedback-tag';
 import { onMounted } from 'vue';
 
 const isShow = ref(false);
+const inputBoxRef = ref<any>(null);
 const show = () => {
   isShow.value = true;
 };
@@ -75,10 +70,10 @@ const submit = async ({ content, parentId, reply, files, clear }: SubmitParam2Ap
   });
 };
 
-const inputBoxParam: InjectInputBoxApi = {
-  upload: true,
-  submit: submit,
-  focus: () => {},
+const open = () => {
+  nextTick(() => {
+    inputBoxRef.value.focus();
+  });
 };
 
 const feedbackTags = ref<FeedbackTagVO[]>([]);
@@ -89,7 +84,4 @@ onMounted(() => {
     modelData.feedbackTagId = feedbackTags.value[0].id;
   });
 });
-
-provide(InjectInputBox, inputBoxParam);
-provide(InjectionEmojiApi, emoji);
 </script>

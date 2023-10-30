@@ -1,6 +1,4 @@
-import { withInstall } from "../../util";
-import editorVue from "./editor.vue";
+import UEditor from "./editor.vue";
 
-export type EditorInstance = InstanceType<typeof editorVue>;
-export const UEditor = withInstall(editorVue);
-export default UEditor;
+export type EditorInstance = InstanceType<typeof UEditor>;
+export { UEditor };

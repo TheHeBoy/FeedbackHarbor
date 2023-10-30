@@ -46,6 +46,7 @@
   },
   "include": [
     "src/**/*",
+    "src/**/*.vue",
     "types/**/*.d.ts",
     "src/types/auto-imports.d.ts",
     "src/types/auto-components.d.ts"

@@ -29,7 +29,12 @@
             </el-avatar>
           </button>
         </div>
-        <InputBox placeholder="输入评论" content-btn="发表评论" />
+        <UImageInputBox
+          ref="inputBoxRef"
+          placeholder="输入评论"
+          content-btn="发表评论"
+          @submit="submit"
+        />
       </div>
     </div>
     <div v-if="comments.length != 0" class="comment-list-wrapper">
@@ -39,25 +44,23 @@
 </template>
 
 <script setup lang="ts">
-import { provide, toRefs, useSlots } from "vue";
-import InputBox from "./tools/input-box.vue";
+import { provide, toRefs, useSlots, ref } from "vue";
 import CommentList from "./comment-list.vue";
 import { ElAvatar } from "element-plus";
 import {
   UIcon,
   CommentApi,
   ConfigApi,
-  InjectionEmojiApi,
   SubmitParamApi,
   ReplyPageParamApi,
+  UImageInputBox,
+  InjectSubmit,
 } from "../../index";
 import {
   InjectContentBoxApi,
   InjectContentBox,
-  InjectInputBox,
   InjectReplyBox,
   InjectSlots,
-  InjectInputBoxApi,
   InjectReplyBoxApi,
   SubmitParam2Api,
 } from "../key";
@@ -66,16 +69,13 @@ import { isNull } from "../../../util";
 interface Props {
   config: ConfigApi;
   page?: boolean;
-  upload?: boolean;
   relativeTime?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   page: false,
-  upload: false,
 });
-// 将这个属性转换为响应式数据。
-// const comments = toRef(props.config, 'comments')
+
 const { user, comments, replyShowSize, total } = toRefs(props.config);
 const emit = defineEmits<{
   (
@@ -88,9 +88,9 @@ const emit = defineEmits<{
     { parentId, pageNum, pageSize, finish }: ReplyPageParamApi
   ): void;
   (e: "showInfo", id: string, finish: Function): void;
-  (e: "focus"): void;
   (e: "userAvatar"): void;
 }>();
+const inputBoxRef = ref();
 
 /**
  * 提交评论
@@ -127,13 +127,8 @@ const submit = ({
   };
   emit("submit", { content, parentId, reply, files, finish });
 };
-const inputBoxParam: InjectInputBoxApi = {
-  upload: props.upload,
-  submit: submit,
-  focus: () => emit("focus"),
-};
-// 输入框盒子
-provide(InjectInputBox, inputBoxParam);
+
+provide(InjectSubmit, submit);
 
 // 点赞评论数组处理
 const editLikeCount = (id: number, count: number) => {
@@ -158,13 +153,13 @@ const like = (id: string) => {
   // 点赞事件处理
   const likeIds = props.config.user.likeIds;
   emit("like", id, () => {
-    if (likeIds.findIndex((item) => item == id) == -1) {
+    if (likeIds.findIndex((item) => item == Number(id)) == -1) {
       // 点赞
       likeIds.push(id as never);
       editLikeCount(Number(id), 1);
     } else {
       // 取消点赞
-      let index = likeIds.findIndex((item) => item == id);
+      let index = likeIds.findIndex((item) => item == Number(id));
       if (index != -1) {
         likeIds.splice(index, 1);
         editLikeCount(Number(id), -1);
@@ -219,14 +214,12 @@ const remove = (comment: CommentApi) => {
   }
 };
 
-// 表情包
-provide(InjectionEmojiApi, props.config.emoji);
-
 // 工具卡槽
 provide(InjectSlots, useSlots());
 
 defineExpose({
   remove: remove,
+  focus: () => inputBoxRef.value.focus(),
 });
 </script>
 
