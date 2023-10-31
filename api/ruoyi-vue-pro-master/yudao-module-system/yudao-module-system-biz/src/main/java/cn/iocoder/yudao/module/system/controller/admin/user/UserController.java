@@ -3,9 +3,7 @@ package cn.iocoder.yudao.module.system.controller.admin.user;
 import cn.hutool.core.collection.CollUtil;
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.user.*;
 import cn.iocoder.yudao.module.system.convert.user.UserConvert;
-import cn.iocoder.yudao.module.system.dal.dataobject.dept.DeptDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
-import cn.iocoder.yudao.module.system.service.dept.DeptService;
 import cn.iocoder.yudao.module.system.service.user.AdminUserService;
 import cn.iocoder.yudao.module.system.enums.common.SexEnum;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
@@ -42,8 +40,6 @@ public class UserController {
 
     @Resource
     private AdminUserService userService;
-    @Resource
-    private DeptService deptService;
 
     @PostMapping("/create")
     @Operation(summary = "新增用户")
@@ -95,15 +91,10 @@ public class UserController {
         if (CollUtil.isEmpty(pageResult.getList())) {
             return success(new PageResult<>(pageResult.getTotal())); // 返回空
         }
-
-        // 获得拼接需要的数据
-        Collection<Long> deptIds = convertList(pageResult.getList(), AdminUserDO::getDeptId);
-        Map<Long, DeptDO> deptMap = deptService.getDeptMap(deptIds);
         // 拼接结果返回
         List<UserPageItemRespVO> userList = new ArrayList<>(pageResult.getList().size());
         pageResult.getList().forEach(user -> {
             UserPageItemRespVO respVO = UserConvert.INSTANCE.convert(user);
-            respVO.setDept(UserConvert.INSTANCE.convert(deptMap.get(user.getDeptId())));
             userList.add(respVO);
         });
         return success(new PageResult<>(userList, pageResult.getTotal()));
@@ -124,9 +115,7 @@ public class UserController {
     @PreAuthorize("@ss.hasPermission('system:user:query')")
     public CommonResult<UserRespVO> getUser(@RequestParam("id") Long id) {
         AdminUserDO user = userService.getUser(id);
-        // 获得部门数据
-        DeptDO dept = deptService.getDept(user.getDeptId());
-        return success(UserConvert.INSTANCE.convert(user).setDept(UserConvert.INSTANCE.convert(dept)));
+        return success(UserConvert.INSTANCE.convert(user));
     }
 
     @GetMapping("/export")
@@ -138,23 +127,10 @@ public class UserController {
         // 获得用户列表
         List<AdminUserDO> users = userService.getUserList(reqVO);
 
-        // 获得拼接需要的数据
-        Collection<Long> deptIds = convertList(users, AdminUserDO::getDeptId);
-        Map<Long, DeptDO> deptMap = deptService.getDeptMap(deptIds);
-        Map<Long, AdminUserDO> deptLeaderUserMap = userService.getUserMap(
-                convertSet(deptMap.values(), DeptDO::getLeaderUserId));
         // 拼接数据
         List<UserExcelVO> excelUsers = new ArrayList<>(users.size());
         users.forEach(user -> {
-            UserExcelVO excelVO = UserConvert.INSTANCE.convert02(user);
-            // 设置部门
-            MapUtils.findAndThen(deptMap, user.getDeptId(), dept -> {
-                excelVO.setDeptName(dept.getName());
-                // 设置部门负责人的名字
-                MapUtils.findAndThen(deptLeaderUserMap, dept.getLeaderUserId(),
-                        deptLeaderUser -> excelVO.setDeptLeaderNickname(deptLeaderUser.getNickname()));
-            });
-            excelUsers.add(excelVO);
+            excelUsers.add(UserConvert.INSTANCE.convert02(user));
         });
 
         // 输出
@@ -166,9 +142,9 @@ public class UserController {
     public void importTemplate(HttpServletResponse response) throws IOException {
         // 手动创建导出 demo
         List<UserImportExcelVO> list = Arrays.asList(
-                UserImportExcelVO.builder().username("yunai").deptId(1L).email("yunai@iocoder.cn").mobile("15601691300")
+                UserImportExcelVO.builder().username("yunai").email("yunai@iocoder.cn").mobile("15601691300")
                         .nickname("芋道").status(CommonStatusEnum.ENABLE.getStatus()).sex(SexEnum.MALE.getSex()).build(),
-                UserImportExcelVO.builder().username("yuanma").deptId(2L).email("yuanma@iocoder.cn").mobile("15601701300")
+                UserImportExcelVO.builder().username("yuanma").email("yuanma@iocoder.cn").mobile("15601701300")
                         .nickname("源码").status(CommonStatusEnum.DISABLE.getStatus()).sex(SexEnum.FEMALE.getSex()).build()
         );
 

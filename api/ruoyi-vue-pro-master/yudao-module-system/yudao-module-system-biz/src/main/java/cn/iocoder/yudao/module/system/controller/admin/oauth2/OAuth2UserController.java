@@ -5,11 +5,7 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.system.controller.admin.oauth2.vo.user.OAuth2UserInfoRespVO;
 import cn.iocoder.yudao.module.system.controller.admin.oauth2.vo.user.OAuth2UserUpdateReqVO;
 import cn.iocoder.yudao.module.system.convert.oauth2.OAuth2UserConvert;
-import cn.iocoder.yudao.module.system.dal.dataobject.dept.DeptDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.dept.PostDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
-import cn.iocoder.yudao.module.system.service.dept.DeptService;
-import cn.iocoder.yudao.module.system.service.dept.PostService;
 import cn.iocoder.yudao.module.system.service.user.AdminUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,10 +38,6 @@ public class OAuth2UserController {
 
     @Resource
     private AdminUserService userService;
-    @Resource
-    private DeptService deptService;
-    @Resource
-    private PostService postService;
 
     @GetMapping("/get")
     @Operation(summary = "获得用户基本信息")
@@ -54,16 +46,6 @@ public class OAuth2UserController {
         // 获得用户基本信息
         AdminUserDO user = userService.getUser(getLoginUserId());
         OAuth2UserInfoRespVO resp = OAuth2UserConvert.INSTANCE.convert(user);
-        // 获得部门信息
-        if (user.getDeptId() != null) {
-            DeptDO dept = deptService.getDept(user.getDeptId());
-            resp.setDept(OAuth2UserConvert.INSTANCE.convert(dept));
-        }
-        // 获得岗位信息
-        if (CollUtil.isNotEmpty(user.getPostIds())) {
-            List<PostDO> posts = postService.getPostList(user.getPostIds());
-            resp.setPosts(OAuth2UserConvert.INSTANCE.convertList(posts));
-        }
         return success(resp);
     }
 

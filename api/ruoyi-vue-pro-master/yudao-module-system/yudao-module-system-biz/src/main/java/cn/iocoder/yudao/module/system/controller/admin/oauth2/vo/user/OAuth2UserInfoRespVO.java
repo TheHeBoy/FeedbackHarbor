@@ -32,39 +32,4 @@ public class OAuth2UserInfoRespVO {
 
     @Schema(description = "用户头像", example = "https://www.iocoder.cn/xxx.png")
     private String avatar;
-
-    /**
-     * 所在部门
-     */
-    private Dept dept;
-
-    /**
-     * 所属岗位数组
-     */
-    private List<Post> posts;
-
-    @Schema(description = "部门")
-    @Data
-    public static class Dept {
-
-        @Schema(description = "部门编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Long id;
-
-        @Schema(description = "部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "研发部")
-        private String name;
-
-    }
-
-    @Schema(description = "岗位")
-    @Data
-    public static class Post {
-
-        @Schema(description = "岗位编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Long id;
-
-        @Schema(description = "岗位名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "开发")
-        private String name;
-
-    }
-
 }

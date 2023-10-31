@@ -52,15 +52,6 @@ public class AdminUserDO extends TenantBaseDO {
      */
     private String remark;
     /**
-     * 部门 ID
-     */
-    private Long deptId;
-    /**
-     * 岗位编号数组
-     */
-    @TableField(typeHandler = JsonLongSetTypeHandler.class)
-    private Set<Long> postIds;
-    /**
      * 用户邮箱
      */
     private String email;

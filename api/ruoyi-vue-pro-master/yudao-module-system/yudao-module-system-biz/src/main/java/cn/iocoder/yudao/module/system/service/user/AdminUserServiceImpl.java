@@ -15,13 +15,8 @@ import cn.iocoder.yudao.module.system.controller.admin.user.vo.profile.UserProfi
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.profile.UserProfileUpdateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.user.*;
 import cn.iocoder.yudao.module.system.convert.user.UserConvert;
-import cn.iocoder.yudao.module.system.dal.dataobject.dept.DeptDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.dept.UserPostDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
-import cn.iocoder.yudao.module.system.dal.mysql.dept.UserPostMapper;
 import cn.iocoder.yudao.module.system.dal.mysql.user.AdminUserMapper;
-import cn.iocoder.yudao.module.system.service.dept.DeptService;
-import cn.iocoder.yudao.module.system.service.dept.PostService;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
 import cn.iocoder.yudao.module.system.service.tenant.TenantService;
 import cn.iocoder.yudao.module.system.util.avatar.AvatarUtil;
@@ -55,11 +50,6 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Resource
     private AdminUserMapper userMapper;
-
-    @Resource
-    private DeptService deptService;
-    @Resource
-    private PostService postService;
     @Resource
     private PermissionService permissionService;
     @Resource
@@ -67,9 +57,6 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Resource
     @Lazy // 延迟，避免循环依赖报错
     private TenantService tenantService;
-
-    @Resource
-    private UserPostMapper userPostMapper;
 
     @Resource
     private FileApi fileApi;
@@ -89,8 +76,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             }
         });
         // 校验正确性
-        validateUserForCreateOrUpdate(null, reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail(),
-                reqVO.getDeptId(), reqVO.getPostIds());
+        validateUserForCreateOrUpdate(null, reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
         // 插入管理员
         AdminUserDO user = UserConvert.INSTANCE.convert(reqVO);
         user.setStatus(CommonStatusEnum.ENABLE.getStatus()); // 默认开启
@@ -99,11 +85,6 @@ public class AdminUserServiceImpl implements AdminUserService {
         String avatarUrl = fileApi.createFile(AvatarUtil.generateImg(user.getNickname()));
         user.setAvatar(avatarUrl);
         userMapper.insert(user);
-        // 插入关联岗位
-        if (CollectionUtil.isNotEmpty(user.getPostIds())) {
-            userPostMapper.insertBatch(convertList(user.getPostIds(),
-                    postId -> new UserPostDO().setUserId(user.getId()).setPostId(postId)));
-        }
         // 插入普通用户
         appUserApi.createAppUser(user.getId(), user.getNickname(), user.getAvatar());
         return user.getId();
@@ -113,30 +94,11 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(UserUpdateReqVO reqVO) {
         // 校验正确性
-        validateUserForCreateOrUpdate(reqVO.getId(), reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail(),
-                reqVO.getDeptId(), reqVO.getPostIds());
+        validateUserForCreateOrUpdate(reqVO.getId(), reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
         // 更新用户
         AdminUserDO updateObj = UserConvert.INSTANCE.convert(reqVO);
         userMapper.updateById(updateObj);
-        // 更新岗位
-        updateUserPost(reqVO, updateObj);
-    }
 
-    private void updateUserPost(UserUpdateReqVO reqVO, AdminUserDO updateObj) {
-        Long userId = reqVO.getId();
-        Set<Long> dbPostIds = convertSet(userPostMapper.selectListByUserId(userId), UserPostDO::getPostId);
-        // 计算新增和删除的岗位编号
-        Set<Long> postIds = updateObj.getPostIds();
-        Collection<Long> createPostIds = CollUtil.subtract(postIds, dbPostIds);
-        Collection<Long> deletePostIds = CollUtil.subtract(dbPostIds, postIds);
-        // 执行新增和删除。对于已经授权的菜单，不用做任何处理
-        if (!CollectionUtil.isEmpty(createPostIds)) {
-            userPostMapper.insertBatch(convertList(createPostIds,
-                    postId -> new UserPostDO().setUserId(userId).setPostId(postId)));
-        }
-        if (!CollectionUtil.isEmpty(deletePostIds)) {
-            userPostMapper.deleteByUserIdAndPostId(userId, deletePostIds);
-        }
     }
 
     @Override
@@ -208,8 +170,6 @@ public class AdminUserServiceImpl implements AdminUserService {
         userMapper.deleteById(id);
         // 删除用户关联数据
         permissionService.processUserDeleted(id);
-        // 删除用户岗位
-        userPostMapper.deleteByUserId(id);
         // 删除普通用户
         appUserApi.deleteAppUser(id);
     }
@@ -226,32 +186,12 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public PageResult<AdminUserDO> getUserPage(UserPageReqVO reqVO) {
-        return userMapper.selectPage(reqVO, getDeptCondition(reqVO.getDeptId()));
+        return userMapper.selectPage(reqVO);
     }
 
     @Override
     public AdminUserDO getUser(Long id) {
         return userMapper.selectById(id);
-    }
-
-    @Override
-    public List<AdminUserDO> getUserListByDeptIds(Collection<Long> deptIds) {
-        if (CollUtil.isEmpty(deptIds)) {
-            return Collections.emptyList();
-        }
-        return userMapper.selectListByDeptIds(deptIds);
-    }
-
-    @Override
-    public List<AdminUserDO> getUserListByPostIds(Collection<Long> postIds) {
-        if (CollUtil.isEmpty(postIds)) {
-            return Collections.emptyList();
-        }
-        Set<Long> userIds = convertSet(userPostMapper.selectListByPostIds(postIds), UserPostDO::getUserId);
-        if (CollUtil.isEmpty(userIds)) {
-            return Collections.emptyList();
-        }
-        return userMapper.selectBatchIds(userIds);
     }
 
     @Override
@@ -284,7 +224,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public List<AdminUserDO> getUserList(UserExportReqVO reqVO) {
-        return userMapper.selectList(reqVO, getDeptCondition(reqVO.getDeptId()));
+        return userMapper.selectList(reqVO);
     }
 
     @Override
@@ -292,23 +232,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         return userMapper.selectListByNickname(nickname);
     }
 
-    /**
-     * 获得部门条件：查询指定部门的子部门编号们，包括自身
-     *
-     * @param deptId 部门编号
-     * @return 部门编号集合
-     */
-    private Set<Long> getDeptCondition(Long deptId) {
-        if (deptId == null) {
-            return Collections.emptySet();
-        }
-        Set<Long> deptIds = convertSet(deptService.getChildDeptList(deptId), DeptDO::getId);
-        deptIds.add(deptId); // 包括自身
-        return deptIds;
-    }
 
-    private void validateUserForCreateOrUpdate(Long id, String username, String mobile, String email,
-                                               Long deptId, Set<Long> postIds) {
+    private void validateUserForCreateOrUpdate(Long id, String username, String mobile, String email) {
         // 关闭数据权限，避免因为没有数据权限，查询不到数据，进而导致唯一校验不正确
         DataPermissionUtils.executeIgnore(() -> {
             // 校验用户存在
@@ -319,10 +244,6 @@ public class AdminUserServiceImpl implements AdminUserService {
             validateMobileUnique(id, mobile);
             // 校验邮箱唯一
             validateEmailUnique(id, email);
-            // 校验部门处于开启状态
-            deptService.validateDeptList(CollectionUtils.singleton(deptId));
-            // 校验岗位处于开启状态
-            postService.validatePostList(postIds);
         });
     }
 
@@ -419,8 +340,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         importUsers.forEach(importUser -> {
             // 校验，判断是否有不符合的原因
             try {
-                validateUserForCreateOrUpdate(null, null, importUser.getMobile(), importUser.getEmail(),
-                        importUser.getDeptId(), null);
+                validateUserForCreateOrUpdate(null, null, importUser.getMobile(), importUser.getEmail());
             } catch (ServiceException ex) {
                 respVO.getFailureUsernames().put(importUser.getUsername(), ex.getMessage());
                 return;
@@ -429,7 +349,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             AdminUserDO existUser = userMapper.selectByUsername(importUser.getUsername());
             if (existUser == null) {
                 userMapper.insert(UserConvert.INSTANCE.convert(importUser)
-                        .setPassword(encodePassword(userInitPassword)).setPostIds(new HashSet<>())); // 设置默认密码及空岗位编号数组
+                        .setPassword(encodePassword(userInitPassword))); // 设置默认密码及空岗位编号数组
                 respVO.getCreateUsernames().add(importUser.getUsername());
                 return;
             }

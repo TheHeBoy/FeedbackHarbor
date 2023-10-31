@@ -9,8 +9,6 @@ import java.util.Map;
 
 /**
  * Admin 用户 API 接口
- *
- * 
  */
 public interface AdminUserApi {
 
@@ -29,22 +27,6 @@ public interface AdminUserApi {
      * @return 用户对象信息
      */
     List<AdminUserRespDTO> getUserList(Collection<Long> ids);
-
-    /**
-     * 获得指定部门的用户数组
-     *
-     * @param deptIds 部门数组
-     * @return 用户数组
-     */
-    List<AdminUserRespDTO> getUserListByDeptIds(Collection<Long> deptIds);
-
-    /**
-     * 获得指定岗位的用户数组
-     *
-     * @param postIds 岗位数组
-     * @return 用户数组
-     */
-    List<AdminUserRespDTO> getUserListByPostIds(Collection<Long> postIds);
 
     /**
      * 获得用户 Map

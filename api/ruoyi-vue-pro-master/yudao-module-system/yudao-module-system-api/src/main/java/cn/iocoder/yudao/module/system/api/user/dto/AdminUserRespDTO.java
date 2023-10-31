@@ -27,15 +27,6 @@ public class AdminUserRespDTO {
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
-
-    /**
-     * 部门ID
-     */
-    private Long deptId;
-    /**
-     * 岗位编号数组
-     */
-    private Set<Long> postIds;
     /**
      * 手机号码
      */

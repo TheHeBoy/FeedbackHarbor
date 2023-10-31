@@ -12,8 +12,6 @@ import java.util.List;
 
 /**
  * Admin 用户 API 实现类
- *
- *
  */
 @Service
 public class AdminUserApiImpl implements AdminUserApi {
@@ -33,17 +31,6 @@ public class AdminUserApiImpl implements AdminUserApi {
         return UserConvert.INSTANCE.convertList4(users);
     }
 
-    @Override
-    public List<AdminUserRespDTO> getUserListByDeptIds(Collection<Long> deptIds) {
-        List<AdminUserDO> users = userService.getUserListByDeptIds(deptIds);
-        return UserConvert.INSTANCE.convertList4(users);
-    }
-
-    @Override
-    public List<AdminUserRespDTO> getUserListByPostIds(Collection<Long> postIds) {
-        List<AdminUserDO> users = userService.getUserListByPostIds(postIds);
-        return UserConvert.INSTANCE.convertList4(users);
-    }
 
     @Override
     public void validateUserList(Collection<Long> ids) {

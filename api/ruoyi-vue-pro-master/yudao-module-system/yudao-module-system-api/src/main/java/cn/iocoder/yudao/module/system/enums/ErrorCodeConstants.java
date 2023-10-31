@@ -43,21 +43,6 @@ public interface ErrorCodeConstants {
     ErrorCode USER_IS_DISABLE = new ErrorCode(1002003006, "名字为【{}】的用户已被禁用");
     ErrorCode USER_COUNT_MAX = new ErrorCode(1002003008, "创建用户失败，原因：超过租户最大租户配额({})！");
 
-    // ========== 部门模块 1002004000 ==========
-    ErrorCode DEPT_NAME_DUPLICATE = new ErrorCode(1002004000, "已经存在该名字的部门");
-    ErrorCode DEPT_PARENT_NOT_EXITS = new ErrorCode(1002004001,"父级部门不存在");
-    ErrorCode DEPT_NOT_FOUND = new ErrorCode(1002004002, "当前部门不存在");
-    ErrorCode DEPT_EXITS_CHILDREN = new ErrorCode(1002004003, "存在子部门，无法删除");
-    ErrorCode DEPT_PARENT_ERROR = new ErrorCode(1002004004, "不能设置自己为父部门");
-    ErrorCode DEPT_EXISTS_USER = new ErrorCode(1002004005, "部门中存在员工，无法删除");
-    ErrorCode DEPT_NOT_ENABLE = new ErrorCode(1002004006, "部门({})不处于开启状态，不允许选择");
-    ErrorCode DEPT_PARENT_IS_CHILD = new ErrorCode(1002004007, "不能设置自己的子部门为父部门");
-
-    // ========== 岗位模块 1002005000 ==========
-    ErrorCode POST_NOT_FOUND = new ErrorCode(1002005000, "当前岗位不存在");
-    ErrorCode POST_NOT_ENABLE = new ErrorCode(1002005001, "岗位({}) 不处于开启状态，不允许选择");
-    ErrorCode POST_NAME_DUPLICATE = new ErrorCode(1002005002, "已经存在该名字的岗位");
-    ErrorCode POST_CODE_DUPLICATE = new ErrorCode(1002005003, "已经存在该标识的岗位");
 
     // ========== 字典类型 1002006000 ==========
     ErrorCode DICT_TYPE_NOT_EXISTS = new ErrorCode(1002006001, "当前字典类型不存在");

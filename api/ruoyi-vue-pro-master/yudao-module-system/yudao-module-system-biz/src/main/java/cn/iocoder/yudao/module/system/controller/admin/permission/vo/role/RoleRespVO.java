@@ -22,9 +22,6 @@ public class RoleRespVO extends RoleBaseVO {
     @Schema(description = "数据范围，参见 DataScopeEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer dataScope;
 
-    @Schema(description = "数据范围(指定部门数组)", example = "1")
-    private Set<Long> dataScopeDeptIds;
-
     @Schema(description = "状态，参见 CommonStatusEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer status;
 

@@ -38,20 +38,6 @@ public class UserProfileRespVO extends UserBaseVO {
      */
     private List<Role> roles;
 
-    /**
-     * 所在部门
-     */
-    private Dept dept;
-
-    /**
-     * 所属岗位数组
-     */
-    private List<Post> posts;
-    /**
-     * 社交用户数组
-     */
-    private List<SocialUser> socialUsers;
-
     @Schema(description = "角色")
     @Data
     public static class Role {
@@ -63,41 +49,4 @@ public class UserProfileRespVO extends UserBaseVO {
         private String name;
 
     }
-
-    @Schema(description = "部门")
-    @Data
-    public static class Dept {
-
-        @Schema(description = "部门编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Long id;
-
-        @Schema(description = "部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "研发部")
-        private String name;
-
-    }
-
-    @Schema(description = "岗位")
-    @Data
-    public static class Post {
-
-        @Schema(description = "岗位编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Long id;
-
-        @Schema(description = "岗位名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "开发")
-        private String name;
-
-    }
-
-    @Schema(description = "社交用户")
-    @Data
-    public static class SocialUser {
-
-        @Schema(description = "社交平台的类型，参见 SocialTypeEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
-        private Integer type;
-
-        @Schema(description = "社交用户的 openid", requiredMode = Schema.RequiredMode.REQUIRED, example = "IPRmJ0wvBptiPIlGEZiPewGwiEiE")
-        private String openid;
-
-    }
-
 }

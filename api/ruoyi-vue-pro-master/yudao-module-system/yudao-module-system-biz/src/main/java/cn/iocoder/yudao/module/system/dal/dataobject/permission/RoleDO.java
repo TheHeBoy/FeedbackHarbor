@@ -67,12 +67,5 @@ public class RoleDO extends TenantBaseDO {
      * 枚举 {@link DataScopeEnum}
      */
     private Integer dataScope;
-    /**
-     * 数据范围(指定部门数组)
-     *
-     * 适用于 {@link #dataScope} 的值为 {@link DataScopeEnum#DEPT_CUSTOM} 时
-     */
-    @TableField(typeHandler = JsonLongSetTypeHandler.class)
-    private Set<Long> dataScopeDeptIds;
 
 }

@@ -12,7 +12,6 @@ import cn.iocoder.yudao.module.harbor.dal.dataobject.feedbacktag.FeedbackTagDO;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackReplyStateEnum;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
-import cn.iocoder.yudao.module.harbor.job.FeedbackLikeJob;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import cn.iocoder.yudao.module.harbor.service.comment.CommentService;
 import cn.iocoder.yudao.module.harbor.service.feedbacktag.FeedbackTagService;

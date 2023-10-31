@@ -30,12 +30,6 @@ public class UserBaseVO {
     @Schema(description = "备注", example = "我是一个用户")
     private String remark;
 
-    @Schema(description = "部门ID", example = "我是一个用户")
-    private Long deptId;
-
-    @Schema(description = "岗位编号数组", example = "1")
-    private Set<Long> postIds;
-
     @Schema(description = "用户邮箱", example = "yudao@iocoder.cn")
     @Email(message = "邮箱格式不正确")
     @Size(max = 50, message = "邮箱长度不能超过 50 个字符")

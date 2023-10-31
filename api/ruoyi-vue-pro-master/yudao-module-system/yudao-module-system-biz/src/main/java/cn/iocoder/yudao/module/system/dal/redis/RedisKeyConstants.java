@@ -8,15 +8,6 @@ import cn.iocoder.yudao.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
  *
  */
 public interface RedisKeyConstants {
-
-    /**
-     * 指定部门的所有子部门编号数组的缓存
-     * <p>
-     * KEY 格式：dept_children_ids:{id}
-     * VALUE 数据类型：String 子部门编号集合
-     */
-    String DEPT_CHILDREN_ID_LIST = "dept_children_ids";
-
     /**
      * 角色的缓存
      * <p>

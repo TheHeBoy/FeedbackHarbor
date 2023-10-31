@@ -1,23 +1,15 @@
 package cn.iocoder.yudao.module.system.controller.admin.user;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.datapermission.core.annotation.DataPermission;
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.profile.UserProfileRespVO;
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.profile.UserProfileUpdatePasswordReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.profile.UserProfileUpdateReqVO;
 import cn.iocoder.yudao.module.system.convert.user.UserConvert;
-import cn.iocoder.yudao.module.system.dal.dataobject.dept.DeptDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.dept.PostDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.social.SocialUserDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
-import cn.iocoder.yudao.module.system.service.dept.DeptService;
-import cn.iocoder.yudao.module.system.service.dept.PostService;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
 import cn.iocoder.yudao.module.system.service.permission.RoleService;
-import cn.iocoder.yudao.module.system.service.social.SocialUserService;
 import cn.iocoder.yudao.module.system.service.user.AdminUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,19 +37,13 @@ public class UserProfileController {
     @Resource
     private AdminUserService userService;
     @Resource
-    private DeptService deptService;
-    @Resource
-    private PostService postService;
-    @Resource
     private PermissionService permissionService;
     @Resource
     private RoleService roleService;
-    @Resource
-    private SocialUserService socialService;
 
     @GetMapping("/get")
     @Operation(summary = "获得登录用户信息")
-    @DataPermission(enable = false) // 关闭数据权限，避免只查看自己时，查询不到部门。
+    @DataPermission(enable = false)
     public CommonResult<UserProfileRespVO> profile() {
         // 获得用户基本信息
         AdminUserDO user = userService.getUser(getLoginUserId());
@@ -65,19 +51,6 @@ public class UserProfileController {
         // 获得用户角色
         List<RoleDO> userRoles = roleService.getRoleListFromCache(permissionService.getUserRoleIdListByUserId(user.getId()));
         resp.setRoles(UserConvert.INSTANCE.convertList(userRoles));
-        // 获得部门信息
-        if (user.getDeptId() != null) {
-            DeptDO dept = deptService.getDept(user.getDeptId());
-            resp.setDept(UserConvert.INSTANCE.convert02(dept));
-        }
-        // 获得岗位信息
-        if (CollUtil.isNotEmpty(user.getPostIds())) {
-            List<PostDO> posts = postService.getPostList(user.getPostIds());
-            resp.setPosts(UserConvert.INSTANCE.convertList02(posts));
-        }
-        // 获得社交用户信息
-        List<SocialUserDO> socialUsers = socialService.getSocialUserList(user.getId(), UserTypeEnum.ADMIN.getValue());
-        resp.setSocialUsers(UserConvert.INSTANCE.convertList03(socialUsers));
         return success(resp);
     }
 

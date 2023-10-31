@@ -35,8 +35,6 @@ import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 
 /**
  * 角色 Service 实现类
- *
- * 
  */
 @Service
 @Slf4j
@@ -88,20 +86,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @CacheEvict(value = RedisKeyConstants.ROLE, key = "#id")
-    public void updateRoleDataScope(Long id, Integer dataScope, Set<Long> dataScopeDeptIds) {
-        // 校验是否可以更新
-        validateRoleForUpdate(id);
-
-        // 更新数据范围
-        RoleDO updateObject = new RoleDO();
-        updateObject.setId(id);
-        updateObject.setDataScope(dataScope);
-        updateObject.setDataScopeDeptIds(dataScopeDeptIds);
-        roleMapper.updateById(updateObject);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = RedisKeyConstants.ROLE, key = "#id")
     public void deleteRole(Long id) {
@@ -115,13 +99,13 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * 校验角色的唯一字段是否重复
-     *
+     * <p>
      * 1. 是否存在相同名字的角色
      * 2. 是否存在相同编码的角色
      *
      * @param name 角色名字
      * @param code 角色额编码
-     * @param id 角色编号
+     * @param id   角色编号
      */
     @VisibleForTesting
     void validateRoleDuplicate(String name, String code, Long id) {

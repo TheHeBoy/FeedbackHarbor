@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @date 2023-09-15
  */
 @Slf4j
-@Component
+@Component("FeedbackLikeJob")
 @TenantJob
 public class FeedbackLikeJob implements JobHandler {
 
@@ -28,10 +28,8 @@ public class FeedbackLikeJob implements JobHandler {
 
     @Override
     public String execute(String param) {
-        log.info("当前租户：" + TenantContextHolder.getTenantId());
-        likeService.syncLike(LikeBusTypeEnum.FEEDBACK);
-        likeService.syncLike(LikeBusTypeEnum.COMMENT);
-        return "同步点赞成功";
+        return "同步点赞数量：" + (likeService.syncLike(LikeBusTypeEnum.FEEDBACK)
+                + likeService.syncLike(LikeBusTypeEnum.COMMENT));
     }
 
 }

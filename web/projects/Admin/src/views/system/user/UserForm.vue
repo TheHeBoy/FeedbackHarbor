@@ -14,15 +14,15 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="归属部门" prop="deptId">
-            <el-tree-select
-              v-model="formData.deptId"
-              :data="deptList"
-              :props="defaultProps"
-              check-strictly
-              node-key="id"
-              placeholder="请选择归属部门"
-            />
+          <el-form-item label="用户性别">
+            <el-select v-model="formData.sex" placeholder="请选择">
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.SYSTEM_USER_SEX)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -56,32 +56,6 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="用户性别">
-            <el-select v-model="formData.sex" placeholder="请选择">
-              <el-option
-                v-for="dict in getIntDictOptions(DICT_TYPE.SYSTEM_USER_SEX)"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="岗位">
-            <el-select v-model="formData.postIds" multiple placeholder="请选择">
-              <el-option
-                v-for="item in postList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="24">
           <el-form-item label="备注">
             <el-input v-model="formData.remark" placeholder="请输入内容" type="textarea" />
@@ -98,9 +72,6 @@
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict';
 import { CommonStatusEnum } from '@/utils/constants';
-import { defaultProps, handleTree } from '@/utils/tree';
-import * as PostApi from '@/api/system/post';
-import * as DeptApi from '@/api/system/dept';
 import * as UserApi from '@/api/system/user';
 
 defineOptions({ name: 'SystemUserForm' });
@@ -146,8 +117,6 @@ const formRules = reactive({
   ],
 });
 const formRef = ref(); // 表单 Ref
-const deptList = ref<Tree[]>([]); // 树形结构
-const postList = ref([]); // 岗位列表
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -164,10 +133,6 @@ const open = async (type: string, id?: number) => {
       formLoading.value = false;
     }
   }
-  // 加载部门树
-  deptList.value = handleTree(await DeptApi.getSimpleDeptList());
-  // 加载岗位列表
-  postList.value = await PostApi.getSimplePostList();
 };
 defineExpose({ open }); // 提供 open 方法，用于打开弹窗
 

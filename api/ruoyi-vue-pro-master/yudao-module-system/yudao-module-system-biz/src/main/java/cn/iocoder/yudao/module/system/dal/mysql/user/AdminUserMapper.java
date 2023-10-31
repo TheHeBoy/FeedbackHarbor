@@ -26,23 +26,21 @@ public interface AdminUserMapper extends BaseMapperX<AdminUserDO> {
         return selectOne(AdminUserDO::getMobile, mobile);
     }
 
-    default PageResult<AdminUserDO> selectPage(UserPageReqVO reqVO, Collection<Long> deptIds) {
+    default PageResult<AdminUserDO> selectPage(UserPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<AdminUserDO>()
                 .likeIfPresent(AdminUserDO::getUsername, reqVO.getUsername())
                 .likeIfPresent(AdminUserDO::getMobile, reqVO.getMobile())
                 .eqIfPresent(AdminUserDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(AdminUserDO::getCreateTime, reqVO.getCreateTime())
-                .inIfPresent(AdminUserDO::getDeptId, deptIds)
                 .orderByDesc(AdminUserDO::getId));
     }
 
-    default List<AdminUserDO> selectList(UserExportReqVO reqVO, Collection<Long> deptIds) {
+    default List<AdminUserDO> selectList(UserExportReqVO reqVO) {
         return selectList(new LambdaQueryWrapperX<AdminUserDO>()
                 .likeIfPresent(AdminUserDO::getUsername, reqVO.getUsername())
                 .likeIfPresent(AdminUserDO::getMobile, reqVO.getMobile())
                 .eqIfPresent(AdminUserDO::getStatus, reqVO.getStatus())
-                .betweenIfPresent(AdminUserDO::getCreateTime, reqVO.getCreateTime())
-                .inIfPresent(AdminUserDO::getDeptId, deptIds));
+                .betweenIfPresent(AdminUserDO::getCreateTime, reqVO.getCreateTime()));
     }
 
     default List<AdminUserDO> selectListByNickname(String nickname) {
@@ -53,8 +51,5 @@ public interface AdminUserMapper extends BaseMapperX<AdminUserDO> {
         return selectList(AdminUserDO::getStatus, status);
     }
 
-    default List<AdminUserDO> selectListByDeptIds(Collection<Long> deptIds) {
-        return selectList(AdminUserDO::getDeptId, deptIds);
-    }
 
 }

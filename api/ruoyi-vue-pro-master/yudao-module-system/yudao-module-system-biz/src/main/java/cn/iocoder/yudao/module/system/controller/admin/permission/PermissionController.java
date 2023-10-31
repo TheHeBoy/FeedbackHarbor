@@ -2,7 +2,6 @@ package cn.iocoder.yudao.module.system.controller.admin.permission;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
-import cn.iocoder.yudao.module.system.controller.admin.permission.vo.permission.PermissionAssignRoleDataScopeReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.permission.vo.permission.PermissionAssignRoleMenuReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.permission.vo.permission.PermissionAssignUserRoleReqVO;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
@@ -15,15 +14,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.Set;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 /**
  * 权限 Controller，提供赋予用户、角色的权限的 API 接口
- *
- *
  */
 @Tag(name = "管理后台 - 权限")
 @RestController
@@ -52,14 +48,6 @@ public class PermissionController {
 
         // 执行菜单的分配
         permissionService.assignRoleMenu(reqVO.getRoleId(), reqVO.getMenuIds());
-        return success(true);
-    }
-
-    @PostMapping("/assign-role-data-scope")
-    @Operation(summary = "赋予角色数据权限")
-    @PreAuthorize("@ss.hasPermission('system:permission:assign-role-data-scope')")
-    public CommonResult<Boolean> assignRoleDataScope(@Valid @RequestBody PermissionAssignRoleDataScopeReqVO reqVO) {
-        permissionService.assignRoleDataScope(reqVO.getRoleId(), reqVO.getDataScope(), reqVO.getDataScopeDeptIds());
         return success(true);
     }
 

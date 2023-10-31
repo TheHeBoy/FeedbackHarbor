@@ -26,17 +26,6 @@ export const SystemRoleTypeEnum = {
 };
 
 /**
- * 数据权限的范围枚举
- */
-export const SystemDataScopeEnum = {
-  ALL: 1, // 全部数据权限
-  DEPT_CUSTOM: 2, // 指定部门数据权限
-  DEPT_ONLY: 3, // 部门数据权限
-  DEPT_AND_CHILD: 4, // 部门及以下数据权限
-  DEPT_SELF: 5, // 仅本人数据权限
-};
-
-/**
  * 代码生成模板类型
  */
 export const InfraCodegenTemplateTypeEnum = {

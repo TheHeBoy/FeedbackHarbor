@@ -122,22 +122,6 @@ public interface AdminUserService {
     AdminUserDO getUser(Long id);
 
     /**
-     * 获得指定部门的用户数组
-     *
-     * @param deptIds 部门数组
-     * @return 用户数组
-     */
-    List<AdminUserDO> getUserListByDeptIds(Collection<Long> deptIds);
-
-    /**
-     * 获得指定岗位的用户数组
-     *
-     * @param postIds 岗位数组
-     * @return 用户数组
-     */
-    List<AdminUserDO> getUserListByPostIds(Collection<Long> postIds);
-
-    /**
      * 获得用户列表
      *
      * @param ids 用户编号数组
