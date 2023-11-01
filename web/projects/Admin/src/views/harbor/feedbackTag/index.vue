@@ -123,6 +123,8 @@ import download from '@/utils/download';
 import * as FeedbackTagApi from '@/api/harbor/feedbackTag';
 import FeedbackTagForm from './FeedbackTagForm.vue';
 
+defineOptions({ name: 'HarborFeedbackTag' });
+
 const message = useMessage(); // 消息弹窗
 const { t } = useI18n(); // 国际化
 
