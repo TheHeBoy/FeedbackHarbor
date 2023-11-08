@@ -20,9 +20,6 @@ public class TenantPackagePageReqVO extends PageParam {
     @Schema(description = "套餐名", example = "VIP")
     private String name;
 
-    @Schema(description = "状态", example = "1")
-    private Integer status;
-
     @Schema(description = "备注", example = "好")
     private String remark;
 

@@ -59,7 +59,7 @@
 
         <dependency>
             <groupId>cn.iocoder.boot</groupId>
-            <artifactId>yudao-module-harbor-api</artifactId> <!-- 需要使用它，进行Admin 与 App用户转换 -->
+            <artifactId>yudao-module-harbor-api</artifactId> <!-- 需要使用它，进行 Admin 与 App 用户转换 -->
             <version>${revision}</version>
         </dependency>
 

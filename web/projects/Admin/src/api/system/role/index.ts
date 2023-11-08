@@ -7,7 +7,6 @@ export interface RoleVO {
   sort: number;
   status: number;
   type: number;
-  dataScope: number;
   dataScopeDeptIds: number[];
   createTime: Date;
 }

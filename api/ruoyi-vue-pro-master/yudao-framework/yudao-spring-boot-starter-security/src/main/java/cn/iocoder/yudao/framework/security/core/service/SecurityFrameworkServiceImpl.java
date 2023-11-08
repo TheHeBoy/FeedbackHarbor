@@ -12,8 +12,6 @@ import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUti
 
 /**
  * 默认的 {@link SecurityFrameworkService} 实现类
- *
- *
  */
 @AllArgsConstructor
 public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
@@ -39,19 +37,4 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
     public boolean hasAnyRoles(String... roles) {
         return permissionApi.hasAnyRoles(getLoginUserId(), roles);
     }
-
-    @Override
-    public boolean hasScope(String scope) {
-        return hasAnyScopes(scope);
-    }
-
-    @Override
-    public boolean hasAnyScopes(String... scope) {
-        LoginUser user = SecurityFrameworkUtils.getLoginUser();
-        if (user == null) {
-            return false;
-        }
-        return CollUtil.containsAny(user.getScopes(), Arrays.asList(scope));
-    }
-
 }

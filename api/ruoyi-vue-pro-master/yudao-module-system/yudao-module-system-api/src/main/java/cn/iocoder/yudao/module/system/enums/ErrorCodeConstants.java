@@ -87,17 +87,12 @@ public interface ErrorCodeConstants {
     ErrorCode TENANT_NOT_EXISTS = new ErrorCode(1002015000, "租户不存在");
     ErrorCode TENANT_DISABLE = new ErrorCode(1002015001, "名字为【{}】的租户已被禁用");
     ErrorCode TENANT_EXPIRE = new ErrorCode(1002015002, "名字为【{}】的租户已过期");
-    ErrorCode TENANT_CAN_NOT_UPDATE_SYSTEM = new ErrorCode(1002015003, "系统租户不能进行修改、删除等操作！");
     ErrorCode TENANT_NAME_DUPLICATE = new ErrorCode(1002015004, "名字为【{}】的租户已存在");
 
     // ========== 租户套餐 1002016000 ==========
     ErrorCode TENANT_PACKAGE_NOT_EXISTS = new ErrorCode(1002016000, "租户套餐不存在");
     ErrorCode TENANT_PACKAGE_USED = new ErrorCode(1002016001, "租户正在使用该套餐，请给租户重新设置套餐后再尝试删除");
-    ErrorCode TENANT_PACKAGE_DISABLE = new ErrorCode(1002016002, "名字为【{}】的租户套餐已被禁用");
-
-    // ========== 错误码模块 1002017000 ==========
-    ErrorCode ERROR_CODE_NOT_EXISTS = new ErrorCode(1002017000, "错误码不存在");
-    ErrorCode ERROR_CODE_DUPLICATE = new ErrorCode(1002017001, "已经存在编码为【{}】的错误码");
+    ErrorCode TENANT_PACKAGE_DEFAULT_DELETE = new ErrorCode(1002016002, "默认套餐不能删除");
 
     // ========== 社交用户 1002018000 ==========
     ErrorCode SOCIAL_USER_AUTH_FAILURE = new ErrorCode(1002018000, "社交授权失败，原因是：{}");
@@ -107,25 +102,6 @@ public interface ErrorCodeConstants {
     // ========== 系统敏感词 1002019000 =========
     ErrorCode SENSITIVE_WORD_NOT_EXISTS = new ErrorCode(1002019000, "系统敏感词在所有标签中都不存在");
     ErrorCode SENSITIVE_WORD_EXISTS = new ErrorCode(1002019001, "系统敏感词已在标签中存在");
-
-    // ========== OAuth2 客户端 1002020000 =========
-    ErrorCode OAUTH2_CLIENT_NOT_EXISTS = new ErrorCode(1002020000, "OAuth2 客户端不存在");
-    ErrorCode OAUTH2_CLIENT_EXISTS = new ErrorCode(1002020001, "OAuth2 客户端编号已存在");
-    ErrorCode OAUTH2_CLIENT_DISABLE = new ErrorCode(1002020002, "OAuth2 客户端已禁用");
-    ErrorCode OAUTH2_CLIENT_AUTHORIZED_GRANT_TYPE_NOT_EXISTS = new ErrorCode(1002020003, "不支持该授权类型");
-    ErrorCode OAUTH2_CLIENT_SCOPE_OVER = new ErrorCode(1002020004, "授权范围过大");
-    ErrorCode OAUTH2_CLIENT_REDIRECT_URI_NOT_MATCH = new ErrorCode(1002020005, "无效 redirect_uri: {}");
-    ErrorCode OAUTH2_CLIENT_CLIENT_SECRET_ERROR = new ErrorCode(1002020006, "无效 client_secret: {}");
-
-    // ========== OAuth2 授权 1002021000 =========
-    ErrorCode OAUTH2_GRANT_CLIENT_ID_MISMATCH = new ErrorCode(1002021000, "client_id 不匹配");
-    ErrorCode OAUTH2_GRANT_REDIRECT_URI_MISMATCH = new ErrorCode(1002021001, "redirect_uri 不匹配");
-    ErrorCode OAUTH2_GRANT_STATE_MISMATCH = new ErrorCode(1002021002, "state 不匹配");
-    ErrorCode OAUTH2_GRANT_CODE_NOT_EXISTS = new ErrorCode(1002021003, "code 不存在");
-
-    // ========== OAuth2 授权 1002022000 =========
-    ErrorCode OAUTH2_CODE_NOT_EXISTS = new ErrorCode(1002022000, "code 不存在");
-    ErrorCode OAUTH2_CODE_EXPIRE = new ErrorCode(1002022001, "code 已过期");
 
     // ========== 邮箱账号 1002023000 ==========
     ErrorCode MAIL_ACCOUNT_NOT_EXISTS = new ErrorCode(1002023000, "邮箱账号不存在");
@@ -138,16 +114,4 @@ public interface ErrorCodeConstants {
     // ========== 邮件发送 1002025000 ==========
     ErrorCode MAIL_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1002025000, "模板参数({})缺失");
     ErrorCode MAIL_SEND_MAIL_NOT_EXISTS = new ErrorCode(1002025001, "邮箱不存在");
-
-    // ========== 站内信模版 1002026000 ==========
-    ErrorCode NOTIFY_TEMPLATE_NOT_EXISTS = new ErrorCode(1002026000, "站内信模版不存在");
-    ErrorCode NOTIFY_TEMPLATE_CODE_DUPLICATE = new ErrorCode(1002026001, "已经存在编码为【{}】的站内信模板");
-
-    // ========== 站内信模版 1002027000 ==========
-
-    // ========== 站内信发送 1002028000 ==========
-    ErrorCode NOTIFY_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1002028000, "模板参数({})缺失");
-
-    ErrorCode GROUP_NOT_EXISTS = new ErrorCode(1002029000, "用户组不存在");
-
 }

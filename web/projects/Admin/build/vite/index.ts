@@ -16,17 +16,9 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import viteCompression from 'vite-plugin-compression';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import svgLoader from 'vite-svg-loader';
 
 export function createVitePlugins() {
-  const root = process.cwd();
-
-  // 路径查找
-  function pathResolve(dir: string) {
-    return resolve(root, '.', dir);
-  }
-
   return [
     Vue(),
     VueJsx(),
@@ -84,11 +76,6 @@ export function createVitePlugins() {
       runtimeOnly: true,
       compositionOnly: true,
       include: [resolve(__dirname, 'src/locales/**')],
-    }),
-    createSvgIconsPlugin({
-      iconDirs: [pathResolve('src/assets/svgs')],
-      symbolId: 'icon-[dir]-[name]',
-      svgoOptions: true,
     }),
     viteCompression({
       verbose: true, // 是否在控制台输出压缩结果

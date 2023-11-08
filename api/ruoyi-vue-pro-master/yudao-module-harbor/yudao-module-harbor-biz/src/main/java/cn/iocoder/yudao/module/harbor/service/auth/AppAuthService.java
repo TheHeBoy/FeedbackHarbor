@@ -30,14 +30,6 @@ public interface AppAuthService {
     void logout(String token);
 
     /**
-     * 刷新访问令牌
-     *
-     * @param refreshToken 刷新令牌
-     * @return 登录结果
-     */
-    AppAuthLoginRespVO refreshToken(String refreshToken);
-
-    /**
      * 社交快捷登录，使用 code 授权码
      *
      * @param reqVO 登录信息

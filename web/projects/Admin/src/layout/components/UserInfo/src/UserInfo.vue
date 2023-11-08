@@ -25,9 +25,9 @@ const prefixCls = getPrefixCls('user-info');
 
 const user = wsCache.get(CACHE_KEY.USER);
 
-const avatar = user.user.avatar ? user.user.avatar : avatarImg;
+const avatar = user.avatar ? user.avatar : avatarImg;
 
-const userName = user.user.nickname ? user.user.nickname : 'Admin';
+const userName = user.nickname ? user.nickname : 'Admin';
 
 const loginOut = () => {
   ElMessageBox.confirm(t('common.loginOutMessage'), t('common.reminder'), {

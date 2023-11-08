@@ -14,8 +14,8 @@
       :accept="fileType.join(',')"
     >
       <template v-if="modelValue">
-        <img :src="modelValue" class="upload-image" />
-        <div class="upload-handle" @click.stop>
+        <img :src="modelValue" class="upload-image" alt="" />
+        <div v-if="actionTool" class="upload-handle" @click.stop>
           <div class="handle-icon" @click="editImg">
             <Icon icon="ep:edit" />
             <span>{{ t('action.edit') }}</span>
@@ -55,7 +55,8 @@ import type { UploadProps } from 'element-plus';
 
 import { generateUUID } from '@/utils';
 import { propTypes } from '@/utils/propTypes';
-import { getAccessToken, getTenantId } from '@/utils/auth';
+import { getAccessToken } from '@/utils/auth';
+import { getTenantId } from '@/utils/auth';
 
 defineOptions({ name: 'UploadImg' });
 
@@ -82,6 +83,7 @@ const props = defineProps({
   height: propTypes.string.def('150px'), // 组件高度 ==> 非必传（默认为 150px）
   width: propTypes.string.def('150px'), // 组件宽度 ==> 非必传（默认为 150px）
   borderradius: propTypes.string.def('8px'), // 组件边框圆角 ==> 非必传（默认为 8px）
+  actionTool: propTypes.bool.def(true), // 是否需要操作栏
 });
 const { t } = useI18n(); // 国际化
 const message = useMessage(); // 消息弹窗

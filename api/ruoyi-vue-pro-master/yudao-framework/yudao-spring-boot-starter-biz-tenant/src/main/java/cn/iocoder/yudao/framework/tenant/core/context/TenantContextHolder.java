@@ -5,8 +5,6 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 
 /**
  * 多租户上下文 Holder
- *
- *
  */
 public class TenantContextHolder {
 
@@ -21,26 +19,12 @@ public class TenantContextHolder {
     private static final ThreadLocal<Boolean> IGNORE = new TransmittableThreadLocal<>();
 
     /**
-     * 获得租户编号。
+     * 获得租户编号
      *
      * @return 租户编号
      */
     public static Long getTenantId() {
         return TENANT_ID.get();
-    }
-
-    /**
-     * 获得租户编号。如果不存在，则抛出 NullPointerException 异常
-     *
-     * @return 租户编号
-     */
-    public static Long getRequiredTenantId() {
-        Long tenantId = getTenantId();
-        if (tenantId == null) {
-            throw new NullPointerException("TenantContextHolder 不存在租户编号！可参考文档："
-                + DocumentEnum.TENANT.getUrl());
-        }
-        return tenantId;
     }
 
     public static void setTenantId(Long tenantId) {

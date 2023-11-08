@@ -46,6 +46,14 @@ public interface TenantPackageService {
      */
     TenantPackageDO getTenantPackage(Long id);
 
+
+    /**
+     * 获得默认租户套餐
+     *
+     * @return 租户套餐
+     */
+    TenantPackageDO getDefaultTenantPackage();
+
     /**
      * 获得租户套餐分页
      *
@@ -61,13 +69,5 @@ public interface TenantPackageService {
      * @return 租户套餐
      */
     TenantPackageDO validTenantPackage(Long id);
-
-    /**
-     * 获得指定状态的租户套餐列表
-     *
-     * @param status 状态
-     * @return 租户套餐
-     */
-    List<TenantPackageDO> getTenantPackageListByStatus(Integer status);
 
 }

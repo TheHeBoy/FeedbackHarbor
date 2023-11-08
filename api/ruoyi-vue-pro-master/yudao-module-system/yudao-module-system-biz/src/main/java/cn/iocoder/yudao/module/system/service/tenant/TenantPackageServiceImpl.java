@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.system.convert.tenant.TenantPackageConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantPackageDO;
 import cn.iocoder.yudao.module.system.dal.mysql.tenant.TenantPackageMapper;
+import cn.iocoder.yudao.module.system.enums.tenant.TenantPackageTypeEnum;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,6 @@ import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 
 /**
  * 租户套餐 Service 实现类
- *
- * 
  */
 @Service
 @Validated
@@ -41,6 +40,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     public Long createTenantPackage(TenantPackageCreateReqVO createReqVO) {
         // 插入
         TenantPackageDO tenantPackage = TenantPackageConvert.INSTANCE.convert(createReqVO);
+        tenantPackage.setType(TenantPackageTypeEnum.CUSTOM.getType());
         tenantPackageMapper.insert(tenantPackage);
         // 返回
         return tenantPackage.getId();
@@ -65,6 +65,10 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     public void deleteTenantPackage(Long id) {
         // 校验存在
         validateTenantPackageExists(id);
+        // 校验是否为默认套餐
+        if (TenantPackageTypeEnum.isDefault(tenantPackageMapper.selectById(id).getType())) {
+            throw exception(TENANT_PACKAGE_DEFAULT_DELETE);
+        }
         // 校验正在使用
         validateTenantUsed(id);
         // 删除
@@ -91,6 +95,11 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     }
 
     @Override
+    public TenantPackageDO getDefaultTenantPackage() {
+        return tenantPackageMapper.selectOne(TenantPackageDO::getType, TenantPackageTypeEnum.DEF.getType());
+    }
+
+    @Override
     public PageResult<TenantPackageDO> getTenantPackagePage(TenantPackagePageReqVO pageReqVO) {
         return tenantPackageMapper.selectPage(pageReqVO);
     }
@@ -101,15 +110,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         if (tenantPackage == null) {
             throw exception(TENANT_PACKAGE_NOT_EXISTS);
         }
-        if (tenantPackage.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
-            throw exception(TENANT_PACKAGE_DISABLE, tenantPackage.getName());
-        }
         return tenantPackage;
-    }
-
-    @Override
-    public List<TenantPackageDO> getTenantPackageListByStatus(Integer status) {
-        return tenantPackageMapper.selectListByStatus(status);
     }
 
 }

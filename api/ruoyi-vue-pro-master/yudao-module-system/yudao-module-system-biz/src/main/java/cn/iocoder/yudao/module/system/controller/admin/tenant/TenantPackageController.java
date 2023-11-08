@@ -69,13 +69,4 @@ public class TenantPackageController {
         PageResult<TenantPackageDO> pageResult = tenantPackageService.getTenantPackagePage(pageVO);
         return success(TenantPackageConvert.INSTANCE.convertPage(pageResult));
     }
-
-    @GetMapping("/get-simple-list")
-    @Operation(summary = "获取租户套餐精简信息列表", description = "只包含被开启的租户套餐，主要用于前端的下拉选项")
-    public CommonResult<List<TenantPackageSimpleRespVO>> getTenantPackageList() {
-        // 获得角色列表，只要开启状态的
-        List<TenantPackageDO> list = tenantPackageService.getTenantPackageListByStatus(CommonStatusEnum.ENABLE.getStatus());
-        return success(TenantPackageConvert.INSTANCE.convertList02(list));
-    }
-
 }

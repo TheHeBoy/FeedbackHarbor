@@ -1,6 +1,9 @@
 package cn.iocoder.yudao.module.system.convert.tenant;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantCreateReqVO;
+import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantRespVO;
+import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantUpdateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantExcelVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantRespVO;
@@ -14,8 +17,6 @@ import java.util.List;
 
 /**
  * 租户 Convert
- *
- *
  */
 @Mapper
 public interface TenantConvert {
@@ -23,23 +24,19 @@ public interface TenantConvert {
     TenantConvert INSTANCE = Mappers.getMapper(TenantConvert.class);
 
     TenantDO convert(TenantCreateReqVO bean);
+    TenantDO convert(SelectTenantUpdateReqVO bean);
+    TenantDO convert(SelectTenantCreateReqVO bean);
 
     TenantDO convert(TenantUpdateReqVO bean);
 
     TenantRespVO convert(TenantDO bean);
+    SelectTenantRespVO convertSelect(TenantDO bean);
 
     List<TenantRespVO> convertList(List<TenantDO> list);
+    List<SelectTenantRespVO> convertListSelect(List<TenantDO> list);
 
     PageResult<TenantRespVO> convertPage(PageResult<TenantDO> page);
 
     List<TenantExcelVO> convertList02(List<TenantDO> list);
-
-    default UserCreateReqVO convert02(TenantCreateReqVO bean) {
-        UserCreateReqVO reqVO = new UserCreateReqVO();
-        reqVO.setUsername(bean.getUsername());
-        reqVO.setPassword(bean.getPassword());
-        reqVO.setNickname(bean.getContactName()).setMobile(bean.getContactMobile());
-        return reqVO;
-    }
 
 }

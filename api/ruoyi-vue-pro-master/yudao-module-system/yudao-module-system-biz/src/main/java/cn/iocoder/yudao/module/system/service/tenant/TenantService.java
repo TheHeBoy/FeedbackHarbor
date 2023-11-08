@@ -2,12 +2,13 @@ package cn.iocoder.yudao.module.system.service.tenant;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
+import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantCreateReqVO;
+import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantUpdateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantExportReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantUpdateReqVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantDO;
-import cn.iocoder.yudao.module.system.service.tenant.handler.TenantInfoHandler;
 import cn.iocoder.yudao.module.system.service.tenant.handler.TenantMenuHandler;
 
 import javax.validation.Valid;
@@ -16,8 +17,6 @@ import java.util.Set;
 
 /**
  * 租户 Service 接口
- *
- *
  */
 public interface TenantService {
 
@@ -27,20 +26,20 @@ public interface TenantService {
      * @param createReqVO 创建信息
      * @return 编号
      */
-    Long createTenant(@Valid TenantCreateReqVO createReqVO);
+    Long createTenant(@Valid SelectTenantCreateReqVO createReqVO, Long userId);
 
     /**
      * 更新租户
      *
      * @param updateReqVO 更新信息
      */
-    void updateTenant(@Valid TenantUpdateReqVO updateReqVO);
+    void updateTenant(@Valid SelectTenantUpdateReqVO updateReqVO);
 
     /**
      * 更新租户的角色菜单
      *
      * @param tenantId 租户编号
-     * @param menuIds 菜单编号数组
+     * @param menuIds  菜单编号数组
      */
     void updateTenantRoleMenu(Long tenantId, Set<Long> menuIds);
 
@@ -75,6 +74,15 @@ public interface TenantService {
      */
     List<TenantDO> getTenantList(TenantExportReqVO exportReqVO);
 
+
+    /**
+     * 得以用户下的所有社区租户
+     *
+     * @param uid 用户id
+     * @return 租户列表
+     */
+    List<TenantDO> getTenantList(Long uid);
+
     /**
      * 获得名字对应的租户
      *
@@ -98,14 +106,6 @@ public interface TenantService {
      * @return 租户数组
      */
     List<TenantDO> getTenantListByPackageId(Long packageId);
-
-    /**
-     * 进行租户的信息处理逻辑
-     * 其中，租户编号从 {@link TenantContextHolder} 上下文中获取
-     *
-     * @param handler 处理器
-     */
-    void handleTenantInfo(TenantInfoHandler handler);
 
     /**
      * 进行租户的菜单处理逻辑

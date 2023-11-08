@@ -6,6 +6,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
+import cn.iocoder.yudao.module.system.controller.admin.permission.vo.menu.MenuListReqVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.MenuDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleMenuDO;
@@ -32,8 +33,6 @@ import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.
 
 /**
  * 权限 Service 实现类
- *
- *
  */
 @Service
 @Slf4j
@@ -78,7 +77,7 @@ public class PermissionServiceImpl implements PermissionService {
     /**
      * 判断指定角色，是否拥有该 permission 权限
      *
-     * @param roles 指定角色数组
+     * @param roles      指定角色数组
      * @param permission 权限标识
      * @return 是否拥有
      */
@@ -173,12 +172,18 @@ public class PermissionServiceImpl implements PermissionService {
             return Collections.emptySet();
         }
 
-        // 如果是管理员的情况下，获取全部菜单编号
+        // 如果是超级管理员的情况下，获取全部菜单编号
         if (roleService.hasAnySuperAdmin(roleIds)) {
             return convertSet(menuService.getMenuList(), MenuDO::getId);
+        } else if (roleService.hasAnySuperTenantAdmin(roleIds)) {
+            // 如果是超级租户管理员，获得套餐下的所有菜单
+            MenuListReqVO menuListReqVO = new MenuListReqVO();
+            menuListReqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
+            return convertSet(menuService.getMenuListByTenant(menuListReqVO), MenuDO::getId);
+        } else {
+            // 如果是租户管理员的情况下，获得超级租户管理员授权的菜单
+            return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
         }
-        // 如果是非管理员的情况下，获得拥有的菜单编号
-        return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
     }
 
     @Override

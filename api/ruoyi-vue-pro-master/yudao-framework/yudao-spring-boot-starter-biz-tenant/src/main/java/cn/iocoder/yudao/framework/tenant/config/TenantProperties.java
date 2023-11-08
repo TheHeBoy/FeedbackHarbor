@@ -14,17 +14,6 @@ import java.util.Set;
 @ConfigurationProperties(prefix = "yudao.tenant")
 @Data
 public class TenantProperties {
-
-    /**
-     * 租户是否开启
-     */
-    private static final Boolean ENABLE_DEFAULT = true;
-
-    /**
-     * 是否开启
-     */
-    private Boolean enable = ENABLE_DEFAULT;
-
     /**
      * 需要忽略多租户的请求
      *

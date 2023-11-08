@@ -33,26 +33,10 @@ export const loginOut = () => {
 };
 
 // 获取用户权限信息
-export const getInfo = () => {
+export const getPermissionInfo = () => {
   return request.get({ url: '/system/auth/get-permission-info' });
 };
 
-//获取登录验证码
-export const sendSmsCode = (data: SmsCodeVO) => {
-  return request.post({ url: '/system/auth/send-sms-code', data });
-};
-
-// 短信验证码登录
-export const smsLogin = (data: SmsLoginVO) => {
-  return request.post({ url: '/system/auth/sms-login', data });
-};
-
-// 社交授权的跳转
-export const socialAuthRedirect = (type: number, redirectUri: string) => {
-  return request.get({
-    url: '/system/auth/social-auth-redirect?type=' + type + '&redirectUri=' + redirectUri,
-  });
-};
 // 获取验证图片以及 token
 export const getCode = (data) => {
   return request.postOriginal({ url: 'system/captcha/get', data });
@@ -61,4 +45,9 @@ export const getCode = (data) => {
 // 滑动或者点选验证
 export const reqCheck = (data) => {
   return request.postOriginal({ url: 'system/captcha/check', data });
+};
+
+// 查询登录用户详情
+export const getUserLoginInfo = () => {
+  return request.get({ url: '/system/auth/login-user-info' });
 };

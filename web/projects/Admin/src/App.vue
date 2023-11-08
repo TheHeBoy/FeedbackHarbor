@@ -24,12 +24,14 @@ const setDefaultTheme = () => {
 };
 setDefaultTheme();
 </script>
+
 <template>
   <ConfigGlobal :size="currentSize">
     <RouterView :class="greyMode ? `${prefixCls}-grey-mode` : ''" />
     <routerSearch />
   </ConfigGlobal>
 </template>
+
 <style lang="scss">
 $prefix-cls: #{$namespace}-app;
 

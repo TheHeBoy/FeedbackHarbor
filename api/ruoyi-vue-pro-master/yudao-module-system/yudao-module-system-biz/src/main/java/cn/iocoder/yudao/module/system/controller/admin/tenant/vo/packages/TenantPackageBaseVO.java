@@ -17,10 +17,6 @@ public class TenantPackageBaseVO {
     @NotNull(message = "套餐名不能为空")
     private String name;
 
-    @Schema(description = "状态，参见 CommonStatusEnum 枚举", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "状态不能为空")
-    private Integer status;
-
     @Schema(description = "备注", example = "好")
     private String remark;
 
@@ -28,4 +24,7 @@ public class TenantPackageBaseVO {
     @NotNull(message = "关联的菜单编号不能为空")
     private Set<Long> menuIds;
 
+    @Schema(description = "套餐天数", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "套餐天数不能为空")
+    private int days;
 }

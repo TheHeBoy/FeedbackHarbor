@@ -38,7 +38,6 @@ import App from './App.vue';
 import './permission';
 
 import '@/plugins/tongji'; // 百度统计
-import Logger from '@/utils/Logger';
 
 import VueDOMPurifyHTML from 'vue-dompurify-html'; // 解决v-html 的安全隐患
 import request from '@/config/axios';
@@ -65,11 +64,9 @@ const setupAll = async () => {
 
   app.use(VueDOMPurifyHTML);
 
-  app.mount('#app');
-
   initApi(request);
+
+  app.mount('#app');
 };
 
-setupAll();
-
-Logger.prettyPrimary(`欢迎使用`, import.meta.env.VITE_APP_TITLE);
+await setupAll();

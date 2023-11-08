@@ -31,7 +31,8 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import { getAccessToken, getTenantId } from '@/utils/auth';
+import { getAccessToken } from '@/utils/auth';
+import { getTenantId } from '@/utils/auth';
 
 defineOptions({ name: 'InfraFileForm' });
 

@@ -14,7 +14,6 @@ import cn.iocoder.yudao.module.system.convert.permission.RoleConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
 import cn.iocoder.yudao.module.system.dal.mysql.permission.RoleMapper;
 import cn.iocoder.yudao.module.system.dal.redis.RedisKeyConstants;
-import cn.iocoder.yudao.module.system.enums.permission.DataScopeEnum;
 import cn.iocoder.yudao.module.system.enums.permission.RoleCodeEnum;
 import cn.iocoder.yudao.module.system.enums.permission.RoleTypeEnum;
 import com.google.common.annotations.VisibleForTesting;
@@ -55,7 +54,6 @@ public class RoleServiceImpl implements RoleService {
         RoleDO role = RoleConvert.INSTANCE.convert(reqVO);
         role.setType(ObjectUtil.defaultIfNull(type, RoleTypeEnum.CUSTOM.getType()));
         role.setStatus(CommonStatusEnum.ENABLE.getStatus());
-        role.setDataScope(DataScopeEnum.ALL.getScope()); // 默认可查看所有数据。原因是，可能一些项目不需要项目权限
         roleMapper.insert(role);
         // 返回
         return role.getId();
@@ -206,6 +204,18 @@ public class RoleServiceImpl implements RoleService {
         return ids.stream().anyMatch(id -> {
             RoleDO role = self.getRoleFromCache(id);
             return role != null && RoleCodeEnum.isSuperAdmin(role.getCode());
+        });
+    }
+
+    @Override
+    public boolean hasAnySuperTenantAdmin(Collection<Long> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return false;
+        }
+        RoleServiceImpl self = getSelf();
+        return ids.stream().anyMatch(id -> {
+            RoleDO role = self.getRoleFromCache(id);
+            return role != null && RoleCodeEnum.isSuperTenantAdmin(role.getCode());
         });
     }
 

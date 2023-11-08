@@ -215,7 +215,7 @@ const submitForm = async () => {
   } finally {
     formLoading.value = false;
     // 清空，从而触发刷新
-    wsCache.delete(CACHE_KEY.ROLE_ROUTERS);
+    wsCache.delete(CACHE_KEY.PERMISSION);
   }
 };
 

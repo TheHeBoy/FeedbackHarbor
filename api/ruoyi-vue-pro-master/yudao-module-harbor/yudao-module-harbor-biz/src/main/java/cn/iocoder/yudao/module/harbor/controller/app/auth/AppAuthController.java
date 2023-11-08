@@ -61,14 +61,6 @@ public class AppAuthController {
         return success(true);
     }
 
-    @PostMapping("/refresh-token")
-    @Operation(summary = "刷新令牌")
-    @Parameter(name = "refreshToken", description = "刷新令牌", required = true)
-    @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
-    public CommonResult<AppAuthLoginRespVO> refreshToken(@RequestParam("refreshToken") String refreshToken) {
-        return success(appAuthService.refreshToken(refreshToken));
-    }
-
     @GetMapping("/get-user-info")
     @PreAuthenticated
     @Operation(summary = "获取登录用用户信息")

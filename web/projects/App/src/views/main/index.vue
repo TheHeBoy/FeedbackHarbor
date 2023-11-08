@@ -34,6 +34,7 @@ import { FeedbackPageParams, FeedbackVO, getFeedbackPage } from '@harbor/apis';
 import { UFeedback } from '@harbor/components';
 import { useUserStoreWithOut } from '@/store/user';
 import { onMounted } from 'vue';
+import router from "@/router";
 
 const userStore = useUserStoreWithOut();
 const { user } = storeToRefs(userStore);
@@ -84,6 +85,6 @@ const resetList = () => {
 
 onMounted(() => {
   pageRequest();
-});
+})
 </script>
 <style lang="scss" scoped></style>

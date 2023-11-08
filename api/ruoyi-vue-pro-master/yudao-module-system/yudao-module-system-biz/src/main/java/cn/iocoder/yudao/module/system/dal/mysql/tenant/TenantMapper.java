@@ -21,8 +21,6 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
     default PageResult<TenantDO> selectPage(TenantPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<TenantDO>()
                 .likeIfPresent(TenantDO::getName, reqVO.getName())
-                .likeIfPresent(TenantDO::getContactName, reqVO.getContactName())
-                .likeIfPresent(TenantDO::getContactMobile, reqVO.getContactMobile())
                 .eqIfPresent(TenantDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(TenantDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(TenantDO::getId));
@@ -31,8 +29,6 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
     default List<TenantDO> selectList(TenantExportReqVO reqVO) {
         return selectList(new LambdaQueryWrapperX<TenantDO>()
                 .likeIfPresent(TenantDO::getName, reqVO.getName())
-                .likeIfPresent(TenantDO::getContactName, reqVO.getContactName())
-                .likeIfPresent(TenantDO::getContactMobile, reqVO.getContactMobile())
                 .eqIfPresent(TenantDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(TenantDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(TenantDO::getId));

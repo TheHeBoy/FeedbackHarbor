@@ -1,16 +1,16 @@
-import { useCache } from '@/hooks/web/useCache';
+import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { TokenType } from '@/api/login/types';
 import { decrypt, encrypt } from '@/utils/jsencrypt';
+import { TenantKeyType } from '@harbor/core';
 
 const { wsCache } = useCache();
-
-const AccessTokenKey = 'ACCESS_TOKEN';
-const RefreshTokenKey = 'REFRESH_TOKEN';
+// ========== Token相关 ==========
+const AccessTokenKey = CACHE_KEY.ACCESS_TOKEN;
+const RefreshTokenKey = CACHE_KEY.REFRESH_TOKEN;
 
 // 获取token
 export const getAccessToken = () => {
-  // 此处与TokenKey相同，此写法解决初始化时Cookies中不存在TokenKey报错
-  return wsCache.get(AccessTokenKey) ? wsCache.get(AccessTokenKey) : wsCache.get('ACCESS_TOKEN');
+  return wsCache.get(AccessTokenKey);
 };
 
 // 刷新token
@@ -30,16 +30,11 @@ export const removeToken = () => {
   wsCache.delete(RefreshTokenKey);
 };
 
-/** 格式化token（jwt格式） */
-export const formatToken = (token: string): string => {
-  return 'Bearer ' + token;
-};
 // ========== 账号相关 ==========
 
-const LoginFormKey = 'LOGINFORM';
+const LoginFormKey = CACHE_KEY.LOGIN_FORM;
 
 export type LoginFormType = {
-  tenantName: string;
   username: string;
   password: string;
   rememberMe: boolean;
@@ -64,29 +59,28 @@ export const removeLoginForm = () => {
 
 // ========== 租户相关 ==========
 
-const TenantIdKey = 'TENANT_ID';
-const TenantNameKey = 'TENANT_NAME';
-
-export const getTenantName = () => {
-  return wsCache.get(TenantNameKey);
-};
-
-export const setTenantName = (username: string) => {
-  wsCache.set(TenantNameKey, username, { exp: 30 * 24 * 60 * 60 });
-};
-
-export const removeTenantName = () => {
-  wsCache.delete(TenantNameKey);
-};
+const TenantKey = CACHE_KEY.TENANT;
 
 export const getTenantId = () => {
-  return wsCache.get(TenantIdKey);
+  return wsCache.get(TenantKey)?.id;
 };
 
-export const setTenantId = (username: string) => {
-  wsCache.set(TenantIdKey, username);
+export const getTenantLogo = () => {
+  return wsCache.get(TenantKey)?.img;
+};
+
+export const getTenantName = () => {
+  return wsCache.get(TenantKey)?.name;
+};
+
+export const setTenant = (type: TenantKeyType) => {
+  wsCache.set(TenantKey, type);
+};
+
+export const getTenant = (): TenantKeyType => {
+  return wsCache.get(TenantKey);
 };
 
 export const removeTenantId = () => {
-  wsCache.delete(TenantIdKey);
+  wsCache.delete(TenantKey);
 };

@@ -9,13 +9,13 @@ import axios, {
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
 import qs from 'qs';
 import { config } from '@/config/axios/config';
-import { getAccessToken, getRefreshToken, getTenantId, removeToken, setToken } from '@/utils/auth';
+import { getAccessToken, getRefreshToken, removeToken, setToken } from '@/utils/auth';
+import { getTenantId } from '@/utils/auth';
 import errorCode from './errorCode';
 
 import { resetRouter } from '@/router';
 import { useCache } from '@/hooks/web/useCache';
 
-const tenantEnable = import.meta.env.VITE_APP_TENANT_ENABLE;
 const { result_code, base_url, request_timeout, default_headers } = config;
 
 // 需要忽略的提示。忽略后，自动 Promise.reject('error')
@@ -48,19 +48,20 @@ service.interceptors.request.use(
     // 是否需要设置 token
     let isToken = (config!.headers || {}).isToken === false;
     whiteList.some((v) => {
-      if (config.url) {
-        config.url.indexOf(v) > -1;
+      if (config.url && config.url.indexOf(v) > -1) {
         return (isToken = false);
       }
     });
     if (getAccessToken() && !isToken) {
       (config as Recordable).headers.Authorization = 'Bearer ' + getAccessToken(); // 让每个请求携带自定义token
     }
+
     // 设置租户
-    if (tenantEnable && tenantEnable === 'true') {
-      const tenantId = getTenantId();
-      if (tenantId) (config as Recordable).headers['tenant-id'] = tenantId;
+    const tenantId = getTenantId();
+    if (tenantId) {
+      (config as Recordable).headers['tenant-id'] = tenantId;
     }
+
     const params = config.params || {};
     const data = config.data || false;
     if (
@@ -87,9 +88,6 @@ service.interceptors.request.use(
           }
         }
       }
-      // 给 get 请求加上时间戳参数，避免从缓存中拿数据
-      // const now = new Date().getTime()
-      // params = params.substring(0, url.length - 1) + `?_t=${now}`
       url = url.slice(0, -1);
       config.params = {};
       config.url = url;

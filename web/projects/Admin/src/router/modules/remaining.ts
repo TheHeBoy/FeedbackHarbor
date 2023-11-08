@@ -71,6 +71,24 @@ const remainingRouter: AppRouteRecordRaw[] = [
     ],
   },
   {
+    path: '/selectTenant',
+    component: () => import('@/views/SelectTenant/index.vue'),
+    name: 'selectTenant',
+    meta: {
+      hidden: true,
+      noTagsView: true,
+    },
+  },
+  {
+    path: '/createTenant',
+    component: () => import('@/views/SelectTenant/TenantForm.vue'),
+    name: 'createTenant',
+    meta: {
+      hidden: true,
+      noTagsView: true,
+    },
+  },
+  {
     path: '/user',
     component: Layout,
     name: 'UserInfo',
@@ -90,21 +108,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           title: t('common.profile'),
         },
       },
-      {
-        path: 'notify-message',
-        component: () => import('@/views/system/notify/my/index.vue'),
-        name: 'MyNotifyMessage',
-        meta: {
-          canTo: true,
-          hidden: true,
-          noTagsView: false,
-          icon: 'ep:message',
-          title: '我的站内信',
-        },
-      },
     ],
   },
-
   {
     path: '/dict',
     component: Layout,
@@ -128,7 +133,6 @@ const remainingRouter: AppRouteRecordRaw[] = [
       },
     ],
   },
-
   {
     path: '/codegen',
     component: Layout,

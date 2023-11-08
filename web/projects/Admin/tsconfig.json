@@ -47,9 +47,8 @@
   "include": [
     "src/**/*",
     "src/**/*.vue",
-    "types/**/*.d.ts",
-    "src/types/auto-imports.d.ts",
-    "src/types/auto-components.d.ts"
+    "src/types/*.d.ts",
+    "./types/*.d.ts"
   ],
   "exclude": [
     "dist",

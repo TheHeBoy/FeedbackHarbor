@@ -6,7 +6,8 @@ import { propTypes } from '@/utils/propTypes';
 import { isNumber } from '@/utils/is';
 import { ElMessage } from 'element-plus';
 import { useLocaleStore } from '@/store/modules/locale';
-import { getAccessToken, getTenantId } from '@/utils/auth';
+import { getAccessToken } from '@/utils/auth';
+import { getTenantId } from '@/utils/auth';
 
 defineOptions({ name: 'Editor' });
 

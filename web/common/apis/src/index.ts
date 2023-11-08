@@ -1,4 +1,4 @@
-export * from "./init.ts";
+export * from "./init";
 export * from "./interface";
 export * from "./comment";
 export * from "./feedback";

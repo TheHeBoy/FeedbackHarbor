@@ -3,6 +3,8 @@ package cn.iocoder.yudao.module.system.dal.dataobject.tenant;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 import cn.iocoder.yudao.framework.mybatis.core.type.JsonLongSetTypeHandler;
+import cn.iocoder.yudao.module.system.enums.permission.RoleTypeEnum;
+import cn.iocoder.yudao.module.system.enums.tenant.TenantPackageTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -34,12 +36,6 @@ public class TenantPackageDO extends BaseDO {
      */
     private String name;
     /**
-     * 租户套餐状态
-     *
-     * 枚举 {@link CommonStatusEnum}
-     */
-    private Integer status;
-    /**
      * 备注
      */
     private String remark;
@@ -48,5 +44,13 @@ public class TenantPackageDO extends BaseDO {
      */
     @TableField(typeHandler = JsonLongSetTypeHandler.class)
     private Set<Long> menuIds;
-
+    /**
+     * 套餐天数
+     */
+    private int days;
+    /**
+     * 套餐类型
+     * 枚举 {@link TenantPackageTypeEnum}
+     */
+    private Integer type;
 }

@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.harbor.service.comment;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
@@ -79,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
             appReplyPageReqVO.setCommentId(commentParent.getId());
             appReplyPageReqVO.setPageSize(pageReqVO.getPageSize());
             appReplyPageReqVO.setPageNo(0);
-            commentParent.setReplyPage(getReplyPage(appReplyPageReqVO));
+            commentParent.setReplyPage(getSelf().getReplyPage(appReplyPageReqVO));
         }
         return commentPage;
     }
@@ -152,5 +153,14 @@ public class CommentServiceImpl implements CommentService {
             vo.setNickname(user.getNickname());
             vo.setUserType(user.getUserType());
         }
+    }
+
+    /**
+     * 获得自身的代理对象，解决 AOP 生效问题
+     *
+     * @return 自己
+     */
+    private CommentServiceImpl getSelf() {
+        return SpringUtil.getBean(getClass());
     }
 }

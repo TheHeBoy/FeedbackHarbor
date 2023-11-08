@@ -5,13 +5,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.social.core.YudaoAuthRequestFactory;
+import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.harbor.controller.app.appuser.vo.AppUserCreateReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthSocialLoginReqVO;
-import cn.iocoder.yudao.module.system.api.oauth2.OAuth2TokenApi;
-import cn.iocoder.yudao.module.system.api.oauth2.dto.OAuth2AccessTokenCreateReqDTO;
-import cn.iocoder.yudao.module.system.api.oauth2.dto.OAuth2AccessTokenRespDTO;
+import cn.iocoder.yudao.module.system.api.token.TokenApi;
+import cn.iocoder.yudao.module.system.api.token.dto.TokenCreateReqDTO;
+import cn.iocoder.yudao.module.system.api.token.dto.TokenRespDTO;
 import cn.iocoder.yudao.module.system.api.social.SocialUserApi;
-import cn.iocoder.yudao.module.system.enums.oauth2.OAuth2ClientConstants;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthLoginReqVO;
 import cn.iocoder.yudao.module.harbor.controller.app.auth.vo.AppAuthLoginRespVO;
 import cn.iocoder.yudao.module.harbor.convert.auth.AuthConvert;
@@ -42,7 +42,7 @@ public class AppAuthServiceImpl implements AppAuthService {
     private AppUserService appUserService;
 
     @Resource
-    private OAuth2TokenApi oauth2TokenApi;
+    private TokenApi tokenApi;
 
     @Resource
     private SocialUserApi socialUserApi;
@@ -52,10 +52,10 @@ public class AppAuthServiceImpl implements AppAuthService {
 
     @Override
     public AppAuthLoginRespVO login(AppAuthLoginReqVO reqVO) {
-        // 使用用户名 + 密码，进行登录。
+        // 使用用户名 + 密码，进行登录
         AppUserDO user = loginUser(reqVO.getUsername(), reqVO.getPassword());
 
-        // 创建 Token 令牌，记录登录日志
+        // 创建 Token 令牌
         return createTokenAfterLoginSuccess(user);
     }
 
@@ -77,19 +77,10 @@ public class AppAuthServiceImpl implements AppAuthService {
     }
 
     @Override
-    public AppAuthLoginRespVO refreshToken(String refreshToken) {
-        return AuthConvert.INSTANCE.convert(
-                oauth2TokenApi.refreshAccessToken(refreshToken, OAuth2ClientConstants.CLIENT_ID_DEFAULT));
-    }
-
-    @Override
     public AppAuthLoginRespVO socialLogin(AppAuthSocialLoginReqVO reqVO) {
         AuthUser authUser = getAuthUser(reqVO.getType(), reqVO.getCode(), reqVO.getState());
-
         String openId = authUser.getUuid() + "-" + authUser.getSource();
-
         AppUserDO appUserDO = appUserService.getByOpenIdAndType(openId, THIRD_PARTY.getValue());
-
         Long userId;
         //用户不存在则自动创建
         if (appUserDO == null) {
@@ -109,7 +100,7 @@ public class AppAuthServiceImpl implements AppAuthService {
             throw exception(USER_NOT_EXISTS);
         }
 
-        // 创建 Token 令牌，记录登录日志
+        // 创建 Token 令牌
         return createTokenAfterLoginSuccess(user);
     }
 
@@ -120,19 +111,17 @@ public class AppAuthServiceImpl implements AppAuthService {
 
     private AppAuthLoginRespVO createTokenAfterLoginSuccess(AppUserDO user) {
         // 创建 Token 令牌
-        OAuth2AccessTokenRespDTO accessTokenRespDTO = oauth2TokenApi.createAccessToken(
-                new OAuth2AccessTokenCreateReqDTO()
-                        .setUserId(user.getId())
-                        .setUserType(getUserType().getValue())
-                        .setClientId(OAuth2ClientConstants.CLIENT_ID_DEFAULT));
+        TokenRespDTO tokenRespDTO = tokenApi.createAccessToken(
+                new TokenCreateReqDTO().setUserId(user.getId()).setUserType(getUserType().getValue()).setTenantId(TenantContextHolder.getTenantId()),
+                false);
         // 构建返回结果
-        return AuthConvert.INSTANCE.convert(accessTokenRespDTO);
+        return AuthConvert.INSTANCE.convert(tokenRespDTO);
     }
 
     @Override
     public void logout(String token) {
         // 删除访问令牌
-        oauth2TokenApi.removeAccessToken(token);
+        tokenApi.removeAccessToken(token);
     }
 
     private UserTypeEnum getUserType() {

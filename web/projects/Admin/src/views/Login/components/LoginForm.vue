@@ -18,17 +18,6 @@
         </el-form-item>
       </el-col>
       <el-col :span="24" style="padding-left: 10px; padding-right: 10px">
-        <el-form-item v-if="loginData.tenantEnable === 'true'" prop="tenantName">
-          <el-input
-            v-model="loginData.loginForm.tenantName"
-            :placeholder="t('login.tenantNamePlaceholder')"
-            :prefix-icon="iconHouse"
-            type="primary"
-            link
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" style="padding-left: 10px; padding-right: 10px">
         <el-form-item prop="username">
           <el-input
             v-model="loginData.loginForm.username"
@@ -87,9 +76,7 @@
 <script lang="ts" setup>
 import { ElLoading } from 'element-plus';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
-
 import { useIcon } from '@/hooks/web/useIcon';
-
 import * as authUtil from '@/utils/auth';
 import { usePermissionStore } from '@/store/modules/permission';
 import * as LoginApi from '@/api/login';
@@ -98,7 +85,6 @@ import { LoginStateEnum, useFormValid, useLoginState } from './useLogin';
 defineOptions({ name: 'LoginForm' });
 
 const { t } = useI18n();
-const iconHouse = useIcon({ icon: 'ep:house' });
 const iconAvatar = useIcon({ icon: 'ep:avatar' });
 const iconLock = useIcon({ icon: 'ep:lock' });
 const formLogin = ref();
@@ -114,16 +100,14 @@ const captchaType = ref('blockPuzzle'); // blockPuzzle 滑块 clickWord 点击�
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
 
 const LoginRules = {
-  tenantName: [required],
   username: [required],
   password: [required],
 };
+
 const loginData = reactive({
   isShowPassword: false,
   captchaEnable: import.meta.env.VITE_APP_CAPTCHA_ENABLE,
-  tenantEnable: import.meta.env.VITE_APP_TENANT_ENABLE,
   loginForm: {
-    tenantName: '芋道源码',
     username: 'admin',
     password: 'admin123',
     captchaVerification: '',
@@ -142,13 +126,6 @@ const getCode = async () => {
     verify.value.show();
   }
 };
-//获取租户ID
-const getTenantId = async () => {
-  if (loginData.tenantEnable === 'true') {
-    const res = await LoginApi.getTenantIdByName(loginData.loginForm.tenantName);
-    authUtil.setTenantId(res);
-  }
-};
 // 记住我
 const getCookie = () => {
   const loginForm = authUtil.getLoginForm();
@@ -157,8 +134,7 @@ const getCookie = () => {
       ...loginData.loginForm,
       username: loginForm.username ? loginForm.username : loginData.loginForm.username,
       password: loginForm.password ? loginForm.password : loginData.loginForm.password,
-      rememberMe: loginForm.rememberMe ? true : false,
-      tenantName: loginForm.tenantName ? loginForm.tenantName : loginData.loginForm.tenantName,
+      rememberMe: loginForm.rememberMe,
     };
   }
 };
@@ -166,7 +142,6 @@ const getCookie = () => {
 const handleLogin = async (params) => {
   loginLoading.value = true;
   try {
-    await getTenantId();
     const data = await validForm();
     if (!data) {
       return;
@@ -190,12 +165,7 @@ const handleLogin = async (params) => {
     if (!redirect.value) {
       redirect.value = '/';
     }
-    // 判断是否为SSO登录
-    if (redirect.value.indexOf('sso') !== -1) {
-      window.location.href = window.location.href.replace('/login?redirect=', '');
-    } else {
-      push({ path: redirect.value || permissionStore.addRouters[0].path });
-    }
+    await push({ path: redirect.value || permissionStore.addRouters[0].path });
   } catch {
     loginLoading.value = false;
   } finally {

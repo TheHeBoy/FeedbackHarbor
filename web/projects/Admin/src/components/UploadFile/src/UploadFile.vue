@@ -39,7 +39,8 @@
 import { PropType } from 'vue';
 
 import { propTypes } from '@/utils/propTypes';
-import { getAccessToken, getTenantId } from '@/utils/auth';
+import { getAccessToken } from '@/utils/auth';
+import { getTenantId } from '@/utils/auth';
 import type { UploadInstance, UploadUserFile, UploadProps, UploadRawFile } from 'element-plus';
 
 defineOptions({ name: 'UploadFile' });

@@ -6,7 +6,9 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
 import cn.iocoder.yudao.framework.security.config.SecurityProperties;
 import cn.iocoder.yudao.module.system.controller.admin.auth.vo.*;
+import cn.iocoder.yudao.module.system.controller.admin.user.vo.user.UserLoginInfoRespVO;
 import cn.iocoder.yudao.module.system.convert.auth.AuthConvert;
+import cn.iocoder.yudao.module.system.convert.user.UserConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.MenuDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
@@ -92,24 +94,25 @@ public class AuthController {
     @GetMapping("/get-permission-info")
     @Operation(summary = "获取登录用户的权限信息")
     public CommonResult<AuthPermissionInfoRespVO> getPermissionInfo() {
-        // 1.1 获得用户信息
-        AdminUserDO user = userService.getUser(getLoginUserId());
-        if (user == null) {
-            return null;
-        }
-
-        // 1.2 获得角色列表
+        // 1 获得角色列表
         Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(getLoginUserId());
         List<RoleDO> roles = roleService.getRoleList(roleIds);
         roles.removeIf(role -> !CommonStatusEnum.ENABLE.getStatus().equals(role.getStatus())); // 移除禁用的角色
 
-        // 1.3 获得菜单列表
+        // 2 获得菜单列表
         Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(convertSet(roles, RoleDO::getId));
         List<MenuDO> menuList = menuService.getMenuList(menuIds);
         menuList.removeIf(menu -> !CommonStatusEnum.ENABLE.getStatus().equals(menu.getStatus())); // 移除禁用的菜单
 
-        // 2. 拼接结果返回
-        return success(AuthConvert.INSTANCE.convert(user, roles, menuList));
+        // 3. 拼接结果返回
+        return success(AuthConvert.INSTANCE.convert(roles, menuList));
+    }
+
+    @GetMapping("/login-user-info")
+    @Operation(summary = "获取登录用户息")
+    public CommonResult<UserLoginInfoRespVO> getLoginUserinfo() {
+        AdminUserDO user = userService.getUser(getLoginUserId());
+        return success(UserConvert.INSTANCE.convert5(user));
     }
 
     // ========== 短信登录相关 ==========

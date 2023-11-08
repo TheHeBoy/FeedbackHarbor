@@ -45,8 +45,7 @@ public interface MenuService {
     List<MenuDO> getMenuList();
 
     /**
-     * 基于租户，筛选菜单列表
-     * 注意，如果是系统租户，返回的还是全菜单
+     * 基于租户，筛选出套餐内的菜单列表
      *
      * @param reqVO 筛选条件请求 VO
      * @return 菜单列表

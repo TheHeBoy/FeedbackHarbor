@@ -8,7 +8,8 @@ import cn.iocoder.yudao.framework.security.core.handler.AuthenticationEntryPoint
 import cn.iocoder.yudao.framework.security.core.service.SecurityFrameworkService;
 import cn.iocoder.yudao.framework.security.core.service.SecurityFrameworkServiceImpl;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
-import cn.iocoder.yudao.module.system.api.oauth2.OAuth2TokenApi;
+import cn.iocoder.yudao.module.harbor.api.appuser.AppUserApi;
+import cn.iocoder.yudao.module.system.api.token.TokenApi;
 import cn.iocoder.yudao.module.system.api.permission.PermissionApi;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -24,11 +25,9 @@ import javax.annotation.Resource;
 
 /**
  * Spring Security 自动配置类，主要用于相关组件的配置
- *
+ * <p>
  * 注意，不能和 {@link YudaoWebSecurityConfigurerAdapter} 用一个，原因是会导致初始化报错。
  * 参见 https://stackoverflow.com/questions/53847050/spring-boot-delegatebuilder-cannot-be-null-on-autowiring-authenticationmanager 文档。
- *
- *
  */
 @AutoConfiguration
 @EnableConfigurationProperties(SecurityProperties.class)
@@ -77,8 +76,8 @@ public class YudaoSecurityAutoConfiguration {
      */
     @Bean
     public TokenAuthenticationFilter authenticationTokenFilter(GlobalExceptionHandler globalExceptionHandler,
-                                                               OAuth2TokenApi oauth2TokenApi) {
-        return new TokenAuthenticationFilter(securityProperties, globalExceptionHandler, oauth2TokenApi);
+                                                               TokenApi tokenApi, AppUserApi appUserApi) {
+        return new TokenAuthenticationFilter(securityProperties, globalExceptionHandler, tokenApi, appUserApi);
     }
 
     @Bean("ss") // 使用 Spring Security 的缩写，方便使用

@@ -23,6 +23,7 @@ import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.EXPORT;
+import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
 @Tag(name = "管理后台 - 租户")
 @RestController
@@ -41,19 +42,11 @@ public class TenantController {
         return success(tenantDO != null ? tenantDO.getId() : null);
     }
 
-    @PostMapping("/create")
-    @Operation(summary = "创建租户")
-    @PreAuthorize("@ss.hasPermission('system:tenant:create')")
-    public CommonResult<Long> createTenant(@Valid @RequestBody TenantCreateReqVO createReqVO) {
-        return success(tenantService.createTenant(createReqVO));
-    }
-
-    @PutMapping("/update")
-    @Operation(summary = "更新租户")
-    @PreAuthorize("@ss.hasPermission('system:tenant:update')")
-    public CommonResult<Boolean> updateTenant(@Valid @RequestBody TenantUpdateReqVO updateReqVO) {
-        tenantService.updateTenant(updateReqVO);
-        return success(true);
+    @GetMapping("/listByUser")
+    @Operation(summary = "通过用户得到所有社区租户")
+    public CommonResult<List<TenantRespVO>> listByUser() {
+        List<TenantDO> list = tenantService.getTenantList(getLoginUserId());
+        return success(TenantConvert.INSTANCE.convertList(list));
     }
 
     @DeleteMapping("/delete")

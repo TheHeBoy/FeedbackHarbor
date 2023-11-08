@@ -31,7 +31,7 @@ public class TenantDatabaseInterceptor implements TenantLineHandler {
 
     @Override
     public Expression getTenantId() {
-        return new LongValue(TenantContextHolder.getRequiredTenantId());
+        return new LongValue(TenantContextHolder.getTenantId());
     }
 
     @Override

@@ -11,28 +11,31 @@ import cn.iocoder.yudao.module.system.api.sms.SmsCodeApi;
 import cn.iocoder.yudao.module.system.api.social.dto.SocialUserBindReqDTO;
 import cn.iocoder.yudao.module.system.controller.admin.auth.vo.*;
 import cn.iocoder.yudao.module.system.convert.auth.AuthConvert;
-import cn.iocoder.yudao.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.token.TokenAccessDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.mysql.tenant.TenantUserMapper;
 import cn.iocoder.yudao.module.system.enums.logger.LoginLogTypeEnum;
 import cn.iocoder.yudao.module.system.enums.logger.LoginResultEnum;
-import cn.iocoder.yudao.module.system.enums.oauth2.OAuth2ClientConstants;
 import cn.iocoder.yudao.module.system.enums.sms.SmsSceneEnum;
 import cn.iocoder.yudao.module.system.service.logger.LoginLogService;
 import cn.iocoder.yudao.module.system.service.member.MemberService;
-import cn.iocoder.yudao.module.system.service.oauth2.OAuth2TokenService;
 import cn.iocoder.yudao.module.system.service.social.SocialUserService;
+import cn.iocoder.yudao.module.system.service.token.TokenService;
 import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import com.google.common.annotations.VisibleForTesting;
 import com.xingyuv.captcha.model.common.ResponseModel;
 import com.xingyuv.captcha.model.vo.CaptchaVO;
 import com.xingyuv.captcha.service.CaptchaService;
-import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.validation.Validator;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.servlet.ServletUtils.getClientIP;
@@ -40,8 +43,6 @@ import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 
 /**
  * Auth Service 实现类
- *
- *
  */
 @Service
 @Slf4j
@@ -52,9 +53,11 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     @Resource
     private LoginLogService loginLogService;
     @Resource
-    private OAuth2TokenService oauth2TokenService;
+    private TokenService tokenService;
     @Resource
     private SocialUserService socialUserService;
+    @Resource
+    private TenantUserMapper tenantUserMapper;
     @Resource
     private MemberService memberService;
     @Resource
@@ -194,22 +197,25 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         // 插入登陆日志
         createLoginLog(userId, username, logType, LoginResultEnum.SUCCESS);
         // 创建访问令牌
-        OAuth2AccessTokenDO accessTokenDO = oauth2TokenService.createAccessToken(userId, getUserType().getValue(),
-                OAuth2ClientConstants.CLIENT_ID_DEFAULT, null);
+        List<TenantUserDO> tenantUserDOS = tenantUserMapper.selectList(TenantUserDO::getUserId, userId);
+        TokenAccessDO accessTokenDO = tokenService.createAccessToken(userId,
+                getUserType().getValue(),
+                tenantUserDOS.stream().map(TenantUserDO::getTenantId).collect(Collectors.toList()),
+                true);
         // 构建返回结果
         return AuthConvert.INSTANCE.convert(accessTokenDO);
     }
 
     @Override
     public AuthLoginRespVO refreshToken(String refreshToken) {
-        OAuth2AccessTokenDO accessTokenDO = oauth2TokenService.refreshAccessToken(refreshToken, OAuth2ClientConstants.CLIENT_ID_DEFAULT);
+        TokenAccessDO accessTokenDO = tokenService.refreshAccessToken(refreshToken);
         return AuthConvert.INSTANCE.convert(accessTokenDO);
     }
 
     @Override
     public void logout(String token, Integer logType) {
         // 删除访问令牌
-        OAuth2AccessTokenDO accessTokenDO = oauth2TokenService.removeAccessToken(token);
+        TokenAccessDO accessTokenDO = tokenService.removeAccessToken(token);
         if (accessTokenDO == null) {
             return;
         }

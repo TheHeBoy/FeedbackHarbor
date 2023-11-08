@@ -19,7 +19,7 @@
             enter-active-class="animate__animated animate__bounceInLeft"
             tag="div"
           >
-            <img key="1" alt="" class="w-350px" src="@/assets/svgs/login-box-bg.svg" />
+            <img key="1" class="w-350px" src="@/assets/svgs/LoginBoxBg.svg?url" alt="" />
             <div key="2" class="text-3xl text-white">{{ t('login.welcome') }}</div>
             <div key="3" class="mt-5 font-normal text-white text-14px">
               {{ t('login.message') }}
@@ -82,7 +82,7 @@ $prefix-cls: #{$namespace}-login;
       z-index: -1;
       width: 100%;
       height: 100%;
-      background-image: url('@/assets/svgs/login-bg.svg');
+      background-image: url('@/assets/svgs/login-bg.svg?url');
       background-position: center;
       background-repeat: no-repeat;
       content: '';

@@ -114,12 +114,20 @@ public interface RoleService {
     List<RoleDO> getRoleList(RoleExportReqVO reqVO);
 
     /**
-     * 判断角色编号数组中，是否有管理员
+     * 判断角色编号数组中，是否有超级管理员
      *
      * @param ids 角色编号数组
      * @return 是否有管理员
      */
     boolean hasAnySuperAdmin(Collection<Long> ids);
+
+    /**
+     * 判断角色编号数组中，是否有超级租户管理员
+     *
+     * @param ids 角色编号数组
+     * @return 是否有管理员
+     */
+    boolean hasAnySuperTenantAdmin(Collection<Long> ids);
 
     /**
      * 校验角色们是否有效。如下情况，视为无效：

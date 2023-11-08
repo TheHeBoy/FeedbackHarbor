@@ -1,8 +1,9 @@
-import { store } from '../index';
+import { store } from '@/store';
 import { defineStore } from 'pinia';
 import { getAccessToken, removeToken } from '@/utils/auth';
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
-import { getInfo, loginOut } from '@/api/login';
+import { loginOut, getUserLoginInfo } from '@/api/login';
+import { usePermissionStore } from '@/store/modules/permission';
 
 const { wsCache } = useCache();
 
@@ -13,30 +14,20 @@ interface UserVO {
 }
 
 interface UserInfoVO {
-  permissions: string[];
-  roles: string[];
-  isSetUser: boolean;
   user: UserVO;
+  isSetUser: boolean;
 }
 
 export const useUserStore = defineStore('admin-user', {
   state: (): UserInfoVO => ({
-    permissions: [],
-    roles: [],
-    isSetUser: false,
     user: {
       id: 0,
       avatar: '',
       nickname: '',
     },
+    isSetUser: false,
   }),
   getters: {
-    getPermissions(): string[] {
-      return this.permissions;
-    },
-    getRoles(): string[] {
-      return this.roles;
-    },
     getIsSetUser(): boolean {
       return this.isSetUser;
     },
@@ -51,26 +42,25 @@ export const useUserStore = defineStore('admin-user', {
         return null;
       }
       let userInfo = wsCache.get(CACHE_KEY.USER);
-      const roleRouters = wsCache.get(CACHE_KEY.ROLE_ROUTERS);
-      if (!userInfo || !roleRouters) {
-        userInfo = await getInfo();
+      if (!userInfo) {
+        userInfo = await getUserLoginInfo();
       }
-      this.permissions = userInfo.permissions;
-      this.roles = userInfo.roles;
-      this.user = userInfo.user;
+
+      this.user = userInfo;
       this.isSetUser = true;
       wsCache.set(CACHE_KEY.USER, userInfo);
-      wsCache.set(CACHE_KEY.ROLE_ROUTERS, userInfo.menus);
     },
     async loginOut() {
       await loginOut();
+      // 删除用户信息
+      wsCache.delete(CACHE_KEY.USER);
+      // 删除权限信息
+      usePermissionStore().removePermission();
+      // 删除token
       removeToken();
-      wsCache.clear();
       this.resetState();
     },
     resetState() {
-      this.permissions = [];
-      this.roles = [];
       this.isSetUser = false;
       this.user = {
         id: 0,

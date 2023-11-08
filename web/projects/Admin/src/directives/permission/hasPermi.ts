@@ -8,7 +8,7 @@ export function hasPermi(app: App<Element>) {
     const { wsCache } = useCache();
     const { value } = binding;
     const all_permission = '*:*:*';
-    const permissions = wsCache.get(CACHE_KEY.USER).permissions;
+    const permissions = wsCache.get(CACHE_KEY.PERMISSION).permissions;
 
     if (value && value instanceof Array && value.length > 0) {
       const permissionFlag = value;
