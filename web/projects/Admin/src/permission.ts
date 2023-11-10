@@ -35,26 +35,41 @@ router.beforeEach(async (to, from, next) => {
       const dictStore = useDictStoreWithOut();
       const userStore = useUserStoreWithOut();
       const permissionStore = usePermissionStoreWithOut();
+
+      let nextData: undefined | {};
       if (!dictStore.getIsSetDict) {
         await dictStore.setDictMap();
       }
+
       // 用户信息
       if (!userStore.getIsSetUser) {
         isRelogin.show = true;
         await userStore.setUserInfoAction();
         isRelogin.show = false;
-        // 后端过滤菜单
-        if (!permissionStore.getIsSetPermission) {
-          await permissionStore.generateRoutes();
+
+        // 登录页面需要重定向
+        if (from.query.redirect) {
+          const redirect = decodeURIComponent(from.query.redirect as string);
+          nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
         }
+      }
+
+      // 菜单权限
+      if (!permissionStore.getIsSetPermission) {
+        await permissionStore.generateRoutes();
         permissionStore.getAddRouters.forEach((route) => {
           router.addRoute(route as unknown as RouteRecordRaw); // 动态添加可访问路由表
         });
-        const redirectPath = from.query.redirect || to.path;
-        const redirect = decodeURIComponent(redirectPath as string);
-        const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
+        if (!nextData) {
+          nextData = { ...to, replace: true };
+        }
+      }
+
+      if (nextData) {
+        // 会再次进入到router.beforeEach方法中, 为了保证动态路由添加成功
         next(nextData);
       } else {
+        // 不会再次进入到router.beforeEach方法中，动态路由已添加成功
         next();
       }
     }

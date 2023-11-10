@@ -175,11 +175,9 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
             handler.handle(menuIds);
             return true;
         }));
-        // 准备参数
-        MenuListReqVO reqVO = new MenuListReqVO().setStatus(CommonStatusEnum.ENABLE.getStatus());
 
         // 调用
-        List<MenuDO> result = menuService.getMenuListByTenant(reqVO);
+        List<MenuDO> result = menuService.getMenuListByTenant();
         // 断言
         assertEquals(1, result.size());
         assertPojoEquals(menu100, result.get(0));

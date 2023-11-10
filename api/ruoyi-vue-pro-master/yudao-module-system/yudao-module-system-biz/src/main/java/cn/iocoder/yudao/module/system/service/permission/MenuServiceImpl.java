@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.system.service.permission;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.module.system.controller.admin.permission.vo.menu.MenuCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.permission.vo.menu.MenuListReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.permission.vo.menu.MenuUpdateReqVO;
@@ -29,8 +30,6 @@ import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 
 /**
  * 菜单 Service 实现
- *
- *
  */
 @Service
 @Slf4j
@@ -104,9 +103,11 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<MenuDO> getMenuListByTenant(MenuListReqVO reqVO) {
+    public List<MenuDO> getMenuListByTenant() {
+        MenuListReqVO reqVO = new MenuListReqVO();
+        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
         List<MenuDO> menus = getMenuList(reqVO);
-        // 开启多租户的情况下，需要过滤掉未开通的菜单
+        // 过滤掉未开通的菜单
         tenantService.handleTenantMenu(menuIds -> menus.removeIf(menu -> !CollUtil.contains(menuIds, menu.getId())));
         return menus;
     }

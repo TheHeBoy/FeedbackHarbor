@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
-import { store } from '../index';
+import { store } from '@/store';
 import { cloneDeep } from 'lodash-es';
 import remainingRouter from '@/router/modules/remaining';
 import { generateRoute, flatMultiLevelRoutes } from '@/utils/routerHelper';
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { getPermissionInfo } from '@/api/login';
+import router from '@/router';
+import { RouteRecordRaw } from 'vue-router';
 
 const { wsCache } = useCache();
 
@@ -43,7 +45,6 @@ export const usePermissionStore = defineStore('permission', {
       if (!permissionInfo) {
         permissionInfo = await getPermissionInfo();
         wsCache.set(CACHE_KEY.PERMISSION, permissionInfo);
-        this.isSetPermission = true;
       }
       const routerMap: AppRouteRecordRaw[] = generateRoute(
         permissionInfo.menus as AppCustomRouteRecordRaw[],
@@ -62,6 +63,7 @@ export const usePermissionStore = defineStore('permission', {
       ]);
       // 渲染菜单的所有路由
       this.routers = cloneDeep(remainingRouter).concat(routerMap);
+      this.isSetPermission = true;
     },
     setMenuTabRouters(routers: AppRouteRecordRaw[]): void {
       this.menuTabRouters = routers;

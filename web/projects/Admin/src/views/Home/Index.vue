@@ -164,10 +164,8 @@
 import { set } from 'lodash-es';
 import { EChartsOption } from 'echarts';
 import { formatTime } from '@/utils';
-
 import { useUserStore } from '@/store/modules/user';
 import { useWatermark } from '@/hooks/web/useWatermark';
-import avatarImg from '@/assets/imgs/avatar.gif';
 import type { WorkplaceTotal, Project, Notice, Shortcut } from './types';
 import { pieOptions, barOptions } from './echarts-data';
 
@@ -177,7 +175,7 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const { setWatermark } = useWatermark();
 const loading = ref(true);
-const avatar = userStore.getUser.avatar ? userStore.getUser.avatar : avatarImg;
+const avatar = userStore.getUser.avatar;
 const username = userStore.getUser.nickname;
 const pieOptionsData = reactive<EChartsOption>(pieOptions) as EChartsOption;
 // 获取统计数

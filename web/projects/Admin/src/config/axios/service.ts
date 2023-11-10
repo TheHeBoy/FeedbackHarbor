@@ -13,9 +13,6 @@ import { getAccessToken, getRefreshToken, removeToken, setToken } from '@/utils/
 import { getTenantId } from '@/utils/auth';
 import errorCode from './errorCode';
 
-import { resetRouter } from '@/router';
-import { useCache } from '@/hooks/web/useCache';
-
 const { result_code, base_url, request_timeout, default_headers } = config;
 
 // 需要忽略的提示。忽略后，自动 Promise.reject('error')
@@ -137,7 +134,7 @@ service.interceptors.response.use(
         try {
           const refreshTokenRes = await refreshToken();
           // 2.1 刷新成功，则回放队列的请求 + 当前请求
-          setToken((await refreshTokenRes).data.data);
+          setToken(refreshTokenRes.data.data);
           config.headers!.Authorization = 'Bearer ' + getAccessToken();
           requestList.forEach((cb: any) => {
             cb();
@@ -169,18 +166,6 @@ service.interceptors.response.use(
       ElMessage.error(t('sys.api.errMsg500'));
       return Promise.reject(new Error(msg));
     } else if (code === 901) {
-      ElMessage.error({
-        offset: 300,
-        dangerouslyUseHTMLString: true,
-        message:
-          '<div>' +
-          t('sys.api.errMsg901') +
-          '</div>' +
-          '<div> &nbsp; </div>' +
-          '<div>参考 https://doc.iocoder.cn/ 教程</div>' +
-          '<div> &nbsp; </div>' +
-          '<div>5 分钟搭建本地环境</div>',
-      });
       return Promise.reject(new Error(msg));
     } else if (code !== 200) {
       if (msg === '无效的刷新令牌') {
@@ -227,13 +212,10 @@ const handleAuthorized = () => {
       confirmButtonText: t('login.relogin'),
       type: 'warning',
     }).then(() => {
-      const { wsCache } = useCache();
-      resetRouter(); // 重置静态路由表
-      wsCache.clear();
       removeToken();
       isRelogin.show = false;
       // 干掉token后再走一次路由让它过router.beforeEach的校验
-      window.location.href = window.location.href;
+      location.reload();
     });
   }
   return Promise.reject(t('sys.api.timeoutMessage'));

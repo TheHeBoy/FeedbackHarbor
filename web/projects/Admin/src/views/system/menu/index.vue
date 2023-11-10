@@ -125,11 +125,10 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict';
 import { handleTree } from '@/utils/tree';
 import * as MenuApi from '@/api/system/menu';
 import MenuForm from './MenuForm.vue';
-import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
+import { usePermissionStore } from '@/store/modules/permission';
 
 defineOptions({ name: 'SystemMenu' });
 
-const { wsCache } = useCache();
 const { t } = useI18n(); // 国际化
 const message = useMessage(); // 消息弹窗
 
@@ -185,7 +184,7 @@ const refreshMenu = async () => {
   try {
     await message.confirm('即将更新缓存刷新浏览器！', '刷新菜单缓存');
     // 清空，从而触发刷新
-    wsCache.delete(CACHE_KEY.PERMISSION);
+    usePermissionStore().removePermission();
     // 刷新浏览器
     location.reload();
   } catch {}

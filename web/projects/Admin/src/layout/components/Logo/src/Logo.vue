@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, unref, watch } from 'vue';
 import { useAppStore } from '@/store/modules/app';
 import { useDesign } from '@/hooks/web/useDesign';
+import { getTenantLogo, getTenantName } from '@/utils/auth';
 
 defineOptions({ name: 'Logo' });
 
@@ -12,8 +13,6 @@ const prefixCls = getPrefixCls('logo');
 const appStore = useAppStore();
 
 const show = ref(true);
-
-const title = computed(() => appStore.getTitle);
 
 const layout = computed(() => appStore.getLayout);
 
@@ -58,32 +57,40 @@ watch(
 
 <template>
   <div>
-    <router-link
+    <div
       :class="[
         prefixCls,
         layout !== 'classic' ? `${prefixCls}__Top` : '',
-        'flex !h-[var(--logo-height)] items-center cursor-pointer justify-center relative',
+        'w-full !h-[var(--logo-height)] flex items-center justify-center',
         'dark:bg-[var(--el-bg-color)]',
       ]"
-      to="/"
     >
       <img
         class="w-[calc(var(--logo-height)-10px)] h-[calc(var(--logo-height)-10px)]"
-        src="@/assets/imgs/logo.png"
+        :src="getTenantLogo()"
+        alt=""
       />
-      <div
-        v-if="show"
-        :class="[
-          'ml-10px text-16px font-700',
-          {
-            'text-[var(--logo-title-text-color)]': layout === 'classic',
-            'text-[var(--top-header-text-color)]':
-              layout === 'topLeft' || layout === 'top' || layout === 'cutMenu',
-          },
-        ]"
-      >
-        {{ title }}
+      <div v-if="show" class="flex items-center justify-center">
+        <div
+          :class="[
+            'ml-10px grow whitespace-nowrap overflow-hidden text-16px font-700',
+            {
+              'text-[var(--logo-title-text-color)]': layout === 'classic',
+              'text-[var(--top-header-text-color)]':
+                layout === 'topLeft' || layout === 'top' || layout === 'cutMenu',
+            },
+          ]"
+        >
+          <span>{{ getTenantName() }}</span>
+        </div>
+        <el-tooltip v-if="show" content="全部社区">
+          <router-link link class="ml-2" to="/selectTenant">
+            <el-button link>
+              <Icon color="#8f9dad" icon="subway:menu" class="hover:bg-gray-900" />
+            </el-button>
+          </router-link>
+        </el-tooltip>
       </div>
-    </router-link>
+    </div>
   </div>
 </template>

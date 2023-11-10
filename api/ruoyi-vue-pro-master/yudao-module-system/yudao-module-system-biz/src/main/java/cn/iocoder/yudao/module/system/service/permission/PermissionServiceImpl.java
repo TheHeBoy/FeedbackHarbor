@@ -177,9 +177,7 @@ public class PermissionServiceImpl implements PermissionService {
             return convertSet(menuService.getMenuList(), MenuDO::getId);
         } else if (roleService.hasAnySuperTenantAdmin(roleIds)) {
             // 如果是超级租户管理员，获得套餐下的所有菜单
-            MenuListReqVO menuListReqVO = new MenuListReqVO();
-            menuListReqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
-            return convertSet(menuService.getMenuListByTenant(menuListReqVO), MenuDO::getId);
+            return convertSet(menuService.getMenuListByTenant(), MenuDO::getId);
         } else {
             // 如果是租户管理员的情况下，获得超级租户管理员授权的菜单
             return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);

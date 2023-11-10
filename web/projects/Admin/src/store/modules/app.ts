@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { store } from '../index';
+import { store } from '@/store';
 import { setCssVar, humpToUnderline } from '@/utils';
 import { ElMessage } from 'element-plus';
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
@@ -26,7 +26,6 @@ interface AppState {
   pageLoading: boolean;
   layout: LayoutType;
   title: string;
-  userInfo: string;
   isDark: boolean;
   currentSize: ElementPlusSize;
   sizeMap: ElementPlusSize[];
@@ -39,7 +38,6 @@ interface AppState {
 export const useAppStore = defineStore('app', {
   state: (): AppState => {
     return {
-      userInfo: 'userInfo', // 登录信息存储字段-建议每个项目换一个字段，避免与其他项目冲突
       sizeMap: ['default', 'large', 'small'],
       mobile: false, // 是否是移动端
       title: import.meta.env.VITE_APP_TITLE, // 标题
@@ -147,9 +145,6 @@ export const useAppStore = defineStore('app', {
     },
     getTitle(): string {
       return this.title;
-    },
-    getUserInfo(): string {
-      return this.userInfo;
     },
     getIsDark(): boolean {
       return this.isDark;

@@ -78,9 +78,10 @@ import { ElLoading } from 'element-plus';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { useIcon } from '@/hooks/web/useIcon';
 import * as authUtil from '@/utils/auth';
-import { usePermissionStore } from '@/store/modules/permission';
 import * as LoginApi from '@/api/login';
 import { LoginStateEnum, useFormValid, useLoginState } from './useLogin';
+import { getTenant } from '@/utils/auth';
+import router from '@/router';
 
 defineOptions({ name: 'LoginForm' });
 
@@ -90,9 +91,8 @@ const iconLock = useIcon({ icon: 'ep:lock' });
 const formLogin = ref();
 const { validForm } = useFormValid(formLogin);
 const { getLoginState } = useLoginState();
-const { currentRoute, push } = useRouter();
-const permissionStore = usePermissionStore();
-const redirect = ref<string>('');
+const { currentRoute } = useRouter();
+const redirect = ref<string>('/');
 const loginLoading = ref(false);
 const verify = ref();
 const captchaType = ref('blockPuzzle'); // blockPuzzle 滑块 clickWord 点击文字
@@ -162,10 +162,13 @@ const handleLogin = async (params) => {
       authUtil.removeLoginForm();
     }
     authUtil.setToken(res);
-    if (!redirect.value) {
-      redirect.value = '/';
+
+    // 是否有租户信息
+    if (getTenant()) {
+      router.push({ path: redirect.value });
+    } else {
+      router.push({ path: '/selectTenant' });
     }
-    await push({ path: redirect.value || permissionStore.addRouters[0].path });
   } catch {
     loginLoading.value = false;
   } finally {

@@ -45,12 +45,13 @@ import { SelectTenantVO } from '@/api/system/selectTenant';
 import router from '@/router';
 import Icon from '@/components/Icon/src/Icon.vue';
 import { setTenant } from '@/utils/auth';
+import { ElLoading } from 'element-plus';
 
 const model = ref<SelectTenantVO[]>();
 const operation = ref({});
 const confirmDialog = ref(false);
 const onCreate = () => {
-  router.push({ name: 'createTenant' });
+  router.push({ path: 'createTenant' });
 };
 const waitDeleteTenant = ref<SelectTenantVO>();
 
@@ -72,14 +73,20 @@ const getList = () => {
   });
 };
 
-const onEntry = (tenantVO: SelectTenantVO) => {
+const onEntry = async (tenantVO: SelectTenantVO) => {
   setTenant(tenantVO);
-  router.push({ name: 'Home' });
+  const loading = ElLoading.service({
+    lock: true,
+    text: '正在进入系统中...',
+  });
+  await router.push({ path: '/' });
+  loading.close();
 };
 
 const onUpdate = (tenantId: number) => {
-  router.push({ name: 'createTenant', query: { tenantId } });
+  router.push({ path: 'createTenant', query: { tenantId } });
 };
+
 onMounted(() => {
   getList();
 });

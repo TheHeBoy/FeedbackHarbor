@@ -2,6 +2,8 @@ import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { TokenType } from '@/api/login/types';
 import { decrypt, encrypt } from '@/utils/jsencrypt';
 import { TenantKeyType } from '@harbor/core';
+import { changeFavicon } from '@/utils/favicon';
+import { usePermissionStore } from '@/store/modules/permission';
 
 const { wsCache } = useCache();
 // ========== Token相关 ==========
@@ -62,25 +64,25 @@ export const removeLoginForm = () => {
 const TenantKey = CACHE_KEY.TENANT;
 
 export const getTenantId = () => {
-  return wsCache.get(TenantKey)?.id;
+  return getTenant()?.id;
 };
 
 export const getTenantLogo = () => {
-  return wsCache.get(TenantKey)?.img;
+  return getTenant()?.logo;
 };
 
 export const getTenantName = () => {
-  return wsCache.get(TenantKey)?.name;
+  return getTenant()?.name;
 };
 
 export const setTenant = (type: TenantKeyType) => {
   wsCache.set(TenantKey, type);
+  // 修改页面标签图标
+  changeFavicon(type.logo);
+  // 移除权限
+  usePermissionStore().removePermission();
 };
 
 export const getTenant = (): TenantKeyType => {
   return wsCache.get(TenantKey);
-};
-
-export const removeTenantId = () => {
-  wsCache.delete(TenantKey);
 };

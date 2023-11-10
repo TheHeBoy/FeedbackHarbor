@@ -4,6 +4,8 @@ import { useAppStore } from '@/store/modules/app';
 import { useDesign } from '@/hooks/web/useDesign';
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import routerSearch from '@/components/RouterSearch/index.vue';
+import { getTenantLogo } from '@/utils/auth';
+import { changeFavicon } from '@/utils/favicon';
 
 defineOptions({ name: 'APP' });
 
@@ -23,12 +25,19 @@ const setDefaultTheme = () => {
   appStore.setIsDark(isDarkTheme);
 };
 setDefaultTheme();
+
+const setFavicon = () => {
+  const logo = getTenantLogo();
+  if (logo) {
+    changeFavicon(logo);
+  }
+};
+setFavicon();
 </script>
 
 <template>
   <ConfigGlobal :size="currentSize">
     <RouterView :class="greyMode ? `${prefixCls}-grey-mode` : ''" />
-    <routerSearch />
   </ConfigGlobal>
 </template>
 

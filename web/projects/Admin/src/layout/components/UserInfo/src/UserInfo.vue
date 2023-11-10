@@ -3,7 +3,6 @@ import { ElMessageBox } from 'element-plus';
 
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { useDesign } from '@/hooks/web/useDesign';
-import avatarImg from '@/assets/imgs/avatar.gif';
 import { useUserStore } from '@/store/modules/user';
 import { useTagsViewStore } from '@/store/modules/tagsView';
 
@@ -25,7 +24,7 @@ const prefixCls = getPrefixCls('user-info');
 
 const user = wsCache.get(CACHE_KEY.USER);
 
-const avatar = user.avatar ? user.avatar : avatarImg;
+const avatar = user.avatar;
 
 const userName = user.nickname ? user.nickname : 'Admin';
 
