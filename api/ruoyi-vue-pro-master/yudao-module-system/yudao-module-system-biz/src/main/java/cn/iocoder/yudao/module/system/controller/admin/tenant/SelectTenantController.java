@@ -1,6 +1,8 @@
 package cn.iocoder.yudao.module.system.controller.admin.tenant;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.framework.security.config.SecurityProperties;
+import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantRespVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantUpdateReqVO;
@@ -17,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -30,6 +33,9 @@ public class SelectTenantController {
     @Resource
     private TenantService tenantService;
 
+    @Resource
+    private SecurityProperties securityProperties;
+
     @GetMapping("/listByUser")
     @Operation(summary = "通过用户得到所有社区租户")
     public CommonResult<List<SelectTenantRespVO>> listByUser() {
@@ -39,8 +45,9 @@ public class SelectTenantController {
 
     @PostMapping("/create")
     @Operation(summary = "创建租户")
-    public CommonResult<Long> createTenant(@Valid @RequestBody SelectTenantCreateReqVO createReqVO) {
-        return success(tenantService.createTenant(createReqVO, getLoginUserId()));
+    public CommonResult<Long> createTenant(@Valid @RequestBody SelectTenantCreateReqVO createReqVO, HttpServletRequest request) {
+        String token = SecurityFrameworkUtils.obtainAuthorization(request, securityProperties.getTokenHeader());
+        return success(tenantService.createTenant(createReqVO, getLoginUserId(), token));
     }
 
     @PutMapping("/update")

@@ -69,8 +69,15 @@ export const SystemUserSocialTypeEnum = {
     img: 'https://s1.ax1x.com/2022/05/22/OzMrzn.png',
   },
 };
+/**
+ * 租户类型枚举
+ */
+export const SystemTenantTypeEnum = {
+  SYSTEM: 1, // 系统租户
+  CUSTOM: 2, // 自定义租户
+};
 
-export const HarborFeedbackReplayState = {
+export const HarborFeedbackReplayStateEnum = {
   NO_REPLY: 0, // 待回复
   REPLIED: 1, // 已回复
 };

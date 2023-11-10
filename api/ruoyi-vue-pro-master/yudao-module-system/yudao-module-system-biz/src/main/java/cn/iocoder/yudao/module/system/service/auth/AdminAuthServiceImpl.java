@@ -196,8 +196,9 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     private AuthLoginRespVO createTokenAfterLoginSuccess(Long userId, String username, LoginLogTypeEnum logType) {
         // 插入登陆日志
         createLoginLog(userId, username, logType, LoginResultEnum.SUCCESS);
-        // 创建访问令牌
+        // 当前用户拥有的社区租户
         List<TenantUserDO> tenantUserDOS = tenantUserMapper.selectList(TenantUserDO::getUserId, userId);
+        // 创建访问令牌
         TokenAccessDO accessTokenDO = tokenService.createAccessToken(userId,
                 getUserType().getValue(),
                 tenantUserDOS.stream().map(TenantUserDO::getTenantId).collect(Collectors.toList()),

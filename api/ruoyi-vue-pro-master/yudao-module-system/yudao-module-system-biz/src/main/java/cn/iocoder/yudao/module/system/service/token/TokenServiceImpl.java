@@ -128,6 +128,15 @@ public class TokenServiceImpl implements TokenService {
         return tokenAccessTokenMapper.selectPage(reqVO);
     }
 
+    @Transactional
+    @Override
+    public void addTenantIdByAccessToken(Long tenantId, String accessToken) {
+        TokenAccessDO tokenAccessDO = tokenAccessTokenMapper.selectByAccessToken(accessToken);
+        tokenAccessDO.getTenantIds().add(tenantId);
+        tokenAccessTokenMapper.updateById(tokenAccessDO);
+        accessTokenRedisDAO.update(accessToken, tokenAccessDO);
+    }
+
     private TokenRefreshDO createRefreshToken(Long userId, Integer userType) {
         TokenRefreshDO refreshToken = new TokenRefreshDO().setRefreshToken(generateRefreshToken())
                 .setUserId(userId).setUserType(userType)

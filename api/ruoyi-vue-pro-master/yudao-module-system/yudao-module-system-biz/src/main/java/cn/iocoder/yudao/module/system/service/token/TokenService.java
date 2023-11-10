@@ -64,4 +64,9 @@ public interface TokenService {
      */
     PageResult<TokenAccessDO> getAccessTokenPage(AccessTokenPageReqVO reqVO);
 
+    /**
+     * 添加 tenant 到 accessToken 的 tenantIds中
+     * @param accessToken 访问令牌
+     */
+    void addTenantIdByAccessToken(Long tenantId,String accessToken);
 }

@@ -1,6 +1,9 @@
 package cn.iocoder.yudao.module.system.dal.redis.token;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
 import cn.iocoder.yudao.module.system.dal.dataobject.token.TokenAccessDO;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -15,8 +18,6 @@ import static cn.iocoder.yudao.module.system.dal.redis.RedisKeyConstants.ACCESS_
 
 /**
  * {@link TokenAccessDO} 的 RedisDAO
- *
- *
  */
 @Repository
 public class AccessTokenRedisDAO {
@@ -35,7 +36,7 @@ public class AccessTokenRedisDAO {
         accessTokenDO.setUpdater(null).setUpdateTime(null).setCreateTime(null).setCreator(null).setDeleted(null);
         long time = LocalDateTimeUtil.between(LocalDateTime.now(), accessTokenDO.getExpiresTime(), ChronoUnit.SECONDS);
         if (time > 0) {
-            stringRedisTemplate.opsForValue().set(redisKey, JsonUtils.toJsonString(accessTokenDO), time, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(redisKey, JSONUtil.toJsonStr(accessTokenDO), time, TimeUnit.SECONDS);
         }
     }
 
@@ -44,8 +45,17 @@ public class AccessTokenRedisDAO {
         stringRedisTemplate.delete(redisKey);
     }
 
+    public void update(String accessToken, TokenAccessDO accessDO) {
+        getSelf().delete(accessToken);
+        getSelf().set(accessDO);
+    }
+
     private static String formatKey(String accessToken) {
         return String.format(ACCESS_TOKEN, accessToken);
+    }
+
+    private AccessTokenRedisDAO getSelf() {
+        return SpringUtil.getBean(getClass());
     }
 
 }

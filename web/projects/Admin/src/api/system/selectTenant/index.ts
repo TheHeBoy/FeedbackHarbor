@@ -4,6 +4,7 @@ export interface SelectTenantVO {
   id: number;
   name: string;
   logo: string;
+  type: number;
 }
 
 // 查询租户详情

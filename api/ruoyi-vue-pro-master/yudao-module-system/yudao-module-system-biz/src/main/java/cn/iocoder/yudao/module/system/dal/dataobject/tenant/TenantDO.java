@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.system.dal.dataobject.tenant;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.enums.tenant.TenantTypeEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -36,7 +37,6 @@ public class TenantDO extends BaseDO {
     private String name;
     /**
      * 租户状态
-     *
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
@@ -53,5 +53,9 @@ public class TenantDO extends BaseDO {
      * 产品Logo
      */
     private String logo;
-
+    /**
+     * 租户类型
+     * 枚举 {@link TenantTypeEnum}
+     */
+    private Integer type;
 }

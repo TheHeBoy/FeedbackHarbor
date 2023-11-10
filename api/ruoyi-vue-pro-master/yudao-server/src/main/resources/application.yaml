@@ -125,8 +125,8 @@ yudao:
         enable: false  # 是否开启 Redis stream 集群消费，默认为 true。这里设置成 false，可以按需开启
   tenant: # 多租户相关配置项
     ignore-urls:
-      - /admin-api/system/tenant/** # 社区租户不需要租户信息
-      - /admin-api/system/select-tenant/** # 社区租户不需要租户信息
+      - /admin-api/system/tenant/**
+      - /admin-api/system/select-tenant/**
       - /admin-api/system/dict-data/** # 字典和，和租户无关
       - /admin-api/system/auth/** # 用户登录，和租户无关
       - /admin-api/system/captcha/get # 获取图片验证码，和租户无关

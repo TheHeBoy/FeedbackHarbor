@@ -27,10 +27,12 @@ import cn.iocoder.yudao.module.system.dal.mysql.tenant.TenantMapper;
 import cn.iocoder.yudao.module.system.dal.mysql.tenant.TenantUserMapper;
 import cn.iocoder.yudao.module.system.enums.permission.RoleCodeEnum;
 import cn.iocoder.yudao.module.system.enums.permission.RoleTypeEnum;
+import cn.iocoder.yudao.module.system.enums.tenant.TenantTypeEnum;
 import cn.iocoder.yudao.module.system.service.permission.MenuService;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
 import cn.iocoder.yudao.module.system.service.permission.RoleService;
 import cn.iocoder.yudao.module.system.service.tenant.handler.TenantMenuHandler;
+import cn.iocoder.yudao.module.system.service.token.TokenService;
 import cn.iocoder.yudao.module.system.service.user.AdminUserService;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +79,9 @@ public class TenantServiceImpl implements TenantService {
     @Resource
     private TenantUserMapper tenantUserMapper;
 
+    @Resource
+    private TokenService tokenService;
+
     @Override
     public List<Long> getTenantIdList() {
         List<TenantDO> tenants = tenantMapper.selectList();
@@ -99,7 +104,7 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
-    public Long createTenant(SelectTenantCreateReqVO createReqVO, Long userId) {
+    public Long createTenant(SelectTenantCreateReqVO createReqVO, Long userId, String accessToken) {
         // 校验租户名称是否重复
         validTenantNameDuplicate(createReqVO.getName(), null);
         // 创建租户
@@ -118,8 +123,9 @@ public class TenantServiceImpl implements TenantService {
             Long roleId = createRole(tenantPackage);
             // 分配角色
             permissionService.assignUserRole(userId, singleton(roleId));
-
         });
+        // 直接刷新token,为了添加新的租户给AccessToken
+        tokenService.addTenantIdByAccessToken(tenant.getId(), accessToken);
         return tenant.getId();
     }
 
@@ -140,12 +146,15 @@ public class TenantServiceImpl implements TenantService {
     @DSTransactional
     public void updateTenant(SelectTenantUpdateReqVO updateReqVO) {
         // 校验存在
-        validateUpdateTenant(updateReqVO.getId());
+        TenantDO tenantDO = validateUpdateTenant(updateReqVO.getId());
+        // 内置租户不能修改
+        if (TenantTypeEnum.isSystemTenant(tenantDO.getType())) {
+            throw exception(TENANT_SYSTEM_UPDATE);
+        }
         // 校验租户名称是否重复
         validTenantNameDuplicate(updateReqVO.getName(), updateReqVO.getId());
         // 更新租户
-        TenantDO updateObj = TenantConvert.INSTANCE.convert(updateReqVO);
-        tenantMapper.updateById(updateObj);
+        tenantMapper.updateById(tenantDO);
     }
 
     private void validTenantNameDuplicate(String name, Long id) {
@@ -189,7 +198,11 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public void deleteTenant(Long id) {
         // 校验存在
-        validateUpdateTenant(id);
+        TenantDO tenantDO = validateUpdateTenant(id);
+        // 内置租户不能删除
+        if (TenantTypeEnum.isSystemTenant(tenantDO.getType())) {
+            throw exception(TENANT_SYSTEM_DELETE);
+        }
         // 删除
         tenantMapper.deleteById(id);
         // 删除用户和租户的关联

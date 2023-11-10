@@ -2,7 +2,7 @@
   <div class="bg-[var(--dark-bg-color)] flex h-full items-center justify-center">
     <Transition appear enter-active-class="animate__animated animate__bounceInRight">
       <el-card shadow="hover" class="w-100 !rounded-3xl">
-        <div class="text-3xl font-bold text-center mb-4">选择你的反馈社区</div>
+        <div class="text-3xl font-bold text-center mb-4">请选择管理系统</div>
         <div class="overflow-y-auto max-h-100">
           <button
             v-for="tenant in model"
@@ -10,19 +10,23 @@
             @click="onEntry(tenant)"
             @mouseover="operation[tenant.id] = true"
             @mouseleave="operation[tenant.id] = false"
+            :class="tenant.type === SystemTenantTypeEnum.SYSTEM ? 'bg-cyan-500' : 'bg-cyan-700'"
             class="text-white h-10 w-full px-3 py-2 block flex items-center rounded-1xl mt-2 bg-cyan-700 hover:bg-cyan-800"
           >
             <img class="w-6 h-6" :src="tenant.logo" alt="" />
             <span class="ml-3 text-1xl">{{ tenant.name }}</span>
             <div class="flex-grow"></div>
-            <div v-if="operation[tenant.id]" class="flex items-center">
+            <div
+              v-if="operation[tenant.id] && tenant.type === SystemTenantTypeEnum.CUSTOM"
+              class="flex items-center"
+            >
               <Icon @click.stop="onUpdate(tenant.id)" class="mr-1" icon="ep:edit" />
               <Icon @click.stop="onDelete(tenant)" icon="ep:delete" />
             </div>
           </button>
         </div>
         <el-button link type="primary" class="w-full mt-4" @click="onCreate"
-          >新建反馈社区
+          >新建社区租户
         </el-button>
       </el-card>
     </Transition>
@@ -46,6 +50,7 @@ import router from '@/router';
 import Icon from '@/components/Icon/src/Icon.vue';
 import { setTenant } from '@/utils/auth';
 import { ElLoading } from 'element-plus';
+import { SystemTenantTypeEnum } from '@/utils/constants';
 
 const model = ref<SelectTenantVO[]>();
 const operation = ref({});

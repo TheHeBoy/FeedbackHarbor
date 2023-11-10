@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Schema(description = "管理后台 - 租户 Response VO")
@@ -14,6 +15,9 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 public class SelectTenantRespVO extends SelectTenantBaseVO {
 
-    @Schema(description = "租户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    @Schema(description = "租户编号")
     private Long id;
+
+    @Schema(description = "租户类型")
+    private Long type;
 }

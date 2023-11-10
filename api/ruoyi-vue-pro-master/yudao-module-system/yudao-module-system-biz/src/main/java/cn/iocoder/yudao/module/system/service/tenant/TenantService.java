@@ -26,7 +26,7 @@ public interface TenantService {
      * @param createReqVO 创建信息
      * @return 编号
      */
-    Long createTenant(@Valid SelectTenantCreateReqVO createReqVO, Long userId);
+    Long createTenant(@Valid SelectTenantCreateReqVO createReqVO, Long userId, String accessToken);
 
     /**
      * 更新租户

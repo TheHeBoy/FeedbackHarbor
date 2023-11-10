@@ -191,7 +191,6 @@ const submitForm = async () => {
       formData.value.type === SystemMenuTypeEnum.MENU
     ) {
       if (!isExternal(formData.value.path)) {
-        console.log(formData.value.path);
         if (formData.value.parentId === 0 && formData.value.path.charAt(0) !== '/') {
           message.error('路由地址必须以 / 开头');
           return;

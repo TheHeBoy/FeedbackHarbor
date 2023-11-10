@@ -5,8 +5,6 @@ import remainingRouter from '@/router/modules/remaining';
 import { generateRoute, flatMultiLevelRoutes } from '@/utils/routerHelper';
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { getPermissionInfo } from '@/api/login';
-import router from '@/router';
-import { RouteRecordRaw } from 'vue-router';
 
 const { wsCache } = useCache();
 
