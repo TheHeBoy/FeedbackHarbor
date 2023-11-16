@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum RoleTypeEnum {
 
     /**
-     * 内置角色 如超级管理员不能删除
+     * 内置角色 超级管理员角色不能删除
      */
     SYSTEM(1),
     /**

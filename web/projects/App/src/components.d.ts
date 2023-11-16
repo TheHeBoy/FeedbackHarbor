@@ -23,6 +23,7 @@ declare module '@vue/runtime-core' {
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
+    ElResult: typeof import('element-plus/es')['ElResult']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
@@ -37,8 +38,8 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SortTag: typeof import('./components/actionbar/SortTag.vue')['default']
-    TheFooter: typeof import('./components/layout/TheFooter.vue')['default']
-    TheHead: typeof import('./components/layout/TheHead.vue')['default']
+    TheFooter: typeof import('@/layout/TheFooter.vue')['default']
+    TheHead: typeof import('@/layout/TheHead.vue')['default']
   }
   export interface ComponentCustomProperties {
     vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']

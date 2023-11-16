@@ -28,12 +28,12 @@
 
 <script lang="ts" setup>
 import { FormInstance } from 'element-plus';
-import { useloginStoreWithOut } from '@/store/login';
+import { useLoginStoreWithOut } from '@/store/login';
 import { login } from '@/api/login';
 import { setToken } from '@/utils/auth';
 import { useUserStoreWithOut } from '@/store/user';
 
-const loginDialogsStore = useloginStoreWithOut();
+const loginDialogsStore = useLoginStoreWithOut();
 const userStore = useUserStoreWithOut();
 
 const { isShow } = storeToRefs(loginDialogsStore);
@@ -51,7 +51,6 @@ const LoginRules = {
   username: [{ required: true, message: '请输入用户名' }],
   password: [{ required: true, message: '请输入密码' }],
 };
-const reload = inject('reload') as Function;
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -64,7 +63,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         setToken(data);
         userStore.setUserInfoAction();
         isShow.value = false;
-        reload();
+        location.reload();
       });
     }
   });

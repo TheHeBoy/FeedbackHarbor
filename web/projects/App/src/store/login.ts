@@ -1,6 +1,6 @@
 import store from './index';
 
-const useloginStore = defineStore({
+const useLoginStore = defineStore({
   id: 'login',
   state: () => {
     return {
@@ -20,6 +20,6 @@ const useloginStore = defineStore({
   },
 });
 
-export const useloginStoreWithOut = () => {
-  return useloginStore(store);
+export const useLoginStoreWithOut = () => {
+  return useLoginStore(store);
 };

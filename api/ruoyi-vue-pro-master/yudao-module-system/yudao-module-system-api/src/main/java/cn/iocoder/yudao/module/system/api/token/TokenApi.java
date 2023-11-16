@@ -15,7 +15,7 @@ public interface TokenApi {
      * 创建访问令牌
      *
      * @param reqDTO              访问令牌的创建信息
-     * @param requireRefreshToken 是否需要刷新 token
+     * @param isRequireRefreshToken 是否需要刷新 token
      * @return 访问令牌的信息
      */
     TokenRespDTO createAccessToken(@Valid TokenCreateReqDTO reqDTO, boolean isRequireRefreshToken);

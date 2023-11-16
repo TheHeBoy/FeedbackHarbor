@@ -60,15 +60,6 @@ public interface FeedbackTagService {
     PageResult<FeedbackTagDO> getFeedbackTagPage(FeedbackTagPageReqVO pageReqVO);
 
     /**
-     * 获得反馈标签列表, 用于 Excel 导出
-     *
-     * @param exportReqVO 查询条件
-     * @return 反馈标签列表
-     */
-    List<FeedbackTagDO> getFeedbackTagList(FeedbackTagExportReqVO exportReqVO);
-
-
-    /**
      * 获得所有反馈标签列表
      *
      * @return 反馈标签列表

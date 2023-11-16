@@ -4,7 +4,7 @@ import cn.iocoder.yudao.framework.common.exception.ErrorCode;
 
 /**
  * System 错误码枚举类
- *
+ * <p>
  * system 系统，使用 1-002-000-000 段
  */
 public interface ErrorCodeConstants {
@@ -87,7 +87,7 @@ public interface ErrorCodeConstants {
     ErrorCode TENANT_NOT_EXISTS = new ErrorCode(1002015000, "租户不存在");
     ErrorCode TENANT_DISABLE = new ErrorCode(1002015001, "名字为【{}】的租户已被禁用");
     ErrorCode TENANT_EXPIRE = new ErrorCode(1002015002, "名字为【{}】的租户已过期");
-    ErrorCode TENANT_NAME_DUPLICATE = new ErrorCode(1002015004, "名字为【{}】的租户已存在");
+    ErrorCode TENANT_ROUTER_URI_DUPLICATE = new ErrorCode(1002015004, "社区租户路由为【{}】的社区租户已存在");
     ErrorCode TENANT_SYSTEM_DELETE = new ErrorCode(1002015005, "内置租户不能删除");
     ErrorCode TENANT_SYSTEM_UPDATE = new ErrorCode(1002015006, "内置租户不能修改");
 

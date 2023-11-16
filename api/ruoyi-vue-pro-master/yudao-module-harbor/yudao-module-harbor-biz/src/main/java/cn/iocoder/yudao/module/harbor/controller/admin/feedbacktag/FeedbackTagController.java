@@ -1,7 +1,9 @@
 package cn.iocoder.yudao.module.harbor.controller.admin.feedbacktag;
 
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,11 +18,13 @@ import java.io.IOException;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
 import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
+
 import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
 
 import cn.iocoder.yudao.module.harbor.controller.admin.feedbacktag.vo.*;
@@ -86,17 +90,4 @@ public class FeedbackTagController {
         PageResult<FeedbackTagDO> pageResult = feedbackTagService.getFeedbackTagPage(pageVO);
         return success(FeedbackTagConvert.INSTANCE.convertPage(pageResult));
     }
-
-    @GetMapping("/export-excel")
-    @Operation(summary = "导出反馈标签 Excel")
-    @PreAuthorize("@ss.hasPermission('harbor:feedback-tag:export')")
-    @OperateLog(type = EXPORT)
-    public void exportFeedbackTagExcel(@Valid FeedbackTagExportReqVO exportReqVO,
-              HttpServletResponse response) throws IOException {
-        List<FeedbackTagDO> list = feedbackTagService.getFeedbackTagList(exportReqVO);
-        // 导出 Excel
-        List<FeedbackTagExcelVO> datas = FeedbackTagConvert.INSTANCE.convertList02(list);
-        ExcelUtils.write(response, "反馈标签.xls", "数据", FeedbackTagExcelVO.class, datas);
-    }
-
 }

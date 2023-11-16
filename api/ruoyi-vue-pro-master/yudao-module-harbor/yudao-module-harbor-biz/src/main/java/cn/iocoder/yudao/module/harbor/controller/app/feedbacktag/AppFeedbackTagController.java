@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class AppFeedbackTagController {
     private FeedbackTagService feedbackTagService;
 
     @GetMapping("/list")
+    @PermitAll
     @Operation(summary = "获得所有反馈标签列表")
     public CommonResult<List<AppFeedbackTagRespVO>> getFeedbackTagList() {
         List<FeedbackTagDO> list = feedbackTagService.getFeedbackTagList();

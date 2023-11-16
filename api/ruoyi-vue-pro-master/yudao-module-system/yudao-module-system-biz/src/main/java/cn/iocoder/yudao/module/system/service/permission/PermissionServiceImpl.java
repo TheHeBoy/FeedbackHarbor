@@ -179,7 +179,7 @@ public class PermissionServiceImpl implements PermissionService {
             // 如果是超级租户管理员，获得套餐下的所有菜单
             return convertSet(menuService.getMenuListByTenant(), MenuDO::getId);
         } else {
-            // 如果是租户管理员的情况下，获得超级租户管理员授权的菜单
+            // 租户管理员获得超级租户管理员授权的菜单，租户管理员获得超级管理员授权的菜单
             return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
         }
     }

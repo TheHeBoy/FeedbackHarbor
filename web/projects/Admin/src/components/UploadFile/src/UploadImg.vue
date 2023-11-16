@@ -56,7 +56,6 @@ import type { UploadProps } from 'element-plus';
 import { generateUUID } from '@/utils';
 import { propTypes } from '@/utils/propTypes';
 import { getAccessToken } from '@/utils/auth';
-import { getTenantId } from '@/utils/auth';
 
 defineOptions({ name: 'UploadImg' });
 
@@ -100,7 +99,6 @@ const deleteImg = () => {
 
 const uploadHeaders = ref({
   Authorization: 'Bearer ' + getAccessToken(),
-  'tenant-id': getTenantId(),
 });
 
 const editImg = () => {
@@ -120,6 +118,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
 // 图片上传成功提示
 const uploadSuccess: UploadProps['onSuccess'] = (res: any): void => {
   message.success('上传成功');
+  console.log(res.data);
   emit('update:modelValue', res.data);
 };
 

@@ -14,6 +14,8 @@ import cn.iocoder.yudao.module.harbor.convert.auth.AuthConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import cn.iocoder.yudao.module.harbor.service.auth.AppAuthService;
+import cn.iocoder.yudao.module.system.api.tenant.TenantApi;
+import cn.iocoder.yudao.module.system.api.tenant.dto.TenantRespDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -26,10 +28,12 @@ import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
-@Tag(name = "用户 ADMIN - 认证")
+@Tag(name = "App 用户 - 认证")
 @RestController
 @RequestMapping("/harbor/auth")
 @Validated
@@ -45,13 +49,18 @@ public class AppAuthController {
     @Resource
     private SecurityProperties securityProperties;
 
+    @Resource
+    private TenantApi tenantApi;
+
     @PostMapping("/login")
+    @PermitAll
     @Operation(summary = "使用账号 + 密码登录")
     public CommonResult<AppAuthLoginRespVO> login(@RequestBody @Valid AppAuthLoginReqVO reqVO) {
         return success(appAuthService.login(reqVO));
     }
 
     @PostMapping("/logout")
+    @PermitAll
     @Operation(summary = "登出系统")
     public CommonResult<Boolean> logout(HttpServletRequest request) {
         String token = SecurityFrameworkUtils.obtainAuthorization(request, securityProperties.getTokenHeader());
@@ -59,6 +68,13 @@ public class AppAuthController {
             appAuthService.logout(token);
         }
         return success(true);
+    }
+
+    @GetMapping("/check-tenantRouterUri")
+    @PermitAll
+    @Operation(summary = "校验租户名")
+    public CommonResult<TenantRespDTO> checkTenantRouterUri(@NotNull String routerUri) {
+        return success(tenantApi.checkTenantRouterUri(routerUri));
     }
 
     @GetMapping("/get-user-info")

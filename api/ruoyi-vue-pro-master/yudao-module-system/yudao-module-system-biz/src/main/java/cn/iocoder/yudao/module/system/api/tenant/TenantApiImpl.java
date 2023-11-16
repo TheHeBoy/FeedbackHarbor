@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.system.api.tenant;
 
+import cn.iocoder.yudao.module.system.api.tenant.dto.TenantRespDTO;
+import cn.iocoder.yudao.module.system.convert.tenant.TenantConvert;
 import cn.iocoder.yudao.module.system.service.tenant.TenantService;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,11 @@ public class TenantApiImpl implements TenantApi {
     @Override
     public void validateTenant(Long id) {
         tenantService.validTenant(id);
+    }
+
+    @Override
+    public TenantRespDTO checkTenantRouterUri(String routerUri) {
+        return TenantConvert.INSTANCE.convertDTO(tenantService.checkTenantRouterUri(routerUri));
     }
 
 }

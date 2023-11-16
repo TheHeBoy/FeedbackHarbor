@@ -13,13 +13,10 @@ import java.util.Arrays;
 @AllArgsConstructor
 @Getter
 public enum UserTypeEnum implements IntArrayValuable {
-
+    // 管理端用户
     ADMIN(1, "管理员"),
-    // 面向 c 端
+    // 客户端用户
     APP(2, "普通用户"),
-    BUILTIN(3, "内置用户"),
-    THIRD_PARTY(4, "第三方用户"),
-    LOGIN_STATE(5, "登录态用户");
     ;
 
     public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(UserTypeEnum::getValue).toArray();

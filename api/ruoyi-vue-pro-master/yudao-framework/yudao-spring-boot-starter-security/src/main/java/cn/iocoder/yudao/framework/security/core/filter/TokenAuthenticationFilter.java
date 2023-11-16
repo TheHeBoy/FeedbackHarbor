@@ -78,7 +78,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             }
             // 管理员访问 App 的请求路径时，登录信息转换为 App User 信息
             if (ObjectUtil.equal(accessToken.getUserType(), ADMIN.getValue()) && ObjectUtil.equal(userType, APP.getValue())) {
-                AppUserRespDTO appUser = appUserApi.getAppUser(accessToken.getUserId());
+                AppUserRespDTO appUser = appUserApi.getAppUserByAdmin(accessToken.getUserId());
                 if (ObjectUtil.isNull(appUser)) {
                     throw new AccessDeniedException("管理员关联的App用户不存在");
                 }

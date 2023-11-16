@@ -14,7 +14,7 @@ public interface AppUserApi {
      * @param adminId Admin ID
      * @return 用户对象信息
      */
-    AppUserRespDTO getAppUser(Long adminId);
+    AppUserRespDTO getAppUserByAdmin(Long adminId);
 
     /**
      * 通过 Admin ID 生成 App
@@ -24,12 +24,12 @@ public interface AppUserApi {
      * @param avatar   用户头像
      * @return 用户对象信息
      */
-    AppUserRespDTO createAppUser(Long adminId, String nickname, String avatar);
+    AppUserRespDTO createAppUserByAdmin(Long adminId, String nickname, String avatar);
 
     /**
      * 删除 App user
      *
      * @param adminId Admin ID
      */
-    public void deleteAppUser(Long adminId);
+    public void deleteAppUserByAdmin(Long adminId);
 }

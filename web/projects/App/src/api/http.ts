@@ -1,9 +1,10 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import showCodeMessage from '@/api/code';
 import { getAccessToken } from '@/utils/auth';
-import { useloginStoreWithOut } from '@/store/login';
+import { useLoginStoreWithOut } from '@/store/login';
 import { ApiBase } from '@harbor/apis';
 import { AxiosRequestConfig } from 'axios/index';
+import { useTenantStoreWithOut } from '@/store/tenant';
 
 // 创建实例
 const axiosInstance: AxiosInstance = axios.create({
@@ -17,12 +18,20 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
+const useTenant = useTenantStoreWithOut();
+
 // 请求拦截器
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (getAccessToken()) {
       config.headers.Authorization = `Bearer ${getAccessToken()}`;
     }
+
+    // 添加租户id
+    if (useTenant.tenant) {
+      config.headers['tenant-id'] = useTenant.tenant.id;
+    }
+
     return config;
   },
   (error: AxiosError) => {
@@ -37,13 +46,16 @@ axiosInstance.interceptors.response.use(
     const code = data.code;
     if (code == 401) {
       // 如果未认证，说明可能是访问令牌过期了
-      useloginStoreWithOut().open();
+      useLoginStoreWithOut().open();
       return Promise.reject('未认证，请登录');
     } else if (code == 500) {
       ElMessage.error(showCodeMessage(data.msg));
       return Promise.reject(data.msg);
     } else if (code == 400) {
       ElMessage.error(showCodeMessage(data.msg));
+      return Promise.reject(data.msg);
+    } else if (code == 403) {
+      // 租户无权访问时
       return Promise.reject(data.msg);
     } else if (code == 0) {
       return data;

@@ -11,8 +11,8 @@ import cn.iocoder.yudao.module.harbor.controller.admin.feedbacktag.vo.*;
 
 /**
  * 反馈标签 Mapper
- *
- *  hehong
+ * <p>
+ * hehong
  */
 @Mapper
 public interface FeedbackTagMapper extends BaseMapperX<FeedbackTagDO> {
@@ -24,15 +24,4 @@ public interface FeedbackTagMapper extends BaseMapperX<FeedbackTagDO> {
                 .eqIfPresent(FeedbackTagDO::getNameEn, reqVO.getNameEn())
                 .orderByDesc(FeedbackTagDO::getId));
     }
-
-    default List<FeedbackTagDO> selectList(FeedbackTagExportReqVO reqVO) {
-        return selectList(new LambdaQueryWrapperX<FeedbackTagDO>()
-                .eqIfPresent(FeedbackTagDO::getId, reqVO.getId())
-                .betweenIfPresent(FeedbackTagDO::getCreateTime, reqVO.getCreateTime())
-                .eqIfPresent(FeedbackTagDO::getNameCh, reqVO.getNameCh())
-                .eqIfPresent(FeedbackTagDO::getNameEn, reqVO.getNameEn())
-                .eqIfPresent(FeedbackTagDO::getSort, reqVO.getSort())
-                .orderByDesc(FeedbackTagDO::getId));
-    }
-
 }

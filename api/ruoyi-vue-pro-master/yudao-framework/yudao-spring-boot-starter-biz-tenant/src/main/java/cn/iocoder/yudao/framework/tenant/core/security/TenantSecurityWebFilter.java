@@ -56,7 +56,15 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
 
         // 如果非忽略租户的 URL，则校验租户是否合法
         if (!isIgnoreUrl(request)) {
-            // 1. 登陆的用户，校验是否有权限访问该租户，避免越权问题。
+            // 1. 如果请求未带租户的编号，不允许访问。
+            if (tenantId == null) {
+                log.error("[doFilterInternal][URL({}/{}) 未传递租户编号]", request.getRequestURI(), request.getMethod());
+                ServletUtils.writeJSON(response, CommonResult.error(GlobalErrorCodeConstants.BAD_REQUEST.getCode(),
+                        "请求的租户标识未传递，请进行排查"));
+                return;
+            }
+
+            // 2. 登陆的用户，校验是否有权限访问该租户，避免越权问题。
             LoginUser user = SecurityFrameworkUtils.getLoginUser();
             if (user != null && !user.getTenantIds().contains(tenantId)) {
                 log.error("[doFilterInternal][租户({}) User({}/{}) 越权访问租户({}) URL({}/{})]",
@@ -66,13 +74,7 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
                         "您无权访问该租户的数据"));
                 return;
             }
-            // 2. 如果请求未带租户的编号，不允许访问。
-            if (tenantId == null) {
-                log.error("[doFilterInternal][URL({}/{}) 未传递租户编号]", request.getRequestURI(), request.getMethod());
-                ServletUtils.writeJSON(response, CommonResult.error(GlobalErrorCodeConstants.BAD_REQUEST.getCode(),
-                        "请求的租户标识未传递，请进行排查"));
-                return;
-            }
+
             // 3. 校验租户是合法，例如说被禁用、到期
             try {
                 tenantFrameworkService.validTenant(tenantId);

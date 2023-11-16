@@ -138,7 +138,7 @@
       :v-model="feedbackRow"
       commentShow
       :user-info="useUserStore().getUser"
-      @submit="feedbackRow.replyState == HarborFeedbackReplayState.NO_REPLY ? getList() : null"
+      @submit="feedbackRow.replyState == HarborFeedbackReplayStateEnum.NO_REPLY ? getList() : null"
     />
   </el-drawer>
 </template>
@@ -157,7 +157,7 @@ import {
   UUserNickNameInfo,
 } from '@harbor/components';
 import { useUserStore } from '@/store/modules/user';
-import { HarborFeedbackReplayState } from '@/utils/constants';
+import { HarborFeedbackReplayStateEnum } from '@/utils/constants';
 
 defineOptions({ name: 'FeedbackAll' });
 

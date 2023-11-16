@@ -1,13 +1,11 @@
-package cn.iocoder.yudao.module.harbor.api;
+package cn.iocoder.yudao.module.harbor.api.appuser;
 
-import cn.iocoder.yudao.module.harbor.api.appuser.AppUserApi;
 import cn.iocoder.yudao.module.harbor.api.appuser.dto.AppUserRespDTO;
 import cn.iocoder.yudao.module.harbor.controller.app.appuser.vo.AppUserCreateReqVO;
 import cn.iocoder.yudao.module.harbor.convert.appuser.AppUserConvert;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
 import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -21,13 +19,13 @@ public class AppUserApiImpl implements AppUserApi {
 
 
     @Override
-    public AppUserRespDTO getAppUser(Long adminId) {
+    public AppUserRespDTO getAppUserByAdmin(Long adminId) {
         AppUserDO appUserDO = appUserService.getByOpenIdAndType(String.valueOf(adminId), ADMIN.getValue());
         return AppUserConvert.INSTANCE.convertApi(appUserDO);
     }
 
     @Override
-    public AppUserRespDTO createAppUser(Long adminId, String nickname, String avatar) {
+    public AppUserRespDTO createAppUserByAdmin(Long adminId, String nickname, String avatar) {
         AppUserCreateReqVO createReqVO = new AppUserCreateReqVO();
         createReqVO.setUserType(ADMIN.getValue())
                 .setNickname(nickname)
@@ -39,7 +37,7 @@ public class AppUserApiImpl implements AppUserApi {
     }
 
     @Override
-    public void deleteAppUser(Long adminId) {
+    public void deleteAppUserByAdmin(Long adminId) {
         appUserService.deleteByOpenIdAndType(String.valueOf(adminId), ADMIN.getValue());
     }
 

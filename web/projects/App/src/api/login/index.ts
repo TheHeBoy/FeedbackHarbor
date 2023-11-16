@@ -41,3 +41,7 @@ export const getUserInfo = () => {
 export const logout = () => {
   return request.post({ url: '/auth/logout' });
 };
+
+export const checkTenantRouterUri = (routerUri: String) => {
+  return request.get({ url: '/auth/check-tenantRouterUri', params: { routerUri } });
+};

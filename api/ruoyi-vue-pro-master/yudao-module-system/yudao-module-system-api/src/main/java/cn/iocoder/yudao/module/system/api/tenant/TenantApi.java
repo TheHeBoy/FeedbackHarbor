@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.system.api.tenant;
 
+import cn.iocoder.yudao.module.system.api.tenant.dto.TenantRespDTO;
+
 import java.util.List;
 
 /**
@@ -23,4 +25,10 @@ public interface TenantApi {
      */
     void validateTenant(Long id);
 
+    /**
+     * 校验租户路由uri是否存在
+     * @param routerUri 路由uri
+     * @return {@link TenantRespDTO} 存在时返回对象 不存在时返回 null
+     */
+    TenantRespDTO checkTenantRouterUri(String routerUri);
 }

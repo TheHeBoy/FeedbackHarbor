@@ -1,13 +1,14 @@
 import store from './index';
 import { getAccessToken, removeToken } from '@/utils/auth';
-import { CACHE_KEY, useCache } from '@/hooks/useCache';
 import { getUserInfo, logout } from '@/api/login';
+import { CACHE_KEY, useCache } from '@/hooks/useCache';
 
 const { wsCache } = useCache();
 
 export const useUserStore = defineStore('app-user', {
   state: () => ({
-    user: { id: -1, avatar: '', nickname: '', userType: -1 },
+    user: { id: 0, avatar: '', nickname: '', userType: 0 },
+    isSetUser: false,
   }),
   getters: {},
   actions: {
@@ -15,17 +16,15 @@ export const useUserStore = defineStore('app-user', {
       let token = getAccessToken();
       if (!token) {
         this.resetState();
-        return false;
+        return null;
       }
-
+      // 设置用户信息
       let userInfo = wsCache.get(CACHE_KEY.USER);
-      if (!userInfo || this.user.id == -1) {
+      if (!userInfo) {
         userInfo = await getUserInfo();
       }
-
-      wsCache.set(CACHE_KEY.USER, userInfo);
       this.user = userInfo;
-      return true;
+      this.isSetUser = true;
     },
     async loginOut() {
       await logout();
@@ -35,14 +34,15 @@ export const useUserStore = defineStore('app-user', {
     },
     resetState() {
       this.user = {
-        id: -1,
+        id: 0,
         avatar: '',
         nickname: '',
-        userType: -1,
+        userType: 0,
       };
+      this.isSetUser = false;
     },
     isLogin() {
-      return wsCache.get(CACHE_KEY.USER) && getAccessToken() && this.user.id != -1;
+      return !!getAccessToken() && this.isSetUser;
     },
   },
 });

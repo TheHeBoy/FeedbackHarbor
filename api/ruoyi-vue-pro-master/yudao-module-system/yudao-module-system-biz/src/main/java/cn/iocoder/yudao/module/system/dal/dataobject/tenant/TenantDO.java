@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 
 /**
  * 租户 DO
- *
- *
  */
 @TableName(value = "system_tenant", autoResultMap = true)
 @KeySequence("system_tenant_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -53,9 +51,8 @@ public class TenantDO extends BaseDO {
      * 产品Logo
      */
     private String logo;
-    /**
-     * 租户类型
-     * 枚举 {@link TenantTypeEnum}
+    /*
+     * 路由uri
      */
-    private Integer type;
+    private String routerUri;
 }

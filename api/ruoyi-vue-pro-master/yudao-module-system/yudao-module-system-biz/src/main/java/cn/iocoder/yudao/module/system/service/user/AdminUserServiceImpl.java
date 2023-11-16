@@ -79,7 +79,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         user.setAvatar(avatarUrl);
         userMapper.insert(user);
         // 插入普通用户
-        appUserApi.createAppUser(user.getId(), user.getNickname(), user.getAvatar());
+        appUserApi.createAppUserByAdmin(user.getId(), user.getNickname(), user.getAvatar());
         return user.getId();
     }
 
@@ -164,7 +164,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         // 删除用户关联数据
         permissionService.processUserDeleted(id);
         // 删除普通用户
-        appUserApi.deleteAppUser(id);
+        appUserApi.deleteAppUserByAdmin(id);
     }
 
     @Override

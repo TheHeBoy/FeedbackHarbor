@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.system.convert.tenant;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.system.api.tenant.dto.TenantRespDTO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantRespVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantUpdateReqVO;
@@ -30,6 +31,8 @@ public interface TenantConvert {
     TenantDO convert(TenantUpdateReqVO bean);
 
     TenantRespVO convert(TenantDO bean);
+    TenantRespDTO convertDTO(TenantDO bean);
+
     SelectTenantRespVO convertSelect(TenantDO bean);
 
     List<TenantRespVO> convertList(List<TenantDO> list);

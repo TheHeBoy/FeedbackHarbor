@@ -70,11 +70,10 @@ export const SystemUserSocialTypeEnum = {
   },
 };
 /**
- * 租户类型枚举
+ * 租户枚举
  */
 export const SystemTenantTypeEnum = {
-  SYSTEM: 1, // 系统租户
-  CUSTOM: 2, // 自定义租户
+  SYSTEM: 1, // 系统租户id
 };
 
 export const HarborFeedbackReplayStateEnum = {

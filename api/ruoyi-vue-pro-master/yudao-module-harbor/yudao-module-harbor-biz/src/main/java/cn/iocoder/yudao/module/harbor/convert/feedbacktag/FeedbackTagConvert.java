@@ -12,10 +12,10 @@ import cn.iocoder.yudao.module.harbor.dal.dataobject.feedbacktag.FeedbackTagDO;
 
 /**
  * 反馈标签 Convert
- *
- *  hehong
+ * <p>
+ * hehong
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring") // 不添加会爆 bean 找不到
 public interface FeedbackTagConvert {
 
     FeedbackTagConvert INSTANCE = Mappers.getMapper(FeedbackTagConvert.class);
@@ -29,11 +29,8 @@ public interface FeedbackTagConvert {
     AppFeedbackTagRespVO convertApp(FeedbackTagDO bean);
 
     List<FeedbackTagRespVO> convertList(List<FeedbackTagDO> list);
-    
+
     List<AppFeedbackTagRespVO> convertListApp(List<FeedbackTagDO> list);
 
     PageResult<FeedbackTagRespVO> convertPage(PageResult<FeedbackTagDO> page);
-
-    List<FeedbackTagExcelVO> convertList02(List<FeedbackTagDO> list);
-
 }

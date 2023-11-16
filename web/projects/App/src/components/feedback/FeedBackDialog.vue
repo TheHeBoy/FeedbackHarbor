@@ -81,7 +81,9 @@ const feedbackTags = ref<FeedbackTagVO[]>([]);
 onMounted(() => {
   getFeedbackTagList().then((data) => {
     feedbackTags.value = data;
-    modelData.feedbackTagId = feedbackTags.value[0].id;
+    if (feedbackTags.value.length) {
+      modelData.feedbackTagId = feedbackTags.value[0].id;
+    }
   });
 });
 </script>

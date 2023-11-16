@@ -35,16 +35,14 @@
 
 <script lang="ts" setup>
 import { socialAuthRedirect } from '@/api/login';
-import { useloginStoreWithOut } from '@/store/login';
+import { useLoginStoreWithOut } from '@/store/login';
 import giteeLogo from '@/assets/svg/giteeLogoSVG.svg?component';
 import googleLogo from '@/assets/svg/googleLogoSVG.svg?component';
 import githubLogo from '@/assets/svg/githubLogoSVG.svg?component';
 import { useUserStoreWithOut } from '@/store/user';
 
-const loginDialogsStore = useloginStoreWithOut();
-const reload = inject('reload') as Function;
+const loginDialogsStore = useLoginStoreWithOut();
 const { isShow } = storeToRefs(loginDialogsStore);
-const userStore = useUserStoreWithOut();
 
 const doSocialLogin = async (type: number) => {
   // 计算 redirectUri
@@ -68,7 +66,7 @@ const doSocialLogin = async (type: number) => {
   window.addEventListener('message', function (event) {
     if (event.data.key === 'AuthPopupClosed') {
       isShow.value = false;
-      reload();
+      location.reload();
     }
   });
 };

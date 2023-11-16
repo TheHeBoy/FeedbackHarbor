@@ -56,6 +56,8 @@ export const useUserStore = defineStore('admin-user', {
       wsCache.delete(CACHE_KEY.USER);
       // 删除权限信息
       usePermissionStore().removePermission();
+      // 删除租户信息
+      wsCache.delete(CACHE_KEY.TENANT);
       // 删除token
       removeToken();
       this.resetState();

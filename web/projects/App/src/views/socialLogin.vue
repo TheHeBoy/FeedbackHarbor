@@ -10,9 +10,6 @@ import { useUserStoreWithOut } from '@/store/user';
 const userStore = useUserStoreWithOut();
 const message = ref('授权中');
 
-const headHide = inject('headHide') as Function;
-headHide();
-
 const getUrlValue = (key: string) => {
   const url = new URL(decodeURIComponent(location.href));
   return url.searchParams.get(key);

@@ -131,8 +131,9 @@ yudao:
       - /admin-api/system/auth/** # 用户登录，和租户无关
       - /admin-api/system/captcha/get # 获取图片验证码，和租户无关
       - /admin-api/system/captcha/check # 校验图片验证码，和租户无关
-      - /admin-api/infra/file/*/get/** # 获取图片，和租户无关
+      - /admin-api/infra/file/** # 文件，和租户无关
       - /admin-api/system/sms/callback/** # 短信回调接口，无法带上租户编号
+      - /app-api/harbor/auth/check-tenantRouterUri # 租户路由校验
     ignore-tables:
       - system_users
       - system_tenant

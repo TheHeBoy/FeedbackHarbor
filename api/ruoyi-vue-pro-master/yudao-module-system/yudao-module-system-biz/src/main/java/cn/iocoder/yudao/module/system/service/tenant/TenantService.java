@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.system.service.tenant;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
+import cn.iocoder.yudao.module.system.api.tenant.dto.TenantRespDTO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantUpdateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.tenant.TenantCreateReqVO;
@@ -128,4 +129,11 @@ public interface TenantService {
      * @param id 租户编号
      */
     void validTenant(Long id);
+
+    /**
+     * 校验租户路由uri是否存在
+     * @param routerUri 路由uri
+     * @return {@link TenantDO} 存在时返回对象 不存在时返回 null
+     */
+    TenantDO checkTenantRouterUri(String routerUri);
 }

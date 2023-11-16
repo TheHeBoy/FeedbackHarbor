@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-import static cn.iocoder.yudao.framework.common.enums.UserTypeEnum.THIRD_PARTY;
+import static cn.iocoder.yudao.framework.common.enums.UserTypeEnum.APP;
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.json.JsonUtils.toJsonString;
 import static cn.iocoder.yudao.module.harbor.enums.ErrorCodeConstants.AUTH_LOGIN_BAD_CREDENTIALS;
@@ -80,7 +80,7 @@ public class AppAuthServiceImpl implements AppAuthService {
     public AppAuthLoginRespVO socialLogin(AppAuthSocialLoginReqVO reqVO) {
         AuthUser authUser = getAuthUser(reqVO.getType(), reqVO.getCode(), reqVO.getState());
         String openId = authUser.getUuid() + "-" + authUser.getSource();
-        AppUserDO appUserDO = appUserService.getByOpenIdAndType(openId, THIRD_PARTY.getValue());
+        AppUserDO appUserDO = appUserService.getByOpenIdAndType(openId, APP.getValue());
         Long userId;
         //用户不存在则自动创建
         if (appUserDO == null) {
@@ -88,7 +88,7 @@ public class AppAuthServiceImpl implements AppAuthService {
             createReqVO.setAvatar(authUser.getAvatar());
             createReqVO.setNickname(authUser.getNickname());
             createReqVO.setUserOpenId(openId);
-            createReqVO.setUserType(THIRD_PARTY.getValue());
+            createReqVO.setUserType(APP.getValue());
             userId = appUserService.createAppUser(createReqVO);
         } else {
             userId = appUserDO.getId();

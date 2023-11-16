@@ -75,11 +75,6 @@ public class FeedbackTagServiceImpl implements FeedbackTagService {
     }
 
     @Override
-    public List<FeedbackTagDO> getFeedbackTagList(FeedbackTagExportReqVO exportReqVO) {
-        return feedbackTagMapper.selectList(exportReqVO);
-    }
-
-    @Override
     public List<FeedbackTagDO> getFeedbackTagList() {
         return feedbackTagMapper.selectList();
     }

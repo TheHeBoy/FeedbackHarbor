@@ -17,7 +17,4 @@ public class SelectTenantRespVO extends SelectTenantBaseVO {
 
     @Schema(description = "租户编号")
     private Long id;
-
-    @Schema(description = "租户类型")
-    private Long type;
 }
