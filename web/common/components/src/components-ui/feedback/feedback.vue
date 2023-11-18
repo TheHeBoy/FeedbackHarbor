@@ -13,7 +13,7 @@
           <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
         </div>
         <div class="mt-2">
-          <UImageContext :contents="contents" :imgs="vModel.imgs" />
+          <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
         </div>
         <div class="flex justify-between">
           <span class="text-sm text-slate-400 mt-1">{{
@@ -50,11 +50,11 @@
           </div>
         </div>
         <UHarborComment
-            ref="commentRef"
-            v-if="isCommentShow"
-            :user-info="userInfo"
-            :v-model="vModel"
-            @submit="$emit('submit')"
+          ref="commentRef"
+          v-if="isCommentShow"
+          :user-info="userInfo"
+          :v-model="vModel"
+          @submit="$emit('submit')"
         />
       </div>
     </el-col>
@@ -122,10 +122,6 @@ const onLike = (feedback: FeedbackVO) => {
     }
   });
 };
-
-const contents = computed(() =>
-  useEmojiParse(emoji.allEmoji, props.vModel.content)
-);
 
 onMounted(() => {
   getLikeList(0).then((data) => {

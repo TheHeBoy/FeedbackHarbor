@@ -11,7 +11,7 @@ export type FeedbackVO = {
   avatar: string;
   userType: number;
   commentNum: number;
-  imgs?: string;
+  imgs?: string[];
 };
 
 export type FeedbackTagVO = {
@@ -31,7 +31,7 @@ export type FeedbackPageParams = {
 export type FeedbackCreateVO = {
   content: string;
   feedbackTagId: number;
-  imgs?: string;
+  imgs?: string[];
 };
 
 export const createFeedback = (data: FeedbackCreateVO) => {

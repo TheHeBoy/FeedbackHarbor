@@ -84,6 +84,6 @@ const resetList = () => {
 
 onMounted(() => {
   pageRequest();
-})
+});
 </script>
 <style lang="scss" scoped></style>

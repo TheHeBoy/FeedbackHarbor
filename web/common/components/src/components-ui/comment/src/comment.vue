@@ -82,12 +82,12 @@ const emit = defineEmits<{
     e: "submit",
     { content, parentId, files, reply, finish }: SubmitParamApi
   ): void;
-  (e: "like", id: string, finish: () => void): void;
+  (e: "like", id: number, finish: () => void): void;
   (
     e: "replyPage",
     { parentId, pageNum, pageSize, finish }: ReplyPageParamApi
   ): void;
-  (e: "showInfo", id: string, finish: Function): void;
+  (e: "showInfo", id: number, finish: Function): void;
   (e: "userAvatar"): void;
 }>();
 const inputBoxRef = ref();
@@ -108,7 +108,7 @@ const submit = ({
     clear();
     // 提交评论添加到评论列表
     if (parentId) {
-      let raw_comment = comments.value.find((v) => v.id == Number(parentId));
+      let raw_comment = comments.value.find((v) => v.id == parentId);
       if (raw_comment) {
         let replys = raw_comment.reply;
         if (replys) {
@@ -149,20 +149,20 @@ const editLikeCount = (id: number, count: number) => {
  * 点赞事件
  * @param id
  */
-const like = (id: string) => {
+const like = (id: number) => {
   // 点赞事件处理
   const likeIds = props.config.user.likeIds;
   emit("like", id, () => {
-    if (likeIds.findIndex((item) => item == Number(id)) == -1) {
+    if (likeIds.findIndex((item) => item == id) == -1) {
       // 点赞
-      likeIds.push(id as never);
-      editLikeCount(Number(id), 1);
+      likeIds.push(id);
+      editLikeCount(id, 1);
     } else {
       // 取消点赞
-      let index = likeIds.findIndex((item) => item == Number(id));
+      let index = likeIds.findIndex((item) => item == id);
       if (index != -1) {
         likeIds.splice(index, 1);
-        editLikeCount(Number(id), -1);
+        editLikeCount(id, -1);
       }
     }
   });

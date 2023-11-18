@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.harbor.controller.app.comment.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
 import java.time.LocalDateTime;
 
 /**
@@ -43,5 +44,5 @@ public class AppCommentBaseVO {
     private LocalDateTime createTime;
 
     @Schema(description = "评论图片集")
-    private String imgs;
+    private List<String> imgs;
 }

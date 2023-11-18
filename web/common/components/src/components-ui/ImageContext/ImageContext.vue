@@ -1,16 +1,16 @@
 <template>
   <div>
     <UFold :unfold="unfold" :line="line">
-      <div v-html="contents"></div>
+      <div v-html="emojiContents"></div>
     </UFold>
     <div class="flex flex-wrap">
-      <template v-for="(url, index) in imgList" :key="index">
+      <template v-for="(url, index) in imgs" :key="index">
         <ElImage
           :src="url"
           class="w-16 h-16 mr-1 mt-1"
           lazy
           preview-teleported
-          :preview-src-list="imgList"
+          :preview-src-list="imgs"
           :initial-index="index"
         ></ElImage>
       </template>
@@ -21,6 +21,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType } from "vue";
 import { UFold } from "../fold";
+import { useEmojiParse } from "../../hooks";
+import emoji from "../../types/emoji";
 
 defineOptions({
   name: "UImageContext",
@@ -36,7 +38,8 @@ const props = defineProps({
     default: () => true,
   },
   imgs: {
-    type: String, // 以 || 分割
+    type: Array as PropType<string[]>,
+    default: () => [],
   },
   line: {
     type: Number,
@@ -44,13 +47,11 @@ const props = defineProps({
   },
 });
 
-const imgList = computed(() => {
-  let temp = props.imgs;
-  if (!temp) return [];
-  return temp?.split("||");
-});
-
 const emit = defineEmits<{}>();
+
+const emojiContents = computed(() =>
+  useEmojiParse(emoji.allEmoji, props.contents)
+);
 
 onMounted(() => {});
 </script>

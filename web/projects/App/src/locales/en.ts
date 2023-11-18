@@ -10,4 +10,5 @@ export default {
   'change lang': 'Switch languages',
   'method to using': 'Method of using template',
   'template process': 'Template configuration process',
+  signOut: 'Sign Out',
 };

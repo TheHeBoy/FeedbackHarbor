@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Schema(description = "App - 用户反馈创建 Request VO")
 @Data
@@ -21,5 +22,5 @@ public class AppFeedbackCreateReqVO {
     private Long feedbackTagId;
 
     @Schema(description = "反馈图片集")
-    private String imgs;
+    private List<String> imgs;
 }

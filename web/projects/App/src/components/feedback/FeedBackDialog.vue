@@ -26,8 +26,8 @@
 
 <script lang="ts" setup>
 import { FormInstance } from 'element-plus';
-import { FeedbackCreateVO, createFeedback, uploadFiles } from '@harbor/apis';
-import { UImageInputBox, SubmitParam2Api } from '@harbor/components';
+import { createFeedback, FeedbackCreateVO, uploadFiles } from '@harbor/apis';
+import { SubmitParam2Api, UImageInputBox } from '@harbor/components';
 import { FeedbackTagVO, getFeedbackTagList } from '@/api/feedback-tag';
 import { onMounted } from 'vue';
 
@@ -43,7 +43,7 @@ const ruleFormRef = ref<FormInstance>();
 const modelData = reactive({
   feedbackTagId: 0,
   content: '',
-  imgs: undefined,
+  imgs: [],
 });
 
 const submit = async ({ content, parentId, reply, files, clear }: SubmitParam2Api) => {
@@ -57,9 +57,7 @@ const submit = async ({ content, parentId, reply, files, clear }: SubmitParam2Ap
     for (let i = 0; i < files.length; i++) {
       formData.append('files', files[i]);
     }
-    let fileUrls = await uploadFiles(formData);
-    // 格式以'||'为分割
-    modelData.imgs = fileUrls.join('||');
+    modelData.imgs = await uploadFiles(formData);
   }
 
   createFeedback(modelData as FeedbackCreateVO).then((data) => {

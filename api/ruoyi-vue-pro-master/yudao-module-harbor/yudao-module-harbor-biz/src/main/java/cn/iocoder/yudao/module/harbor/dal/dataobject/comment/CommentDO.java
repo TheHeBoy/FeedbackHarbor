@@ -1,16 +1,18 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.comment;
 
+import cn.iocoder.yudao.framework.mybatis.core.type.StringListTypeHandler;
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
+
+import java.util.List;
 
 /**
  * 评论 DO
  * <p>
  * hehong
  */
-@TableName("harbor_comment")
-@KeySequence("harbor_comment_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
+@TableName(value = "harbor_comment",autoResultMap = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -22,7 +24,7 @@ public class CommentDO extends TenantBaseDO {
     /**
      * 主键
      */
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     /**
      * 父节点
@@ -41,9 +43,10 @@ public class CommentDO extends TenantBaseDO {
      */
     private Long likes;
     /**
-     * 图片集，以||分隔
+     * 图片集
      */
-    private String imgs;
+    @TableField(typeHandler = StringListTypeHandler.class)
+    private List<String> imgs;
     /**
      * 用户id
      */

@@ -12,10 +12,8 @@ import cn.iocoder.yudao.framework.sms.core.client.dto.SmsSendRespDTO;
 import cn.iocoder.yudao.framework.test.core.ut.BaseMockitoUnitTest;
 import cn.iocoder.yudao.module.system.dal.dataobject.sms.SmsChannelDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.sms.SmsTemplateDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.mq.message.sms.SmsSendMessage;
 import cn.iocoder.yudao.module.system.mq.producer.sms.SmsProducer;
-import cn.iocoder.yudao.module.system.service.member.MemberService;
 import cn.iocoder.yudao.module.system.service.user.UserService;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -41,8 +39,7 @@ public class SmsSendServiceImplTest extends BaseMockitoUnitTest {
 
     @Mock
     private UserService userService;
-    @Mock
-    private MemberService memberService;
+
     @Mock
     private SmsChannelService smsChannelService;
     @Mock

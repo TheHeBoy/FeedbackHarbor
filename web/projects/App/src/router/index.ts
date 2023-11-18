@@ -4,6 +4,7 @@ import exceptionRoutes from '@/router/route.exception';
 import asyncRoutes from '@/router/route.async';
 import { useUserStoreWithOut } from '@/store/user';
 import { useTenantStoreWithOut } from '@/store/tenant';
+import { changeFavicon } from '@harbor/core/src/utils/favicon';
 
 const routes: Array<RouteRecordRaw> = [
   // 带鉴权的业务路由
@@ -59,6 +60,11 @@ router.beforeEach(async (to, from, next) => {
         NProgress.start();
       }
     }
+  }
+
+  // 改变页面图标
+  if (useTenant.isSetTenant) {
+    changeFavicon(useTenant.tenant.logo);
   }
   next();
 });

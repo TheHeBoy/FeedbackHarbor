@@ -35,12 +35,6 @@ public class AppFeedbackController {
     @Resource
     private FeedbackService feedbackService;
 
-    @Resource
-    private FeedbackTagService feedbackTagService;
-
-    @Resource
-    private FeedbackTagConvert feedbackTagConvert;
-
     @PostMapping("/create")
     @PreAuthenticated
     @Operation(summary = "创建用户反馈")

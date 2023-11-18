@@ -82,17 +82,17 @@ public class AuthServiceImpl implements AuthService {
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
         if (!userService.isPasswordMatch(password, user.getPassword())) {
-            createLoginLog(user.getId(), username, userTypeEnum, logTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
+            createLoginLog(user.getId(), username, UserTypeEnum.valueOf(user.getUserType()), logTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
         // 校验是否禁用
         if (ObjectUtil.notEqual(user.getStatus(), CommonStatusEnum.ENABLE.getStatus())) {
-            createLoginLog(user.getId(), username, userTypeEnum, logTypeEnum, LoginResultEnum.USER_DISABLED);
+            createLoginLog(user.getId(), username, UserTypeEnum.valueOf(user.getUserType()), logTypeEnum, LoginResultEnum.USER_DISABLED);
             throw exception(AUTH_LOGIN_USER_DISABLED);
         }
 
         // 创建 Token 令牌，记录登录日志
-        return createTokenAfterLoginSuccess(user.getId(), username, userTypeEnum, LoginLogTypeEnum.LOGIN_USERNAME);
+        return createTokenAfterLoginSuccess(user.getId(), username, UserTypeEnum.valueOf(user.getUserType()), LoginLogTypeEnum.LOGIN_USERNAME);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 创建 Token 令牌，记录登录日志
-        return createTokenAfterLoginSuccess(user.getId(), reqVO.getMobile(), userTypeEnum, LoginLogTypeEnum.LOGIN_MOBILE);
+        return createTokenAfterLoginSuccess(user.getId(), reqVO.getMobile(), UserTypeEnum.valueOf(user.getUserType()), LoginLogTypeEnum.LOGIN_MOBILE);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class AuthServiceImpl implements AuthService {
         // 自动登录
         UserDO user = userService.getUser(userId);
         // 创建 Token 令牌
-        return createTokenAfterLoginSuccess(user.getId(), user.getUsername(), userTypeEnum, LoginLogTypeEnum.LOGIN_SOCIAL);
+        return createTokenAfterLoginSuccess(user.getId(), user.getUsername(), UserTypeEnum.valueOf(user.getUserType()), LoginLogTypeEnum.LOGIN_SOCIAL);
     }
 
     @Override

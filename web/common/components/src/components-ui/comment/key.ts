@@ -7,8 +7,8 @@ export const InjectSlots = Symbol();
 // 输入框
 export interface SubmitParam2Api {
   content: string;
-  parentId: string | null;
-  replyId?: string | null;
+  parentId: number | null;
+  replyId?: number | null;
   reply?: CommentApi;
   files?: any[];
   clear: () => void;
@@ -22,8 +22,8 @@ export const InjectSubmit: InjectionKey<
 export interface InjectContentBoxApi {
   user: Ref<UserApi>;
   relativeTime: boolean;
-  like: (id: string) => void;
-  showInfo: (id: string, finish: Function) => void;
+  like: (id: number) => void;
+  showInfo: (id: number, finish: Function) => void;
 }
 
 export const InjectContentBox: InjectionKey<InjectContentBoxApi> = Symbol();
@@ -34,7 +34,7 @@ export interface InjectReplyBoxApi {
   replyShowSize: number;
   comments: Ref<CommentApi[]>;
   replyPage: (
-    parentId: string,
+    parentId: number,
     pageNum: number,
     pageSize: number,
     finish: (reply: ReplyApi) => void

@@ -1,15 +1,17 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.feedback;
 
+import cn.iocoder.yudao.framework.mybatis.core.type.StringListTypeHandler;
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackReplyStateEnum;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.util.List;
+
 /**
  * 用户反馈 DO
- *
  */
-@TableName("harbor_feedback")
+@TableName(value = "harbor_feedback", autoResultMap = true)
 @KeySequence("harbor_feedback_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -37,9 +39,10 @@ public class FeedbackDO extends TenantBaseDO {
      */
     private Long feedbackTagId;
     /**
-     * 图片集，以||分隔
+     * 图片集
      */
-    private String imgs;
+    @TableField(typeHandler = StringListTypeHandler.class)
+    private List<String> imgs;
     /**
      * 反馈回复状态
      * 枚举 {@link FeedbackReplyStateEnum}

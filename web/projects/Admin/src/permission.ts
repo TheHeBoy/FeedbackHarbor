@@ -1,12 +1,13 @@
 import router from './router';
 import type { RouteRecordRaw } from 'vue-router';
-import { getAccessToken, getTenant } from '@/utils/auth';
+import { getAccessToken, getTenant, getTenantLogo } from '@/utils/auth';
 import { useTitle } from '@/hooks/web/useTitle';
 import { useNProgress } from '@/hooks/web/useNProgress';
 import { usePageLoading } from '@/hooks/web/usePageLoading';
 import { useDictStoreWithOut } from '@/store/modules/dict';
 import { useUserStoreWithOut } from '@/store/modules/user';
 import { usePermissionStoreWithOut } from '@/store/modules/permission';
+import { changeFavicon } from '@/utils/favicon';
 
 const { start, done } = useNProgress();
 
@@ -76,6 +77,11 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next(`/login?redirect=${to.fullPath}`); // 否则全部重定向到登录页
     }
+  }
+
+  // 如果有租户信息修改页面图标
+  if (getTenantLogo()) {
+    changeFavicon(getTenantLogo());
   }
 });
 

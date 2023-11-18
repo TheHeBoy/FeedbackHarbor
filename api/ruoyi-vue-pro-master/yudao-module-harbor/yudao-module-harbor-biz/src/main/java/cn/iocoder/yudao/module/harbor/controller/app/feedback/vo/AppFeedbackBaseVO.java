@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 反馈基础 Base VO
@@ -42,7 +43,7 @@ public class AppFeedbackBaseVO {
     private Long commentNum;
 
     @Schema(description = "评论图片集")
-    private String imgs;
+    private List<String> imgs;
 
     @Schema(description = "用户类型")
     private Integer userType;

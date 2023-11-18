@@ -3,7 +3,7 @@
  */
 
 import WebStorageCache from 'web-storage-cache';
-import { AccessTokenKey } from '@harbor/core';
+import { AccessTokenKey } from '@harbor/core/src/wscache';
 
 export const CACHE_KEY = {
   USER: 'app_user',

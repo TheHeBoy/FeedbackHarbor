@@ -8,21 +8,7 @@
           :type="data.user.type"
         />
         <div class="content">
-          <u-fold unfold>
-            <div v-html="contents"></div>
-            <div class="imgbox flex flex-wrap">
-              <template v-for="(url, index) in imgList" :key="index">
-                <ElImage
-                  :src="url"
-                  class="w-16 h-16 mr-1 mt-1"
-                  lazy
-                  fit="fill"
-                  :preview-src-list="imgList"
-                  :initial-index="index"
-                ></ElImage>
-              </template>
-            </div>
-          </u-fold>
+          <UImageContext :contents="data.content" :imgs="data.contentImg" />
         </div>
         <div class="flex w-full justify-between">
           <time class="time"
@@ -125,6 +111,7 @@ import {
   UUserAvatar,
   InjectSubmit,
   UUserNickNameInfo,
+  UImageContext,
 } from "../../../components-ui";
 import { ElImage } from "element-plus";
 import { useEmojiParse } from "../../../hooks";
@@ -149,12 +136,6 @@ const state = reactive({
 
 const commentRef = ref();
 const btnRef = ref<HTMLDivElement>();
-
-const imgList = computed(() => {
-  let temp = props.data.contentImg;
-  if (isEmpty(temp)) return [];
-  return temp?.split("||");
-});
 
 const { like, user, relativeTime } = inject(
   InjectContentBox
@@ -184,10 +165,6 @@ const slots = inject(InjectSlots) as any;
 
 //操作栏卡槽
 const Operate = () => h("div", slots.operate(props.data));
-
-const contents = computed(() =>
-  useEmojiParse(emoji.allEmoji, props.data.content)
-);
 </script>
 
 <style lang="scss" scoped>

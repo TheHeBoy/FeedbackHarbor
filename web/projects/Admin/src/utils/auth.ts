@@ -1,8 +1,8 @@
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { TokenType } from '@/api/login/types';
 import { decrypt, encrypt } from '@/utils/jsencrypt';
-import { TenantKeyType } from '@harbor/core';
-import { changeFavicon } from '@/utils/favicon';
+import { TenantKeyType } from '@harbor/core/src/wscache';
+import { changeFavicon } from '@harbor/core/src/utils/favicon';
 import { usePermissionStore } from '@/store/modules/permission';
 
 const { wsCache } = useCache();

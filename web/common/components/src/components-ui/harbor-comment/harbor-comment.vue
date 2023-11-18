@@ -71,7 +71,7 @@ const config = reactive<ConfigApi>({
     avatar: props.userInfo.avatar,
     type: props.userInfo.userType,
     likeIds: [],
-  } as UserApi,
+  },
   comments: [],
   total: 0,
   replyShowSize: 3,
@@ -86,19 +86,19 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
     return;
   }
 
-  let fileUrls: string | undefined;
+  let fileUrls: string[] | undefined;
   if (files && files.length > 0) {
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
-    fileUrls = (await uploadFiles(formData)).join("||"); //格式以'||'为分割;
+    fileUrls = await uploadFiles(formData);
   }
 
   const createCommentVO: createCommentVO = {
     content: content,
     feedbackId: props.vModel.id,
-    parentId: parentId ? Number(parentId) : undefined,
+    parentId: parentId ? parentId : undefined,
     imgs: fileUrls,
   };
 
@@ -127,8 +127,8 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
   });
 };
 
-const likeBtn = (id: string, finish: () => void) => {
-  like({ rid: parseInt(id), busType: 1 }).then(() => {
+const likeBtn = (id: number, finish: () => void) => {
+  like({ rid: id, busType: 1 }).then(() => {
     finish();
   });
 };

@@ -7,7 +7,7 @@ export interface CommentApi {
   address: string;
   content: string;
   likes: number;
-  contentImg?: string;
+  contentImg?: string[];
   createTime: string;
   user: CommentUserApi;
   reply: ReplyApi | null;
@@ -42,7 +42,7 @@ export interface ConfigApi {
 
 export interface SubmitParamApi {
   content: string;
-  parentId: string | null;
+  parentId: number | null;
   files?: any[];
   reply?: CommentApi;
   finish: (comment: CommentApi) => void;

@@ -1,7 +1,7 @@
 /**
  * 配置浏览器本地存储的方式，可直接存储对象数组。
  */
-import { AccessTokenKey } from '@harbor/core';
+import { AccessTokenKey } from '@harbor/core/src/wscache';
 import WebStorageCache from 'web-storage-cache';
 
 type CacheType = 'localStorage' | 'sessionStorage';

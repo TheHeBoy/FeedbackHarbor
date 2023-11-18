@@ -1,12 +1,13 @@
 import store from './index';
 import { CACHE_KEY, useCache } from '@/hooks/useCache';
 import { checkTenantRouterUri } from '@/api/login';
+import { TenantKeyType } from '@harbor/core/src/wscache';
 
 const { wsCache } = useCache();
 
 export const useTenantStore = defineStore('tenant', {
   state: () => ({
-    tenant: { id: 0, name: '', logo: '', routerUri: '' },
+    tenant: { id: 0, name: '', logo: '', routerUri: '' } as TenantKeyType,
     isSetTenant: false,
   }),
   getters: {},
