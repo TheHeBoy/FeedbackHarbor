@@ -23,7 +23,7 @@ export default defineConfig((env) => {
             // 是否开启 https
             https: false,
             // 端口号
-            port: 80,
+            port: 8080,
             host: "0.0.0.0",
             open: true
         },

@@ -153,7 +153,7 @@ import { EChartsOption } from 'echarts';
 import { useDesign } from '@/hooks/web/useDesign';
 import type { AnalysisTotalTypes } from './types';
 import { barOptions, lineOptions, pieOptions } from './echarts-data';
-import { getTenantId } from '@/utils/auth';
+import { getTenantId, getTenantRouterUri } from '@/utils/auth';
 
 defineOptions({ name: 'Home2' });
 
@@ -279,8 +279,7 @@ const getAllApi = async () => {
 
 getAllApi();
 
-const tenantId = getTenantId() === 1 ? '' : '/' + getTenantId();
-const appUrl = `${import.meta.env.VITE_APP_URL}${tenantId}/home`;
+const appUrl = `${import.meta.env.VITE_APP_URL + getTenantRouterUri()}/home`;
 </script>
 
 <style lang="scss" scoped>

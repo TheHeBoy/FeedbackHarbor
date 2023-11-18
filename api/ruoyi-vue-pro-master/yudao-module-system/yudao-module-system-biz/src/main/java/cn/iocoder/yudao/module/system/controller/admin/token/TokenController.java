@@ -7,7 +7,7 @@ import cn.iocoder.yudao.module.system.controller.admin.token.vo.AccessTokenRespV
 import cn.iocoder.yudao.module.system.convert.token.TokenConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.token.TokenAccessDO;
 import cn.iocoder.yudao.module.system.enums.logger.LoginLogTypeEnum;
-import cn.iocoder.yudao.module.system.service.auth.AdminAuthService;
+import cn.iocoder.yudao.module.system.service.auth.AuthService;
 import cn.iocoder.yudao.module.system.service.token.TokenService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +28,7 @@ public class TokenController {
     @Resource
     private TokenService tokenService;
     @Resource
-    private AdminAuthService authService;
+    private AuthService authService;
 
     @GetMapping("/page")
     @Operation(summary = "获得访问令牌分页", description = "只返回有效期内的")

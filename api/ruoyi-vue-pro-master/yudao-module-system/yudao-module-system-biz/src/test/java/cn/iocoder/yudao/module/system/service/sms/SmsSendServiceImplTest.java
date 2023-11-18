@@ -12,11 +12,11 @@ import cn.iocoder.yudao.framework.sms.core.client.dto.SmsSendRespDTO;
 import cn.iocoder.yudao.framework.test.core.ut.BaseMockitoUnitTest;
 import cn.iocoder.yudao.module.system.dal.dataobject.sms.SmsChannelDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.sms.SmsTemplateDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.mq.message.sms.SmsSendMessage;
 import cn.iocoder.yudao.module.system.mq.producer.sms.SmsProducer;
 import cn.iocoder.yudao.module.system.service.member.MemberService;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +40,7 @@ public class SmsSendServiceImplTest extends BaseMockitoUnitTest {
     private SmsSendServiceImpl smsService;
 
     @Mock
-    private AdminUserService adminUserService;
+    private UserService userService;
     @Mock
     private MemberService memberService;
     @Mock
@@ -54,84 +54,6 @@ public class SmsSendServiceImplTest extends BaseMockitoUnitTest {
 
     @Mock
     private SmsClientFactory smsClientFactory;
-
-    @Test
-    public void testSendSingleSmsToAdmin() {
-        // 准备参数
-        Long userId = randomLongId();
-        String templateCode = randomString();
-        Map<String, Object> templateParams = MapUtil.<String, Object>builder().put("code", "1234")
-                .put("op", "login").build();
-        // mock adminUserService 的方法
-        AdminUserDO user = randomPojo(AdminUserDO.class, o -> o.setMobile("15601691300"));
-        when(adminUserService.getUser(eq(userId))).thenReturn(user);
-
-        // mock SmsTemplateService 的方法
-        SmsTemplateDO template = randomPojo(SmsTemplateDO.class, o -> {
-            o.setStatus(CommonStatusEnum.ENABLE.getStatus());
-            o.setContent("验证码为{code}, 操作为{op}");
-            o.setParams(Lists.newArrayList("code", "op"));
-        });
-        when(smsTemplateService.getSmsTemplateByCodeFromCache(eq(templateCode))).thenReturn(template);
-        String content = randomString();
-        when(smsTemplateService.formatSmsTemplateContent(eq(template.getContent()), eq(templateParams)))
-                .thenReturn(content);
-        // mock SmsChannelService 的方法
-        SmsChannelDO smsChannel = randomPojo(SmsChannelDO.class, o -> o.setStatus(CommonStatusEnum.ENABLE.getStatus()));
-        when(smsChannelService.getSmsChannel(eq(template.getChannelId()))).thenReturn(smsChannel);
-        // mock SmsLogService 的方法
-        Long smsLogId = randomLongId();
-        when(smsLogService.createSmsLog(eq(user.getMobile()), eq(userId), eq(UserTypeEnum.ADMIN.getValue()), eq(Boolean.TRUE), eq(template),
-                eq(content), eq(templateParams))).thenReturn(smsLogId);
-
-        // 调用
-        Long resultSmsLogId = smsService.sendSingleSmsToAdmin(null, userId, templateCode, templateParams);
-        // 断言
-        assertEquals(smsLogId, resultSmsLogId);
-        // 断言调用
-        verify(smsProducer).sendSmsSendMessage(eq(smsLogId), eq(user.getMobile()),
-                eq(template.getChannelId()), eq(template.getApiTemplateId()),
-                eq(Lists.newArrayList(new KeyValue<>("code", "1234"), new KeyValue<>("op", "login"))));
-    }
-
-    @Test
-    public void testSendSingleSmsToUser() {
-        // 准备参数
-        Long userId = randomLongId();
-        String templateCode = randomString();
-        Map<String, Object> templateParams = MapUtil.<String, Object>builder().put("code", "1234")
-                .put("op", "login").build();
-        // mock memberService 的方法
-        String mobile = "15601691300";
-        when(memberService.getMemberUserMobile(eq(userId))).thenReturn(mobile);
-
-        // mock SmsTemplateService 的方法
-        SmsTemplateDO template = randomPojo(SmsTemplateDO.class, o -> {
-            o.setStatus(CommonStatusEnum.ENABLE.getStatus());
-            o.setContent("验证码为{code}, 操作为{op}");
-            o.setParams(Lists.newArrayList("code", "op"));
-        });
-        when(smsTemplateService.getSmsTemplateByCodeFromCache(eq(templateCode))).thenReturn(template);
-        String content = randomString();
-        when(smsTemplateService.formatSmsTemplateContent(eq(template.getContent()), eq(templateParams)))
-                .thenReturn(content);
-        // mock SmsChannelService 的方法
-        SmsChannelDO smsChannel = randomPojo(SmsChannelDO.class, o -> o.setStatus(CommonStatusEnum.ENABLE.getStatus()));
-        when(smsChannelService.getSmsChannel(eq(template.getChannelId()))).thenReturn(smsChannel);
-        // mock SmsLogService 的方法
-        Long smsLogId = randomLongId();
-        when(smsLogService.createSmsLog(eq(mobile), eq(userId), eq(UserTypeEnum.APP.getValue()), eq(Boolean.TRUE), eq(template),
-                eq(content), eq(templateParams))).thenReturn(smsLogId);
-
-        // 调用
-        Long resultSmsLogId = smsService.sendSingleSmsToMember(null, userId, templateCode, templateParams);
-        // 断言
-        assertEquals(smsLogId, resultSmsLogId);
-        // 断言调用
-        verify(smsProducer).sendSmsSendMessage(eq(smsLogId), eq(mobile),
-                eq(template.getChannelId()), eq(template.getApiTemplateId()),
-                eq(Lists.newArrayList(new KeyValue<>("code", "1234"), new KeyValue<>("op", "login"))));
-    }
 
     /**
      * 发送成功，当短信模板开启时

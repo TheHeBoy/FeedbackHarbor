@@ -17,11 +17,11 @@
       <el-menu-item index="/roadmap">产品计划</el-menu-item>
       <div class="flex-grow"></div>
       <div class="flex">
-        <!-- <el-tooltip :content="t('change lang')" placement="top">
-          <button class="icon-btn mx-2" @click="toggleLocales()">
-            <i-la-language class="icon-footer" />
-          </button>
-        </el-tooltip> -->
+<!--        <el-tooltip :content="t('change lang')" placement="top">-->
+<!--          <button class="icon-btn mx-2" @click="toggleLocales()">-->
+<!--            <i-la-language class="icon-footer" />-->
+<!--          </button>-->
+<!--        </el-tooltip>-->
         <el-tooltip
           class="ml-2"
           :content="isDark ? t('change light') : t('change dark')"

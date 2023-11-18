@@ -9,8 +9,6 @@ import javax.validation.constraints.Size;
 
 /**
  * 登录日志创建 Request DTO
- *
- * 
  */
 @Data
 public class LoginLogCreateReqDTO {
@@ -28,6 +26,7 @@ public class LoginLogCreateReqDTO {
     /**
      * 用户编号
      */
+    @NotNull(message = "用户id不能为空")
     private Long userId;
     /**
      * 用户类型
@@ -37,7 +36,6 @@ public class LoginLogCreateReqDTO {
     /**
      * 用户账号
      */
-    @NotBlank(message = "用户账号不能为空")
     @Size(max = 30, message = "用户账号长度不能超过30个字符")
     private String username;
 
@@ -54,7 +52,7 @@ public class LoginLogCreateReqDTO {
     private String userIp;
     /**
      * 浏览器 UserAgent
-     *
+     * <p>
      * 允许空，原因：Job 过期登出时，是无法传递 UserAgent 的
      */
     private String userAgent;

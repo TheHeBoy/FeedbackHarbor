@@ -1,7 +1,7 @@
 package cn.iocoder.yudao.module.system.service.tenant;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
+import cn.iocoder.yudao.framework.common.enums.SystemIdEnum;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.packages.TenantPackageCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
@@ -10,7 +10,6 @@ import cn.iocoder.yudao.module.system.convert.tenant.TenantPackageConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantPackageDO;
 import cn.iocoder.yudao.module.system.dal.mysql.tenant.TenantPackageMapper;
-import cn.iocoder.yudao.module.system.enums.tenant.TenantPackageTypeEnum;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,6 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     public Long createTenantPackage(TenantPackageCreateReqVO createReqVO) {
         // 插入
         TenantPackageDO tenantPackage = TenantPackageConvert.INSTANCE.convert(createReqVO);
-        tenantPackage.setType(TenantPackageTypeEnum.CUSTOM.getType());
         tenantPackageMapper.insert(tenantPackage);
         // 返回
         return tenantPackage.getId();
@@ -66,7 +64,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         // 校验存在
         validateTenantPackageExists(id);
         // 校验是否为默认套餐
-        if (TenantPackageTypeEnum.isDefault(tenantPackageMapper.selectById(id).getType())) {
+        if (SystemIdEnum.isSystemData(id)) {
             throw exception(TENANT_PACKAGE_DEFAULT_DELETE);
         }
         // 校验正在使用
@@ -96,7 +94,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
 
     @Override
     public TenantPackageDO getDefaultTenantPackage() {
-        return tenantPackageMapper.selectOne(TenantPackageDO::getType, TenantPackageTypeEnum.DEF.getType());
+        return tenantPackageMapper.selectById(SystemIdEnum.SYSTEM_ID);
     }
 
     @Override

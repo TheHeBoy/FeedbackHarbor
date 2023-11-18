@@ -7,10 +7,10 @@ import cn.iocoder.yudao.module.system.controller.admin.user.vo.profile.UserProfi
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.profile.UserProfileUpdateReqVO;
 import cn.iocoder.yudao.module.system.convert.user.UserConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
 import cn.iocoder.yudao.module.system.service.permission.RoleService;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ import static cn.iocoder.yudao.module.infra.enums.ErrorCodeConstants.FILE_IS_EMP
 public class UserProfileController {
 
     @Resource
-    private AdminUserService userService;
+    private UserService userService;
     @Resource
     private PermissionService permissionService;
     @Resource
@@ -46,7 +46,7 @@ public class UserProfileController {
     @DataPermission(enable = false)
     public CommonResult<UserProfileRespVO> profile() {
         // 获得用户基本信息
-        AdminUserDO user = userService.getUser(getLoginUserId());
+        UserDO user = userService.getUser(getLoginUserId());
         UserProfileRespVO resp = UserConvert.INSTANCE.convert03(user);
         // 获得用户角色
         List<RoleDO> userRoles = roleService.getRoleListFromCache(permissionService.getUserRoleIdListByUserId(user.getId()));

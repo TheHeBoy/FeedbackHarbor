@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.system.controller.admin.sms;
 
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.module.system.controller.admin.sms.vo.template.*;
 import cn.iocoder.yudao.module.system.convert.sms.SmsTemplateConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.sms.SmsTemplateDO;
@@ -91,7 +92,7 @@ public class SmsTemplateController {
     @Operation(summary = "发送短信")
     @PreAuthorize("@ss.hasPermission('system:sms-template:send-sms')")
     public CommonResult<Long> sendSms(@Valid @RequestBody SmsTemplateSendReqVO sendReqVO) {
-        return success(smsSendService.sendSingleSmsToAdmin(sendReqVO.getMobile(), null,
+        return success(smsSendService.sendSingleSms(sendReqVO.getMobile(), null, UserTypeEnum.ADMIN.getValue(),
                 sendReqVO.getTemplateCode(), sendReqVO.getTemplateParams()));
     }
 

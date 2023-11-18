@@ -28,6 +28,7 @@ declare module '@vue/runtime-core' {
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     FeedBackDialog: typeof import('./components/feedback/FeedBackDialog.vue')['default']
+    ILaLanguage: typeof import('~icons/la/language')['default']
     IMdiDotsVertical: typeof import('~icons/mdi/dots-vertical')['default']
     IMdiTagMultiple: typeof import('~icons/mdi/tag-multiple')['default']
     IPhCloudMoonBold: typeof import('~icons/ph/cloud-moon-bold')['default']

@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.system.service.tenant;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
+import cn.iocoder.yudao.framework.common.enums.SystemIdEnum;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
 import cn.iocoder.yudao.framework.common.util.date.DateUtils;
@@ -22,8 +23,6 @@ import cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantUserDO;
 import cn.iocoder.yudao.module.system.dal.mysql.tenant.TenantMapper;
 import cn.iocoder.yudao.module.system.dal.mysql.tenant.TenantUserMapper;
 import cn.iocoder.yudao.module.system.enums.permission.RoleCodeEnum;
-import cn.iocoder.yudao.module.system.enums.permission.RoleTypeEnum;
-import cn.iocoder.yudao.module.system.enums.tenant.TenantTypeEnum;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
 import cn.iocoder.yudao.module.system.service.permission.RoleService;
 import cn.iocoder.yudao.module.system.service.tenant.handler.TenantMenuHandler;
@@ -134,7 +133,7 @@ public class TenantServiceImpl implements TenantService {
         reqVO.setName(RoleCodeEnum.SUPER_TENANT_ADMIN.getName())
                 .setCode(RoleCodeEnum.SUPER_TENANT_ADMIN.getCode())
                 .setSort(0);
-        Long roleId = roleService.createRole(reqVO, RoleTypeEnum.CUSTOM.getType());
+        Long roleId = roleService.createRole(reqVO);
         // 分配权限
         permissionService.assignRoleMenu(roleId, tenantPackage.getMenuIds());
         return roleId;
@@ -147,7 +146,7 @@ public class TenantServiceImpl implements TenantService {
         // 校验存在
         TenantDO tenantDO = validateUpdateTenant(updateReqVO.getId());
         // 内置租户不能修改
-        if (TenantTypeEnum.isSystemTenant(tenantDO.getId())) {
+        if (SystemIdEnum.isSystemData(tenantDO.getId())) {
             throw exception(TENANT_SYSTEM_UPDATE);
         }
         // 校验租户路由是否重复
@@ -186,7 +185,7 @@ public class TenantServiceImpl implements TenantService {
         // 校验存在
         TenantDO tenantDO = validateUpdateTenant(id);
         // 内置租户不能删除
-        if (TenantTypeEnum.isSystemTenant(tenantDO.getId())) {
+        if (SystemIdEnum.isSystemData(tenantDO.getId())) {
             throw exception(TENANT_SYSTEM_DELETE);
         }
         // 删除

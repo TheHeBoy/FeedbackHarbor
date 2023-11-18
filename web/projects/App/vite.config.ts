@@ -25,10 +25,9 @@ export default defineConfig((env) => {
     // 服务设置
     server: {
       host: true, // host设置为true才可以使用network的形式，以ip访问项目
-      port: 8080, // 端口号
-      open: true, // 自动打开浏览器
+      port: 80, // 端口号
       cors: true, // 跨域设置允许
-      strictPort: true, // 如果端口已占用直接退出
+      open: '/product/feedback-harbor/home', // 自动打开浏览器
     },
     build: {
       reportCompressedSize: false,

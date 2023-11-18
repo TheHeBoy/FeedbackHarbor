@@ -5,8 +5,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.core.KeyValue;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
-import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
-import cn.iocoder.yudao.framework.datapermission.core.annotation.DataPermission;
 import cn.iocoder.yudao.framework.sms.core.client.SmsClient;
 import cn.iocoder.yudao.framework.sms.core.client.SmsClientFactory;
 import cn.iocoder.yudao.framework.sms.core.client.SmsCommonResult;
@@ -14,11 +12,8 @@ import cn.iocoder.yudao.framework.sms.core.client.dto.SmsReceiveRespDTO;
 import cn.iocoder.yudao.framework.sms.core.client.dto.SmsSendRespDTO;
 import cn.iocoder.yudao.module.system.dal.dataobject.sms.SmsChannelDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.sms.SmsTemplateDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
 import cn.iocoder.yudao.module.system.mq.message.sms.SmsSendMessage;
 import cn.iocoder.yudao.module.system.mq.producer.sms.SmsProducer;
-import cn.iocoder.yudao.module.system.service.member.MemberService;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.stereotype.Service;
 
@@ -32,16 +27,9 @@ import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 
 /**
  * 短信发送 Service 发送的实现
- *
- * 
  */
 @Service
 public class SmsSendServiceImpl implements SmsSendService {
-
-    @Resource
-    private AdminUserService adminUserService;
-    @Resource
-    private MemberService memberService;
     @Resource
     private SmsChannelService smsChannelService;
     @Resource
@@ -54,30 +42,6 @@ public class SmsSendServiceImpl implements SmsSendService {
 
     @Resource
     private SmsProducer smsProducer;
-
-    @Override
-    @DataPermission(enable = false) // 发送短信时，无需考虑数据权限
-    public Long sendSingleSmsToAdmin(String mobile, Long userId, String templateCode, Map<String, Object> templateParams) {
-        // 如果 mobile 为空，则加载用户编号对应的手机号
-        if (StrUtil.isEmpty(mobile)) {
-            AdminUserDO user = adminUserService.getUser(userId);
-            if (user != null) {
-                mobile = user.getMobile();
-            }
-        }
-        // 执行发送
-        return sendSingleSms(mobile, userId, UserTypeEnum.ADMIN.getValue(), templateCode, templateParams);
-    }
-
-    @Override
-    public Long sendSingleSmsToMember(String mobile, Long userId, String templateCode, Map<String, Object> templateParams) {
-        // 如果 mobile 为空，则加载用户编号对应的手机号
-        if (StrUtil.isEmpty(mobile)) {
-            mobile = memberService.getMemberUserMobile(userId);
-        }
-        // 执行发送
-        return sendSingleSms(mobile, userId, UserTypeEnum.APP.getValue(), templateCode, templateParams);
-    }
 
     @Override
     public Long sendSingleSms(String mobile, Long userId, Integer userType,
@@ -95,7 +59,7 @@ public class SmsSendServiceImpl implements SmsSendService {
         // 创建发送日志。如果模板被禁用，则不发送短信，只记录日志
         Boolean isSend = CommonStatusEnum.ENABLE.getStatus().equals(template.getStatus())
                 && CommonStatusEnum.ENABLE.getStatus().equals(smsChannel.getStatus());
-        ;
+
         String content = smsTemplateService.formatSmsTemplateContent(template.getContent(), templateParams);
         Long sendLogId = smsLogService.createSmsLog(mobile, userId, userType, isSend, template, content, templateParams);
 

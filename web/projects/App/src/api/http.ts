@@ -3,7 +3,7 @@ import showCodeMessage from '@/api/code';
 import { getAccessToken } from '@/utils/auth';
 import { useLoginStoreWithOut } from '@/store/login';
 import { ApiBase } from '@harbor/apis';
-import { AxiosRequestConfig } from 'axios/index';
+import { AxiosRequestConfig } from 'axios';
 import { useTenantStoreWithOut } from '@/store/tenant';
 
 // 创建实例
@@ -26,11 +26,8 @@ axiosInstance.interceptors.request.use(
     if (getAccessToken()) {
       config.headers.Authorization = `Bearer ${getAccessToken()}`;
     }
-
     // 添加租户id
-    if (useTenant.tenant) {
-      config.headers['tenant-id'] = useTenant.tenant.id;
-    }
+    config.headers['tenant-id'] = useTenant.tenant.id;
 
     return config;
   },

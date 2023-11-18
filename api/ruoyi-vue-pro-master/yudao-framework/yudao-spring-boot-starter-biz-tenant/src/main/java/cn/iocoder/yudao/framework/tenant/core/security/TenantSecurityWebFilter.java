@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.framework.tenant.core.security;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.common.exception.enums.GlobalErrorCodeConstants;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.servlet.ServletUtils;
@@ -12,6 +13,7 @@ import cn.iocoder.yudao.framework.tenant.core.service.TenantFrameworkService;
 import cn.iocoder.yudao.framework.web.config.WebProperties;
 import cn.iocoder.yudao.framework.web.core.filter.ApiRequestFilter;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
+import cn.iocoder.yudao.framework.web.core.util.WebFrameworkUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
 
@@ -64,9 +66,9 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
                 return;
             }
 
-            // 2. 登陆的用户，校验是否有权限访问该租户，避免越权问题。
+            // 2. 登陆的用户，admin需要校验是否有权限访问该租户，避免越权问题。
             LoginUser user = SecurityFrameworkUtils.getLoginUser();
-            if (user != null && !user.getTenantIds().contains(tenantId)) {
+            if (user != null && !user.getTenantIds().contains(tenantId) && Objects.equals(user.getUserType(), UserTypeEnum.ADMIN.getValue())) {
                 log.error("[doFilterInternal][租户({}) User({}/{}) 越权访问租户({}) URL({}/{})]",
                         user.getTenantIds(), user.getId(), user.getUserType(),
                         TenantContextHolder.getTenantId(), request.getRequestURI(), request.getMethod());

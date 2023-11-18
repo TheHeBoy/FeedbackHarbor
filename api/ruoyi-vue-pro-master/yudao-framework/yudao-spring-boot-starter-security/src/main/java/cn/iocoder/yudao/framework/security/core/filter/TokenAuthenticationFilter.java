@@ -2,7 +2,9 @@ package cn.iocoder.yudao.framework.security.core.filter;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.common.exception.ServiceException;
+import cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.servlet.ServletUtils;
 import cn.iocoder.yudao.framework.security.config.SecurityProperties;
@@ -10,8 +12,7 @@ import cn.iocoder.yudao.framework.security.core.LoginUser;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
 import cn.iocoder.yudao.framework.web.core.util.WebFrameworkUtils;
-import cn.iocoder.yudao.module.harbor.api.appuser.AppUserApi;
-import cn.iocoder.yudao.module.harbor.api.appuser.dto.AppUserRespDTO;
+import cn.iocoder.yudao.module.harbor.enums.ErrorCodeConstants;
 import cn.iocoder.yudao.module.system.api.token.TokenApi;
 import cn.iocoder.yudao.module.system.api.token.dto.TokenCheckRespDTO;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ import java.io.IOException;
 
 import static cn.iocoder.yudao.framework.common.enums.UserTypeEnum.ADMIN;
 import static cn.iocoder.yudao.framework.common.enums.UserTypeEnum.APP;
+import static cn.iocoder.yudao.framework.common.exception.enums.GlobalErrorCodeConstants.BAD_USER_TYPE;
+import static cn.iocoder.yudao.framework.common.exception.enums.GlobalErrorCodeConstants.FORBIDDEN;
 
 /**
  * Token 过滤器，验证 token 的有效性
@@ -41,8 +44,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final GlobalExceptionHandler globalExceptionHandler;
 
     private final TokenApi tokenApi;
-
-    private final AppUserApi appUserApi;
 
     @Override
     @SuppressWarnings("NullableProblems")
@@ -76,19 +77,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if (accessToken == null) {
                 return null;
             }
-            // 管理员访问 App 的请求路径时，登录信息转换为 App User 信息
-            if (ObjectUtil.equal(accessToken.getUserType(), ADMIN.getValue()) && ObjectUtil.equal(userType, APP.getValue())) {
-                AppUserRespDTO appUser = appUserApi.getAppUserByAdmin(accessToken.getUserId());
-                if (ObjectUtil.isNull(appUser)) {
-                    throw new AccessDeniedException("管理员关联的App用户不存在");
-                }
-                return new LoginUser().setId(appUser.getId())
-                        .setUserType(APP.getValue())
-                        .setTenantIds(accessToken.getTenantIds());
-            }
-            // 用户类型不匹配
-            if (ObjectUtil.notEqual(accessToken.getUserType(), userType)) {
-                throw new AccessDeniedException("错误的用户类型");
+            // App 用户不能访问 admin-api 路径，无权限
+            if (ObjectUtil.equal(userType, ADMIN.getValue()) && ObjectUtil.equal(accessToken.getUserType(), APP.getValue())) {
+                throw ServiceExceptionUtil.exception(BAD_USER_TYPE);
             }
             // 构建登录用户
             return new LoginUser().setId(accessToken.getUserId())

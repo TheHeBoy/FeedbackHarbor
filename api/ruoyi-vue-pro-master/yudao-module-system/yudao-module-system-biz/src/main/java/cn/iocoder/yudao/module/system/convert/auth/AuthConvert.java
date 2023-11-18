@@ -2,12 +2,13 @@ package cn.iocoder.yudao.module.system.convert.auth;
 
 import cn.iocoder.yudao.module.system.api.sms.dto.code.SmsCodeSendReqDTO;
 import cn.iocoder.yudao.module.system.api.sms.dto.code.SmsCodeUseReqDTO;
-import cn.iocoder.yudao.module.system.api.social.dto.SocialUserBindReqDTO;
 import cn.iocoder.yudao.module.system.controller.admin.auth.vo.*;
+import cn.iocoder.yudao.module.system.controller.app.auth.vo.AppAuthLoginRespVO;
+import cn.iocoder.yudao.module.system.controller.app.auth.vo.AppAuthUserInfoRespVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.token.TokenAccessDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.MenuDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.enums.permission.MenuTypeEnum;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -25,6 +26,8 @@ public interface AuthConvert {
     AuthConvert INSTANCE = Mappers.getMapper(AuthConvert.class);
 
     AuthLoginRespVO convert(TokenAccessDO bean);
+    AppAuthUserInfoRespVO convertApp(UserDO bean);
+    AppAuthLoginRespVO convertApp(TokenAccessDO bean);
 
     default AuthPermissionInfoRespVO convert(List<RoleDO> roleList, List<MenuDO> menuList) {
         return AuthPermissionInfoRespVO.builder()
@@ -72,8 +75,6 @@ public interface AuthConvert {
         // 获得到所有的根节点
         return filterList(treeNodeMap.values(), node -> ID_ROOT.equals(node.getParentId()));
     }
-
-    SocialUserBindReqDTO convert(Long userId, Integer userType, AuthSocialLoginReqVO reqVO);
 
     SmsCodeSendReqDTO convert(AuthSmsSendReqVO reqVO);
 

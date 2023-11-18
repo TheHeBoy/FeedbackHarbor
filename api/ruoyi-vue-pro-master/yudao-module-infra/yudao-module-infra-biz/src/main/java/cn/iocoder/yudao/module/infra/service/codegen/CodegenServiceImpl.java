@@ -18,7 +18,7 @@ import cn.iocoder.yudao.module.infra.framework.codegen.config.CodegenProperties;
 import cn.iocoder.yudao.module.infra.service.codegen.inner.CodegenBuilder;
 import cn.iocoder.yudao.module.infra.service.codegen.inner.CodegenEngine;
 import cn.iocoder.yudao.module.infra.service.db.DatabaseTableService;
-import cn.iocoder.yudao.module.system.api.user.AdminUserApi;
+import cn.iocoder.yudao.module.system.api.user.UserApi;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class CodegenServiceImpl implements CodegenService {
     private CodegenColumnMapper codegenColumnMapper;
 
     @Resource
-    private AdminUserApi userApi;
+    private UserApi userApi;
 
     @Resource
     private CodegenBuilder codegenBuilder;

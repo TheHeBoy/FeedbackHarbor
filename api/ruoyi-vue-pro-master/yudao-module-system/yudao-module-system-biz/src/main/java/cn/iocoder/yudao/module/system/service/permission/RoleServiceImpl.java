@@ -2,9 +2,9 @@ package cn.iocoder.yudao.module.system.service.permission;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
+import cn.iocoder.yudao.framework.common.enums.SystemIdEnum;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.system.controller.admin.permission.vo.role.RoleCreateReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.permission.vo.role.RoleExportReqVO;
@@ -15,7 +15,6 @@ import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
 import cn.iocoder.yudao.module.system.dal.mysql.permission.RoleMapper;
 import cn.iocoder.yudao.module.system.dal.redis.RedisKeyConstants;
 import cn.iocoder.yudao.module.system.enums.permission.RoleCodeEnum;
-import cn.iocoder.yudao.module.system.enums.permission.RoleTypeEnum;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -47,12 +46,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long createRole(RoleCreateReqVO reqVO, Integer type) {
+    public Long createRole(RoleCreateReqVO reqVO) {
         // 校验角色
         validateRoleDuplicate(reqVO.getName(), reqVO.getCode(), null);
         // 插入到数据库
         RoleDO role = RoleConvert.INSTANCE.convert(reqVO);
-        role.setType(ObjectUtil.defaultIfNull(type, RoleTypeEnum.CUSTOM.getType()));
         role.setStatus(CommonStatusEnum.ENABLE.getStatus());
         roleMapper.insert(role);
         // 返回
@@ -139,7 +137,7 @@ public class RoleServiceImpl implements RoleService {
             throw exception(ROLE_NOT_EXISTS);
         }
         // 内置角色，不允许删除
-        if (RoleTypeEnum.SYSTEM.getType().equals(roleDO.getType())) {
+        if (SystemIdEnum.isSystemData(id)) {
             throw exception(ROLE_CAN_NOT_UPDATE_SYSTEM_TYPE_ROLE);
         }
     }

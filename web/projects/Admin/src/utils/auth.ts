@@ -75,6 +75,10 @@ export const getTenantName = () => {
   return getTenant()?.name;
 };
 
+export const getTenantRouterUri = () => {
+  return getTenant()?.routerUri;
+};
+
 export const setTenant = (type: TenantKeyType) => {
   wsCache.set(TenantKey, type);
   // 修改页面标签图标

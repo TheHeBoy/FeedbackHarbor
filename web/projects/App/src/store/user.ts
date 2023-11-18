@@ -1,7 +1,7 @@
 import store from './index';
 import { getAccessToken, removeToken } from '@/utils/auth';
 import { getUserInfo, logout } from '@/api/login';
-import { CACHE_KEY, useCache } from '@/hooks/useCache';
+import {CACHE_KEY, useCache} from '@/hooks/useCache';
 
 const { wsCache } = useCache();
 

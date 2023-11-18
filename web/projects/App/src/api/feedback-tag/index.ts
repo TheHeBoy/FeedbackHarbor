@@ -9,5 +9,5 @@ export type FeedbackTagVO = {
 };
 
 export const getFeedbackTagList = () => {
-  return request.get({ url: '/feedback-tag/list' });
+  return request.get({ url: '/harbor/feedback-tag/list' });
 };

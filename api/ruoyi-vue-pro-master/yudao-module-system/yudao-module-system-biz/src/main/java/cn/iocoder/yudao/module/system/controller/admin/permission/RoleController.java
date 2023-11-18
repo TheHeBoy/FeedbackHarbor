@@ -40,7 +40,7 @@ public class RoleController {
     @Operation(summary = "创建角色")
     @PreAuthorize("@ss.hasPermission('system:role:create')")
     public CommonResult<Long> createRole(@Valid @RequestBody RoleCreateReqVO reqVO) {
-        return success(roleService.createRole(reqVO, null));
+        return success(roleService.createRole(reqVO));
     }
 
     @PutMapping("/update")

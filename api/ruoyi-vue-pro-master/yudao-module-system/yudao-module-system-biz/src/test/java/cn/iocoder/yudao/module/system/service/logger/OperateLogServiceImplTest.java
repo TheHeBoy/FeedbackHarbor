@@ -12,9 +12,9 @@ import cn.iocoder.yudao.module.system.api.logger.dto.OperateLogCreateReqDTO;
 import cn.iocoder.yudao.module.system.controller.admin.logger.vo.operatelog.OperateLogExportReqVO;
 import cn.iocoder.yudao.module.system.controller.admin.logger.vo.operatelog.OperateLogPageReqVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.logger.OperateLogDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.dal.mysql.logger.OperateLogMapper;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -43,7 +43,7 @@ public class OperateLogServiceImplTest extends BaseDbUnitTest {
     private OperateLogMapper operateLogMapper;
 
     @MockBean
-    private AdminUserService userService;
+    private UserService userService;
 
     @Test
     public void testCreateOperateLogAsync() {
@@ -60,7 +60,7 @@ public class OperateLogServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testGetOperateLogPage() {
         // mock（用户信息）
-        AdminUserDO user = RandomUtils.randomPojo(AdminUserDO.class, o -> {
+        UserDO user = RandomUtils.randomPojo(UserDO.class, o -> {
             o.setNickname("wang");
             o.setStatus(CommonStatusEnum.ENABLE.getStatus());
         });
@@ -108,7 +108,7 @@ public class OperateLogServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testGetOperateLogs() {
         // mock（用户信息）
-        AdminUserDO user = RandomUtils.randomPojo(AdminUserDO.class, o -> {
+        UserDO user = RandomUtils.randomPojo(UserDO.class, o -> {
             o.setNickname("wang");
             o.setStatus(CommonStatusEnum.ENABLE.getStatus());
         });

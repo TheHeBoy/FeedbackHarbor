@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.system.controller.admin.auth;
 
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
 import cn.iocoder.yudao.framework.security.config.SecurityProperties;
@@ -11,14 +12,14 @@ import cn.iocoder.yudao.module.system.convert.auth.AuthConvert;
 import cn.iocoder.yudao.module.system.convert.user.UserConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.MenuDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.token.TokenAccessDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.enums.logger.LoginLogTypeEnum;
-import cn.iocoder.yudao.module.system.service.auth.AdminAuthService;
+import cn.iocoder.yudao.module.system.service.auth.AuthService;
 import cn.iocoder.yudao.module.system.service.permission.MenuService;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
 import cn.iocoder.yudao.module.system.service.permission.RoleService;
-import cn.iocoder.yudao.module.system.service.social.SocialUserService;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -47,18 +48,15 @@ import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUti
 public class AuthController {
 
     @Resource
-    private AdminAuthService authService;
+    private AuthService authService;
     @Resource
-    private AdminUserService userService;
+    private UserService userService;
     @Resource
     private RoleService roleService;
     @Resource
     private MenuService menuService;
     @Resource
     private PermissionService permissionService;
-    @Resource
-    private SocialUserService socialUserService;
-
     @Resource
     private SecurityProperties securityProperties;
 
@@ -67,7 +65,8 @@ public class AuthController {
     @Operation(summary = "使用账号密码登录")
     @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
     public CommonResult<AuthLoginRespVO> login(@RequestBody @Valid AuthLoginReqVO reqVO) {
-        return success(authService.login(reqVO));
+        TokenAccessDO tokenAccessDO = authService.login(reqVO.getUsername(), reqVO.getPassword(), getUserType());
+        return success(AuthConvert.INSTANCE.convert(tokenAccessDO));
     }
 
     @PostMapping("/logout")
@@ -111,7 +110,7 @@ public class AuthController {
     @GetMapping("/login-user-info")
     @Operation(summary = "获取登录用户息")
     public CommonResult<UserLoginInfoRespVO> getLoginUserinfo() {
-        AdminUserDO user = userService.getUser(getLoginUserId());
+        UserDO user = userService.getUser(getLoginUserId());
         return success(UserConvert.INSTANCE.convert5(user));
     }
 
@@ -122,7 +121,8 @@ public class AuthController {
     @Operation(summary = "使用短信验证码登录")
     @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
     public CommonResult<AuthLoginRespVO> smsLogin(@RequestBody @Valid AuthSmsLoginReqVO reqVO) {
-        return success(authService.smsLogin(reqVO));
+        TokenAccessDO tokenAccessDO = authService.smsLogin(reqVO, getUserType());
+        return success(AuthConvert.INSTANCE.convert(tokenAccessDO));
     }
 
     @PostMapping("/send-sms-code")
@@ -143,17 +143,21 @@ public class AuthController {
             @Parameter(name = "type", description = "社交类型", required = true),
             @Parameter(name = "redirectUri", description = "回调路径")
     })
-    public CommonResult<String> socialLogin(@RequestParam("type") Integer type,
-                                            @RequestParam("redirectUri") String redirectUri) {
-        return CommonResult.success(socialUserService.getAuthorizeUrl(type, redirectUri));
+    public CommonResult<String> socialAuthRedirect(@RequestParam("type") Integer type,
+                                                   @RequestParam("redirectUri") String redirectUri) {
+        return CommonResult.success(authService.getAuthorizeUrl(type, redirectUri));
     }
 
     @PostMapping("/social-login")
     @PermitAll
-    @Operation(summary = "社交快捷登录，使用 code 授权码", description = "适合未登录的用户，但是社交账号已绑定用户")
+    @Operation(summary = "社交快捷登录，使用 code 授权码")
     @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
-    public CommonResult<AuthLoginRespVO> socialQuickLogin(@RequestBody @Valid AuthSocialLoginReqVO reqVO) {
-        return success(authService.socialLogin(reqVO));
+    public CommonResult<AuthLoginRespVO> socialLogin(@RequestBody @Valid AuthSocialLoginReqVO reqVO) {
+        return success(AuthConvert.INSTANCE.convert(authService.socialLogin(reqVO, getUserType())));
     }
 
+
+    private UserTypeEnum getUserType() {
+        return UserTypeEnum.ADMIN;
+    }
 }

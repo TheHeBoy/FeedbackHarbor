@@ -4,24 +4,18 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.module.harbor.controller.app.comment.vo.*;
-import cn.iocoder.yudao.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
-import cn.iocoder.yudao.module.harbor.convert.feedback.FeedbackConvert;
-import cn.iocoder.yudao.module.harbor.dal.dataobject.appuser.AppUserDO;
-import cn.iocoder.yudao.module.harbor.dal.dataobject.feedback.FeedbackDO;
-import cn.iocoder.yudao.module.harbor.dal.dataobject.feedbacktag.FeedbackTagDO;
 import cn.iocoder.yudao.module.harbor.dal.mysql.feedback.FeedbackMapper;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.enums.feedback.FeedbackReplyStateEnum;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
-import cn.iocoder.yudao.module.harbor.service.appuser.AppUserService;
-import cn.iocoder.yudao.module.harbor.service.feedback.FeedbackService;
+import cn.iocoder.yudao.module.system.api.user.UserApi;
+import cn.iocoder.yudao.module.system.api.user.dto.UserRespDTO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 import org.springframework.validation.annotation.Validated;
 
-import cn.iocoder.yudao.module.harbor.controller.admin.comment.vo.*;
 import cn.iocoder.yudao.module.harbor.dal.dataobject.comment.CommentDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 
@@ -44,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
     private CommentMapper commentMapper;
 
     @Resource
-    private AppUserService appUserService;
+    private UserApi userApi;
 
     @Resource
     private LikeRedisDAO likeRedisDAO;
@@ -147,7 +141,7 @@ public class CommentServiceImpl implements CommentService {
      * 填充用户信息
      */
     private void fillUserInfo(AppCommentBaseVO vo) {
-        AppUserDO user = appUserService.getUser(vo.getUid());
+        UserRespDTO user = userApi.getUser(vo.getUid());
         if (ObjectUtil.isNotNull(user)) {
             vo.setAvatar(user.getAvatar());
             vo.setNickname(user.getNickname());

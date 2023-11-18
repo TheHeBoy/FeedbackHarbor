@@ -20,4 +20,8 @@ public class TenantRespDTO {
      * 产品Logo
      */
     private String logo;
+    /**
+     * 租户路由 Uri
+     */
+    private String routerUri;
 }

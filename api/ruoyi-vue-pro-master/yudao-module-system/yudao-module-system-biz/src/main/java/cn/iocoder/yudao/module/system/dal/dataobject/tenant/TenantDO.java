@@ -2,8 +2,6 @@ package cn.iocoder.yudao.module.system.dal.dataobject.tenant;
 
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
-import cn.iocoder.yudao.module.system.enums.tenant.TenantTypeEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -25,9 +23,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class TenantDO extends BaseDO {
     /**
-     * 租户编号，UUID
+     * 租户编号
      */
-    @TableId(value = "ID", type = IdType.ASSIGN_ID)
+    @TableId(value = "ID")
     private Long id;
     /**
      * 租户名，唯一

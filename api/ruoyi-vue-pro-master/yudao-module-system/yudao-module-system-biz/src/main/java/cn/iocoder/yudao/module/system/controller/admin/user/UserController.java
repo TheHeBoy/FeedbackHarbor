@@ -1,15 +1,15 @@
 package cn.iocoder.yudao.module.system.controller.admin.user;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.module.system.controller.admin.user.vo.user.*;
 import cn.iocoder.yudao.module.system.convert.user.UserConvert;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import cn.iocoder.yudao.module.system.enums.common.SexEnum;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
-import cn.iocoder.yudao.framework.common.util.collection.MapUtils;
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +31,6 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertList;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertSet;
 import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.EXPORT;
-import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
 @Tag(name = "管理后台 - 用户")
 @RestController
@@ -40,13 +39,13 @@ import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUti
 public class UserController {
 
     @Resource
-    private AdminUserService userService;
+    private UserService userService;
 
     @PostMapping("/create")
     @Operation(summary = "新增用户")
     @PreAuthorize("@ss.hasPermission('system:user:create')")
     public CommonResult<Long> createUser(@Valid @RequestBody UserCreateReqVO reqVO) {
-        Long id = userService.createUser(reqVO);
+        Long id = userService.createUser(reqVO, getUserType());
         return success(id);
     }
 
@@ -88,7 +87,7 @@ public class UserController {
     @PreAuthorize("@ss.hasPermission('system:user:list')")
     public CommonResult<PageResult<UserPageItemRespVO>> getUserPage(@Valid UserPageReqVO reqVO) {
         // 获得用户分页列表
-        PageResult<AdminUserDO> pageResult = userService.getUserPage(reqVO);
+        PageResult<UserDO> pageResult = userService.getUserPage(reqVO);
         if (CollUtil.isEmpty(pageResult.getList())) {
             return success(new PageResult<>(pageResult.getTotal())); // 返回空
         }
@@ -105,7 +104,7 @@ public class UserController {
     @Operation(summary = "获取用户精简信息列表", description = "只包含被开启的用户，主要用于前端的下拉选项")
     public CommonResult<List<UserSimpleRespVO>> getSimpleUserList() {
         // 获用户列表，只要开启状态的
-        List<AdminUserDO> list = userService.getUserListByStatus(CommonStatusEnum.ENABLE.getStatus());
+        List<UserDO> list = userService.getUserListByStatus(CommonStatusEnum.ENABLE.getStatus());
         // 排序后，返回给前端
         return success(UserConvert.INSTANCE.convertList04(list));
     }
@@ -115,7 +114,7 @@ public class UserController {
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('system:user:query')")
     public CommonResult<UserRespVO> getUser(@RequestParam("id") Long id) {
-        AdminUserDO user = userService.getUser(id);
+        UserDO user = userService.getUser(id);
         return success(UserConvert.INSTANCE.convert(user));
     }
 
@@ -126,7 +125,7 @@ public class UserController {
     public void exportUserList(@Validated UserExportReqVO reqVO,
                                HttpServletResponse response) throws IOException {
         // 获得用户列表
-        List<AdminUserDO> users = userService.getUserList(reqVO);
+        List<UserDO> users = userService.getUserList(reqVO);
 
         // 拼接数据
         List<UserExcelVO> excelUsers = new ArrayList<>(users.size());
@@ -166,4 +165,7 @@ public class UserController {
         return success(userService.importUserList(list, updateSupport));
     }
 
+    private UserTypeEnum getUserType() {
+        return UserTypeEnum.ADMIN;
+    }
 }

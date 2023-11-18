@@ -8,11 +8,10 @@ import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.module.system.convert.mail.MailAccountConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.mail.MailAccountDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.mail.MailTemplateDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.mq.message.mail.MailSendMessage;
 import cn.iocoder.yudao.module.system.mq.producer.mail.MailProducer;
-import cn.iocoder.yudao.module.system.service.member.MemberService;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,9 @@ import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 
 /**
  * 邮箱发送 Service 实现类
+ * <p>
+ * wangjingyi
  *
- *  wangjingyi
  * @since 2022-03-21
  */
 @Service
@@ -36,44 +36,15 @@ import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
 public class MailSendServiceImpl implements MailSendService {
 
     @Resource
-    private AdminUserService adminUserService;
-    @Resource
-    private MemberService memberService;
-
+    private UserService userService;
     @Resource
     private MailAccountService mailAccountService;
     @Resource
     private MailTemplateService mailTemplateService;
-
     @Resource
     private MailLogService mailLogService;
     @Resource
     private MailProducer mailProducer;
-
-    @Override
-    public Long sendSingleMailToAdmin(String mail, Long userId,
-                                      String templateCode, Map<String, Object> templateParams) {
-        // 如果 mail 为空，则加载用户编号对应的邮箱
-        if (StrUtil.isEmpty(mail)) {
-            AdminUserDO user = adminUserService.getUser(userId);
-            if (user != null) {
-                mail = user.getEmail();
-            }
-        }
-        // 执行发送
-        return sendSingleMail(mail, userId, UserTypeEnum.ADMIN.getValue(), templateCode, templateParams);
-    }
-
-    @Override
-    public Long sendSingleMailToMember(String mail, Long userId,
-                                       String templateCode, Map<String, Object> templateParams) {
-        // 如果 mail 为空，则加载用户编号对应的邮箱
-        if (StrUtil.isEmpty(mail)) {
-            mail = memberService.getMemberUserEmail(userId);
-        }
-        // 执行发送
-        return sendSingleMail(mail, userId, UserTypeEnum.APP.getValue(), templateCode, templateParams);
-    }
 
     @Override
     public Long sendSingleMail(String mail, Long userId, Integer userType,
@@ -105,11 +76,11 @@ public class MailSendServiceImpl implements MailSendService {
     public void doSendMail(MailSendMessage message) {
         // 1. 创建发送账号
         MailAccountDO account = validateMailAccount(message.getAccountId());
-        MailAccount mailAccount  = MailAccountConvert.INSTANCE.convert(account, message.getNickname());
+        MailAccount mailAccount = MailAccountConvert.INSTANCE.convert(account, message.getNickname());
         // 2. 发送邮件
         try {
             String messageId = MailUtil.send(mailAccount, message.getMail(),
-                    message.getTitle(), message.getContent(),true);
+                    message.getTitle(), message.getContent(), true);
             // 3. 更新结果（成功）
             mailLogService.updateMailSendResult(message.getLogId(), messageId, null);
         } catch (Exception e) {
@@ -151,7 +122,7 @@ public class MailSendServiceImpl implements MailSendService {
     /**
      * 校验邮件参数是否确实
      *
-     * @param template 邮箱模板
+     * @param template       邮箱模板
      * @param templateParams 参数列表
      */
     @VisibleForTesting

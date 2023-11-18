@@ -7,7 +7,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     component: TheHead,
     children: [
       {
-        path: '',
+        path: 'home',
         name: 'home',
         component: () => import('@/views/main/index.vue'),
       },
@@ -19,7 +19,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: '/:tenantRouterUri/social-login',
+    path: '/social-login',
     component: () => import('@/views/socialLogin.vue'),
   },
 ];

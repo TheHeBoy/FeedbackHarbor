@@ -3,13 +3,17 @@
  */
 
 import WebStorageCache from 'web-storage-cache';
+import { AccessTokenKey } from '@harbor/core';
 
 export const CACHE_KEY = {
-  USER: 'user',
+  USER: 'app_user',
+  ACCESS_TOKEN: AccessTokenKey,
+  TENANT: 'app_tenant',
 };
 
-type CacheType = 'localStorage' | 'sessionStorage';
 
+
+type CacheType = 'localStorage' | 'sessionStorage';
 export const useCache = (type: CacheType = 'localStorage') => {
   const wsCache: WebStorageCache = new WebStorageCache({
     storage: type,

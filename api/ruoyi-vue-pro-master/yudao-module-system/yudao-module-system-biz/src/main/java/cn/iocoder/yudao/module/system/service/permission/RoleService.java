@@ -23,10 +23,9 @@ public interface RoleService {
      * 创建角色
      *
      * @param reqVO 创建角色信息
-     * @param type 角色类型
      * @return 角色编号
      */
-    Long createRole(@Valid RoleCreateReqVO reqVO, Integer type);
+    Long createRole(@Valid RoleCreateReqVO reqVO);
 
     /**
      * 更新角色

@@ -9,9 +9,9 @@ import cn.iocoder.yudao.module.system.controller.admin.logger.vo.operatelog.Oper
 import cn.iocoder.yudao.module.system.controller.admin.logger.vo.operatelog.OperateLogPageReqVO;
 import cn.iocoder.yudao.module.system.convert.logger.OperateLogConvert;
 import cn.iocoder.yudao.module.system.dal.dataobject.logger.OperateLogDO;
-import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
+import cn.iocoder.yudao.module.system.dal.dataobject.user.UserDO;
 import cn.iocoder.yudao.module.system.dal.mysql.logger.OperateLogMapper;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +34,7 @@ public class OperateLogServiceImpl implements OperateLogService {
     private OperateLogMapper operateLogMapper;
 
     @Resource
-    private AdminUserService userService;
+    private UserService userService;
 
     @Override
     public void createOperateLog(OperateLogCreateReqDTO createReqDTO) {
@@ -49,7 +49,7 @@ public class OperateLogServiceImpl implements OperateLogService {
         // 处理基于用户昵称的查询
         Collection<Long> userIds = null;
         if (StrUtil.isNotEmpty(reqVO.getUserNickname())) {
-            userIds = convertSet(userService.getUserListByNickname(reqVO.getUserNickname()), AdminUserDO::getId);
+            userIds = convertSet(userService.getUserListByNickname(reqVO.getUserNickname()), UserDO::getId);
             if (CollUtil.isEmpty(userIds)) {
                 return PageResult.empty();
             }
@@ -63,7 +63,7 @@ public class OperateLogServiceImpl implements OperateLogService {
         // 处理基于用户昵称的查询
         Collection<Long> userIds = null;
         if (StrUtil.isNotEmpty(reqVO.getUserNickname())) {
-            userIds = convertSet(userService.getUserListByNickname(reqVO.getUserNickname()), AdminUserDO::getId);
+            userIds = convertSet(userService.getUserListByNickname(reqVO.getUserNickname()), UserDO::getId);
             if (CollUtil.isEmpty(userIds)) {
                 return Collections.emptyList();
             }

@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.system.controller.admin.mail;
 
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.system.controller.admin.mail.vo.template.*;
@@ -33,14 +34,14 @@ public class MailTemplateController {
     @PostMapping("/create")
     @Operation(summary = "创建邮件模版")
     @PreAuthorize("@ss.hasPermission('system:mail-template:create')")
-    public CommonResult<Long> createMailTemplate(@Valid @RequestBody MailTemplateCreateReqVO createReqVO){
+    public CommonResult<Long> createMailTemplate(@Valid @RequestBody MailTemplateCreateReqVO createReqVO) {
         return success(mailTempleService.createMailTemplate(createReqVO));
     }
 
     @PutMapping("/update")
     @Operation(summary = "修改邮件模版")
     @PreAuthorize("@ss.hasPermission('system:mail-template:update')")
-    public CommonResult<Boolean> updateMailTemplate(@Valid @RequestBody MailTemplateUpdateReqVO updateReqVO){
+    public CommonResult<Boolean> updateMailTemplate(@Valid @RequestBody MailTemplateUpdateReqVO updateReqVO) {
         mailTempleService.updateMailTemplate(updateReqVO);
         return success(true);
     }
@@ -82,7 +83,7 @@ public class MailTemplateController {
     @Operation(summary = "发送短信")
     @PreAuthorize("@ss.hasPermission('system:mail-template:send-mail')")
     public CommonResult<Long> sendMail(@Valid @RequestBody MailTemplateSendReqVO sendReqVO) {
-        return success(mailSendService.sendSingleMailToAdmin(sendReqVO.getMail(), getLoginUserId(),
+        return success(mailSendService.sendSingleMail(sendReqVO.getMail(), getLoginUserId(), UserTypeEnum.ADMIN.getValue(),
                 sendReqVO.getTemplateCode(), sendReqVO.getTemplateParams()));
     }
 

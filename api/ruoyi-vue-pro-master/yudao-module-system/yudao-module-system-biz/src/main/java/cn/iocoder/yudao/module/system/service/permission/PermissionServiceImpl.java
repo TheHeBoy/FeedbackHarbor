@@ -6,7 +6,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
-import cn.iocoder.yudao.module.system.controller.admin.permission.vo.menu.MenuListReqVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.MenuDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleMenuDO;
@@ -14,7 +13,7 @@ import cn.iocoder.yudao.module.system.dal.dataobject.permission.UserRoleDO;
 import cn.iocoder.yudao.module.system.dal.mysql.permission.RoleMenuMapper;
 import cn.iocoder.yudao.module.system.dal.mysql.permission.UserRoleMapper;
 import cn.iocoder.yudao.module.system.dal.redis.RedisKeyConstants;
-import cn.iocoder.yudao.module.system.service.user.AdminUserService;
+import cn.iocoder.yudao.module.system.service.user.UserService;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
@@ -27,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.function.Supplier;
 
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertSet;
 
@@ -48,7 +46,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Resource
     private MenuService menuService;
     @Resource
-    private AdminUserService userService;
+    private UserService userService;
 
     @Override
     public boolean hasAnyPermissions(Long userId, String... permissions) {

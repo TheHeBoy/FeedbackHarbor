@@ -29,7 +29,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
-    "@intlify/vite-plugin-vue-i18n": "^6.0.0",
+    "@intlify/unplugin-vue-i18n": "^0.12.1",
     "@types/node": "^17.0.10",
     "@types/nprogress": "^0.2.0",
     "@types/svgo": "^2.6.1",

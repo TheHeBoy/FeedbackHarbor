@@ -8,7 +8,7 @@ import IconsResolver from 'unplugin-icons/resolver';
 import { ElementPlusResolver, VueUseComponentsResolver } from 'unplugin-vue-components/resolvers';
 import WindiCSS from 'vite-plugin-windicss';
 import ViteFonts from 'vite-plugin-fonts';
-import VueI18n from '@intlify/vite-plugin-vue-i18n';
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import { ConfigEnv } from 'vite';
 import { resolve } from 'path';
 
@@ -31,7 +31,7 @@ export default (env: ConfigEnv) => {
       resolvers: [ElementPlusResolver()],
     }),
     Components({
-      dts: './src/components.d.ts',
+      dts: 'src/components.d.ts',
       extensions: ['vue', 'md'],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       // imports 指定组件所在位置，默认为 src/components; 有需要也可以加上 view 目录
@@ -47,8 +47,10 @@ export default (env: ConfigEnv) => {
         families: ['Open Sans', 'Montserrat', 'Fira Sans'],
       },
     }),
-    VueI18n({
-      include: [resolve(__dirname, '../locales/**')],
+    VueI18nPlugin({
+      runtimeOnly: true,
+      compositionOnly: true,
+      include: [resolve(__dirname, 'src/locales/**')],
     }),
     WindiCSS(),
   ];
