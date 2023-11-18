@@ -1,24 +1,16 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestHeaders,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-import qs from 'qs';
-import { config } from '@/config/axios/config';
 import { getAccessToken, getRefreshToken, removeToken, setToken } from '@/utils/auth';
 import { getTenantId } from '@/utils/auth';
 import errorCode from './errorCode';
 
-const { result_code, base_url, request_timeout, default_headers } = config;
-
-// 需要忽略的提示。忽略后，自动 Promise.reject('error')
-const ignoreMsgs = [
-  '无效的刷新令牌', // 刷新令牌被删除时，不用提示
-  '刷新令牌已过期', // 使用刷新令牌，刷新获取新的访问令牌时，结果因为过期失败，此时需要忽略。否则，会导致继续 401，无法跳转到登出界面
+// 忽略的错误不需要提示给用户
+const ignoreCode = [
+  431, // 无效的刷新令牌
+  401, // 刷新令牌已过期
+  430, // 用户类型错误请尝试重新登录
+  901, // 演示模式，禁止写操作
 ];
 // 是否显示重新登录
 export const isRelogin = { show: false };
@@ -27,29 +19,23 @@ export const isRelogin = { show: false };
 let requestList: any[] = [];
 // 是否正在刷新中
 let isRefreshToken = false;
-// 请求白名单，无须token的接口
-const whiteList: string[] = ['/login', '/refresh-token'];
+
+const result_code = 200;
+const base_url = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL;
 // 创建axios实例
 const service: AxiosInstance = axios.create({
-  baseURL: base_url, // api 的 base_url
-  timeout: request_timeout, // 请求超时时间
+  baseURL: base_url,
+  timeout: 30000, // 请求超时时间
   withCredentials: false, // 禁用 Cookie 等信息
   headers: {
-    'Content-Type': default_headers,
+    'Content-Type': 'application/json',
   },
 });
 
 // request拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 是否需要设置 token
-    let isToken = (config!.headers || {}).isToken === false;
-    whiteList.some((v) => {
-      if (config.url && config.url.indexOf(v) > -1) {
-        return (isToken = false);
-      }
-    });
-    if (getAccessToken() && !isToken) {
+    if (getAccessToken()) {
       (config as Recordable).headers.Authorization = 'Bearer ' + getAccessToken(); // 让每个请求携带自定义token
     }
 
@@ -57,37 +43,6 @@ service.interceptors.request.use(
     const tenantId = getTenantId();
     if (tenantId) {
       (config as Recordable).headers['tenant-id'] = tenantId;
-    }
-
-    const params = config.params || {};
-    const data = config.data || false;
-    if (
-      config.method?.toUpperCase() === 'POST' &&
-      (config.headers as AxiosRequestHeaders)['Content-Type'] ===
-        'application/x-www-form-urlencoded'
-    ) {
-      config.data = qs.stringify(data);
-    }
-    // get参数编码
-    if (config.method?.toUpperCase() === 'GET' && params) {
-      let url = config.url + '?';
-      for (const propName of Object.keys(params)) {
-        const value = params[propName];
-        if (value !== void 0 && value !== null && typeof value !== 'undefined') {
-          if (typeof value === 'object') {
-            for (const val of Object.keys(value)) {
-              const params = propName + '[' + val + ']';
-              const subPart = encodeURIComponent(params) + '=';
-              url += subPart + encodeURIComponent(value[val]) + '&';
-            }
-          } else {
-            url += `${propName}=${encodeURIComponent(value)}&`;
-          }
-        }
-      }
-      url = url.slice(0, -1);
-      config.params = {};
-      config.url = url;
     }
     return config;
   },
@@ -103,10 +58,6 @@ service.interceptors.response.use(
   async (response: AxiosResponse<any>) => {
     const { data } = response;
     const config = response.config;
-    if (!data) {
-      // 返回“[HTTP]请求没有返回值”;
-      throw new Error();
-    }
     const { t } = useI18n();
     // 未设置状态码则默认成功状态
     const code = data.code || result_code;
@@ -119,11 +70,11 @@ service.interceptors.response.use(
     }
     // 获取错误信息
     const msg = data.msg || errorCode[code] || errorCode['default'];
-    if (ignoreMsgs.indexOf(msg) !== -1) {
+    if (ignoreCode.indexOf(code) !== -1) {
       // 如果是忽略的错误码，直接返回 msg 异常
       return Promise.reject(msg);
     } else if (code === 401) {
-      // 如果未认证，并且未进行刷新令牌，说明可能是访问令牌过期了
+      // 未登录,尝试无感知刷新token
       if (!isRefreshToken) {
         isRefreshToken = true;
         // 1. 如果获取不到刷新令牌，则只能执行登出操作
@@ -154,7 +105,7 @@ service.interceptors.response.use(
           isRefreshToken = false;
         }
       } else {
-        // 添加到队列，等待刷新获取到新的令牌
+        // 刷新token中时先添加到队列，等待刷新获取到新的令牌
         return new Promise((resolve) => {
           requestList.push(() => {
             config.headers!.Authorization = 'Bearer ' + getAccessToken(); // 让每个请求携带自定义token 请根据实际情况自行修改
@@ -165,17 +116,8 @@ service.interceptors.response.use(
     } else if (code === 500) {
       ElMessage.error(t('sys.api.errMsg500'));
       return Promise.reject(new Error(msg));
-    } else if (code === 430) {
-      return Promise.reject(new Error(msg));
-    } else if (code === 901) {
-      return Promise.reject(new Error(msg));
     } else if (code !== 200) {
-      if (msg === '无效的刷新令牌') {
-        // hard coding：忽略这个提示，直接登出
-        console.log(msg);
-      } else {
-        ElNotification.error({ title: msg });
-      }
+      ElNotification.error({ title: msg });
       return Promise.reject('error');
     } else {
       return data;
@@ -203,6 +145,8 @@ const refreshToken = async () => {
     base_url + '/system/auth/refresh-token?refreshToken=' + getRefreshToken(),
   );
 };
+
+// 重新登录
 const handleAuthorized = () => {
   const { t } = useI18n();
   if (!isRelogin.show) {

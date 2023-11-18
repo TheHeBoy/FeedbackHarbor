@@ -4,8 +4,10 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.exception.enums.GlobalErrorCodeConstants;
+import cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.date.DateUtils;
+import cn.iocoder.yudao.framework.common.util.spring.SpringExpressionUtils;
 import cn.iocoder.yudao.module.system.controller.admin.token.vo.AccessTokenPageReqVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.token.TokenAccessDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.token.TokenRefreshDO;
@@ -58,7 +60,7 @@ public class TokenServiceImpl implements TokenService {
         // 查询访问令牌
         TokenRefreshDO refreshTokenDO = tokenRefreshTokenMapper.selectByRefreshToken(refreshToken);
         if (refreshTokenDO == null) {
-            throw exception0(GlobalErrorCodeConstants.BAD_REQUEST.getCode(), "无效的刷新令牌");
+            throw ServiceExceptionUtil.exception(GlobalErrorCodeConstants.INVALID_REFRESH_TOKEN);
         }
 
         // 移除相关的访问令牌
@@ -71,7 +73,7 @@ public class TokenServiceImpl implements TokenService {
         // 已过期的情况下，删除刷新令牌
         if (DateUtils.isExpired(refreshTokenDO.getExpiresTime())) {
             tokenRefreshTokenMapper.deleteById(refreshTokenDO.getId());
-            throw exception0(GlobalErrorCodeConstants.UNAUTHORIZED.getCode(), "刷新令牌已过期");
+            throw ServiceExceptionUtil.exception(GlobalErrorCodeConstants.REFRESH_TOKEN_OVERDUE);
         }
 
         // 创建访问令牌

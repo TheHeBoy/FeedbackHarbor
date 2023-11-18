@@ -25,4 +25,5 @@ app.use(store);
 app.use(i18n);
 app.mount('#app');
 
+// 提供 api 服务给通用组件使用
 initApi(service);

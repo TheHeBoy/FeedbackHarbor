@@ -1,6 +1,5 @@
 import router from './router';
 import type { RouteRecordRaw } from 'vue-router';
-import { isRelogin } from '@/config/axios/service';
 import { getAccessToken, getTenant } from '@/utils/auth';
 import { useTitle } from '@/hooks/web/useTitle';
 import { useNProgress } from '@/hooks/web/useNProgress';
@@ -43,9 +42,7 @@ router.beforeEach(async (to, from, next) => {
 
       // 用户信息
       if (!userStore.getIsSetUser) {
-        isRelogin.show = true;
         await userStore.setUserInfoAction();
-        isRelogin.show = false;
 
         // 登录页面需要重定向
         if (from.query.redirect) {

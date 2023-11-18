@@ -27,7 +27,9 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${getAccessToken()}`;
     }
     // 添加租户id
-    config.headers['tenant-id'] = useTenant.tenant.id;
+    if (useTenant.isSetTenant) {
+      config.headers['tenant-id'] = useTenant.tenant.id;
+    }
 
     return config;
   },
