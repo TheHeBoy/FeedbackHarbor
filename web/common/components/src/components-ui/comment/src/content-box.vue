@@ -113,12 +113,9 @@ import {
   UUserNickNameInfo,
   UImageContext,
 } from "../../../components-ui";
-import { ElImage } from "element-plus";
-import { useEmojiParse } from "../../../hooks";
 import { str, isEmpty, dayjs } from "../../../util";
 import { InjectContentBox, InjectContentBoxApi, InjectSlots } from "../key";
 import { UImageInputBox } from "../../index";
-import emoji from "../../../types/emoji";
 
 interface Props {
   reply?: boolean;

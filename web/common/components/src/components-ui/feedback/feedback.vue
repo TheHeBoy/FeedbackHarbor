@@ -77,8 +77,6 @@ import { FeedbackVO, getLikeList, like } from "@harbor/apis";
 import { UHarborComment } from "../harbor-comment";
 import { UserInfo } from "./index";
 import { formatPast, str } from "../../util";
-import { useEmojiParse } from "../../hooks";
-import emoji from "../../types/emoji";
 
 defineOptions({
   name: "UFeedback",

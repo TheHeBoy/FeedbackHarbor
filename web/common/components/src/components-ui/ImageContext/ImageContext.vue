@@ -21,8 +21,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType } from "vue";
 import { UFold } from "../fold";
-import { useEmojiParse } from "../../hooks";
 import emoji from "../../types/emoji";
+import { Emoji } from "../emoji";
 
 defineOptions({
   name: "UImageContext",
@@ -48,6 +48,29 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{}>();
+
+const useEmojiParse = (allEmoji: Emoji, val: string): string => {
+  //解析表情
+  const reg = /\[.+?\]/g;
+  val = val.replace(reg, (str: any) => {
+    const emojiPath = allEmoji[str];
+    //表情库不存在的就默认返回原字符串
+    if (!emojiPath) {
+      return str;
+    }
+    return [
+      '<img src="',
+      emojiPath,
+      '" width="20" height="20" alt="',
+      str,
+      '" title="',
+      str,
+      '" style="margin: 0 1px; vertical-align: text-bottom; display: inline"',
+      "/>",
+    ].join("");
+  });
+  return val;
+};
 
 const emojiContents = computed(() =>
   useEmojiParse(emoji.allEmoji, props.contents)

@@ -1,5 +1,4 @@
 export const UserTypeEnum = {
-  ADMIN: 0, // 管理员
-  APP: 1, // 普通用户
+  ADMIN: 1, // 管理员
+  APP: 2, // 普通用户
 };
-
