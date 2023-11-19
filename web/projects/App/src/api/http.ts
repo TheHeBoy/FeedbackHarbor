@@ -1,13 +1,11 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import showCodeMessage from '@/api/code';
+import showCodeMessage from '@/api/errorCode';
 import { getAccessToken } from '@/utils/auth';
 import { useLoginStoreWithOut } from '@/store/login';
-import { ApiBase } from '@harbor/apis';
-import { AxiosRequestConfig } from 'axios';
 import { useTenantStoreWithOut } from '@/store/tenant';
 
 // 创建实例
-const axiosInstance: AxiosInstance = axios.create({
+export const axiosInstance: AxiosInstance = axios.create({
   // 前缀
   baseURL: import.meta.env.VITE_API_BASEURL + import.meta.env.VITE_API_URL,
   // 超时
@@ -70,49 +68,3 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-async function request(option: AxiosRequestConfig, apiUrl?: string) {
-  if (apiUrl) {
-    option.baseURL = import.meta.env.VITE_API_BASEURL + apiUrl;
-  }
-  return await axiosInstance(option);
-}
-
-const service: ApiBase = {
-  get: async (option: AxiosRequestConfig, apiUrl?: string) => {
-    const res = await request({ method: 'GET', ...option }, apiUrl);
-    return res.data;
-  },
-  post: async (option: AxiosRequestConfig, apiUrl?: string) => {
-    const res = await request({ method: 'POST', ...option }, apiUrl);
-    return res.data;
-  },
-  postOriginal: async (option: AxiosRequestConfig, apiUrl?: string) => {
-    const res = await request({ method: 'POST', ...option }, apiUrl);
-    return res;
-  },
-  delete: async (option: AxiosRequestConfig, apiUrl?: string) => {
-    const res = await request({ method: 'DELETE', ...option }, apiUrl);
-    return res.data;
-  },
-  put: async (option: AxiosRequestConfig, apiUrl?: string) => {
-    const res = await request({ method: 'PUT', ...option }, apiUrl);
-    return res.data;
-  },
-  download: async (option: AxiosRequestConfig, apiUrl?: string) => {
-    return await request({ method: 'GET', responseType: 'blob', ...option }, apiUrl);
-  },
-  upload: async (option: AxiosRequestConfig, apiUrl?: string) => {
-    const data = await request(
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        ...option,
-      },
-      apiUrl,
-    );
-    return data.data;
-  },
-};
-
-export default service;

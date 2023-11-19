@@ -1,4 +1,4 @@
-import request from '@/config/axios';
+import { request } from '@harbor/apis';
 
 // 社交绑定，使用 code 授权码
 export const socialBind = (type, code, state) => {

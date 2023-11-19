@@ -1,4 +1,4 @@
-import request from '@/config/axios';
+import { request } from '@harbor/apis';
 
 // 导出Html
 export const exportHtml = () => {

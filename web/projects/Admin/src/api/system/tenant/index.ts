@@ -1,4 +1,4 @@
-import request from '@/config/axios';
+import { request } from '@harbor/apis';
 
 export interface TenantVO {
   id: number;

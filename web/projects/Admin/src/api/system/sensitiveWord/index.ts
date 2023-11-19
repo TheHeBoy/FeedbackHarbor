@@ -1,4 +1,4 @@
-import request from '@/config/axios';
+import { request } from '@harbor/apis';
 import qs from 'qs';
 
 export interface SensitiveWordVO {

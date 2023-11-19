@@ -9,7 +9,7 @@ import * as ConfigApi from '@/api/infra/config';
 defineOptions({ name: 'InfraAdminServer' });
 
 const loading = ref(true); // 是否加载中
-const src = ref(import.meta.env.VITE_BASE_URL + '/admin/applications');
+const src = ref(import.meta.env.VITE_API_BASEURL + '/admin/applications');
 
 /** 初始化 */
 onMounted(async () => {

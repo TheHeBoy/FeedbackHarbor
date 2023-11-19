@@ -8,6 +8,6 @@ import { getAccessToken } from '@/utils/auth';
 
 defineOptions({ name: 'JimuReport' });
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASEURL;
 const src = ref(BASE_URL + '/jmreport/list?token=' + getAccessToken());
 </script>

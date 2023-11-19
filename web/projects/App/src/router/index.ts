@@ -28,7 +28,6 @@ const whiteList = ['/404', '/social-login'];
 router.beforeEach(async (to, from, next) => {
   // 设置页面标题
   document.title = (to.meta.title as string) || import.meta.env.VITE_APP_TITLE;
-
   const toPath = to.path;
   if (whiteList.indexOf(toPath) == -1) {
     // 路由路径如果没有二层路径,就不会存在租户路由,路由路径第一层为租户路由

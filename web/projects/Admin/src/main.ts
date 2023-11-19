@@ -40,11 +40,13 @@ import './permission';
 import '@/plugins/tongji'; // 百度统计
 
 import VueDOMPurifyHTML from 'vue-dompurify-html'; // 解决v-html 的安全隐患
-import request from '@/config/axios';
+import { axiosInstance } from '@/api/http';
 import { initApi } from '@harbor/apis';
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App);
+
+  initApi(axiosInstance, import.meta.env.VITE_API_BASEURL);
 
   await setupI18n(app);
 
@@ -63,8 +65,6 @@ const setupAll = async () => {
   await router.isReady();
 
   app.use(VueDOMPurifyHTML);
-
-  initApi(request);
 
   app.mount('#app');
 };

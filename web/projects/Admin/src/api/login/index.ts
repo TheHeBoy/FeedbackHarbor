@@ -1,4 +1,4 @@
-import request from '@/config/axios';
+import { request } from '@harbor/apis';
 import { getRefreshToken } from '@/utils/auth';
 import type { UserLoginVO } from './types';
 

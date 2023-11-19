@@ -67,7 +67,7 @@ const userStore = useUserStore();
 const sendValue = ref('');
 
 const server = ref(
-  (import.meta.env.VITE_BASE_URL + '/websocket/message').replace('http', 'ws') +
+  (import.meta.env.VITE_API_BASEURL + '/websocket/message').replace('http', 'ws') +
     '?userId=' +
     userStore.getUser.id,
 );

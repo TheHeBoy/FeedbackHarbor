@@ -1,4 +1,4 @@
-import request from '@/api/http';
+import { request } from '@harbor/apis';
 
 export type UserLoginVO = {
   username: string;
