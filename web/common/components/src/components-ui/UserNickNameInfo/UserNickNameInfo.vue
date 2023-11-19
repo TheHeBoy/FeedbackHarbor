@@ -1,7 +1,13 @@
 <template>
-  <div class="flex">
-    <span>{{ nickName ? nickName : '注销用户' }}</span>
-    <span v-if="type === UserTypeEnum.ADMIN">官方</span>
+  <div class="flex items-center">
+    <span class="">{{ nickName ? nickName : "注销用户" }}</span>
+    <el-tag
+      v-if="type === UserTypeEnum.ADMIN"
+      class="ml-1"
+      type="danger"
+      size="small"
+      >官方
+    </el-tag>
   </div>
 </template>
 
@@ -24,7 +30,6 @@ const props = defineProps({
     require: true,
   },
 });
-
 const emit = defineEmits<{}>();
 
 onMounted(() => {});

@@ -24,6 +24,7 @@ export const useUserStore = defineStore('admin-user', {
       id: 0,
       avatar: '',
       nickname: '',
+      userType: 0,
     },
     isSetUser: false,
   }),
