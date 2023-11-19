@@ -69,7 +69,6 @@ import { isNull } from "../../../util";
 interface Props {
   config: ConfigApi;
   page?: boolean;
-  relativeTime?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -173,7 +172,6 @@ const like = (id: number) => {
 const contentBoxParam: InjectContentBoxApi = {
   user: user,
   like: like,
-  relativeTime: isNull(props.relativeTime, false),
   showInfo: (uid, finish) => emit("showInfo", uid, finish),
 };
 provide(InjectContentBox, contentBoxParam);

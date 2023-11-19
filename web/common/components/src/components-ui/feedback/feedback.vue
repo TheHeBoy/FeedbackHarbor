@@ -16,9 +16,9 @@
           <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
         </div>
         <div class="flex justify-between">
-          <span class="text-sm text-slate-400 mt-1">{{
-            formatPast(vModel.createTime, "YYYY-MM-DD HH:mm")
-          }}</span>
+          <div class="mt-1">
+            <URelativelyTime :time="vModel.createTime" />
+          </div>
           <div>
             <el-popover trigger="click" placement="bottom">
               <el-button link size="small" class="w-full text-center">
@@ -74,9 +74,9 @@ import likeSVG from "./svg/likeSVG.svg?component";
 import likeNoSVG from "./svg/likeNoSVG.svg?component";
 import commentSVG from "./svg/commentSVG.svg?component";
 import { FeedbackVO, getLikeList, like } from "@harbor/apis";
-import { UHarborComment } from "../harbor-comment";
+import { UHarborComment, URelativelyTime } from "../index";
 import { UserInfo } from "./index";
-import { formatPast, str } from "../../util";
+import { str } from "../../util";
 
 defineOptions({
   name: "UFeedback",

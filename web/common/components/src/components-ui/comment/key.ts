@@ -21,7 +21,6 @@ export const InjectSubmit: InjectionKey<
 // 内容盒子
 export interface InjectContentBoxApi {
   user: Ref<UserApi>;
-  relativeTime: boolean;
   like: (id: number) => void;
   showInfo: (id: number, finish: Function) => void;
 }

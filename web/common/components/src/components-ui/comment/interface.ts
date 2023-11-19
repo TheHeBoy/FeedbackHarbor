@@ -8,7 +8,7 @@ export interface CommentApi {
   content: string;
   likes: number;
   contentImg?: string[];
-  createTime: string;
+  createTime: number;
   user: CommentUserApi;
   reply: ReplyApi | null;
 }

@@ -20,10 +20,10 @@
     "baseUrl": ".",
   },
   "include": [
+    "src/**/*.vue",
     "src/**/*.ts",
     "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.tsx"
   ],
   // 编译器默认排除的编译文件
   "exclude": [

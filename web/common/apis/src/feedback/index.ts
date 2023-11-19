@@ -2,7 +2,7 @@ import { request } from "../index";
 
 export type FeedbackVO = {
   id: number;
-  createTime: Date;
+  createTime: number;
   content: string;
   likes: number;
   feedbackTag: FeedbackTagVO;

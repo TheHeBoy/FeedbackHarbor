@@ -11,11 +11,7 @@
           <UImageContext :contents="data.content" :imgs="data.contentImg" />
         </div>
         <div class="flex w-full justify-between">
-          <time class="time"
-            >{{
-              relativeTime ? dayjs(data.createTime).fromNow() : data.createTime
-            }}
-          </time>
+          <URelativelyTime :time="data.createTime" />
           <div class="action-box select-none">
             <!-- 回复 -->
             <div
@@ -112,6 +108,7 @@ import {
   InjectSubmit,
   UUserNickNameInfo,
   UImageContext,
+  URelativelyTime,
 } from "../../../components-ui";
 import { str, isEmpty, dayjs } from "../../../util";
 import { InjectContentBox, InjectContentBoxApi, InjectSlots } from "../key";
@@ -134,9 +131,7 @@ const state = reactive({
 const commentRef = ref();
 const btnRef = ref<HTMLDivElement>();
 
-const { like, user, relativeTime } = inject(
-  InjectContentBox
-) as InjectContentBoxApi;
+const { like, user } = inject(InjectContentBox) as InjectContentBoxApi;
 
 //点击回复按钮打开输入框
 function reply() {

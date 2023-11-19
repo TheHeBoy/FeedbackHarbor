@@ -116,7 +116,7 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
       },
       address: "",
       likes: 0,
-      createTime: formatPast(data.createTime, "YYYY-MM-DD HH:mm"),
+      createTime: data.createTime,
       contentImg: fileUrls,
       reply: null,
     };
@@ -141,7 +141,7 @@ function convert(data: any, replyData?: any): CommentApi {
     address: "",
     content: data.content,
     likes: data.likes,
-    createTime: formatPast(data.createTime, "YYYY-MM-DD HH:mm"),
+    createTime: data.createTime,
     contentImg: data.imgs,
     user: {
       username: data.nickname,
@@ -184,7 +184,6 @@ const replyPage = async ({
   pageSize,
   finish,
 }: ReplyPageParamApi) => {
-  console.log("why");
   let data = await getReplyPage({
     pageNo: pageNum,
     pageSize: pageSize,
