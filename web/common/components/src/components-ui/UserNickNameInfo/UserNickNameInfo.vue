@@ -1,12 +1,12 @@
 <template>
   <div class="flex items-center">
-    <span class="">{{ nickName ? nickName : "注销用户" }}</span>
+    <el-text type="primary" size="large">{{ nickName ? nickName : "注销用户" }}</el-text>
     <el-tag
       v-if="type === UserTypeEnum.ADMIN"
       class="ml-1"
       type="danger"
       size="small"
-      >官方
+      >{{ t("com.official") }}
     </el-tag>
   </div>
 </template>
@@ -19,6 +19,7 @@ defineOptions({
   name: "UUserNickNameInfo",
 });
 
+const { t } = useI18n();
 const props = defineProps({
   nickName: {
     type: String,

@@ -1,16 +1,14 @@
-export default {
-  hello: '你好',
-  'welcome to': '欢迎来到',
-  'includes features': '是一个开箱即用的 Vue3 模板，它拥有这些功能：',
-  'before coding': '在开始编码之前',
-  'setup ide': '我建议将你的 IDE 设置为',
-  'change light': '点击切换为亮色主题',
-  'change dark': '点击切换为暗黑主题',
-  'change lang': '切换国际化语言',
-  'method to using': '使用模板的方法',
-  'template process': '模板配置流程',
-  signOut: '退出登录',
-  signIn: '登录',
-  home: '首页',
-  roadmap: '产品计划',
-};
+import zh from '@harbor/components/src/locales/zh-CN';
+
+export default Object.assign(
+  {
+    'change light': '点击切换为亮色主题',
+    'change dark': '点击切换为暗黑主题',
+    'change lang': '切换国际化语言',
+    signOut: '退出登录',
+    signIn: '登录',
+    home: '首页',
+    roadmap: '产品计划',
+  },
+  zh,
+);

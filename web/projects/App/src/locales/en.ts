@@ -1,14 +1,19 @@
-export default {
-  hello: 'Hello',
-  'welcome to': 'Welcome to',
-  'includes features': 'is a zero-config Vue3 template, it includes these feature：',
-  'before coding': 'Before coding',
-  'setup ide': 'I recommended your IDE setup',
-  home: 'Home',
-  'change light': 'Click to switch to bright color theme',
-  'change dark': 'Click to switch to dark theme',
-  'change lang': 'Switch languages',
-  'method to using': 'Method of using template',
-  'template process': 'Template configuration process',
-  signOut: 'Sign Out',
-};
+import en from '@harbor/components/src/locales/en';
+
+export default Object.assign(
+  {
+    hello: 'Hello',
+    'welcome to': 'Welcome to',
+    'includes features': 'is a zero-config Vue3 template, it includes these feature：',
+    'before coding': 'Before coding',
+    'setup ide': 'I recommended your IDE setup',
+    home: 'Home',
+    'change light': 'Click to switch to bright color theme',
+    'change dark': 'Click to switch to dark theme',
+    'change lang': 'Switch languages',
+    'method to using': 'Method of using template',
+    'template process': 'Template configuration process',
+    signOut: 'Sign Out',
+  },
+  en,
+);

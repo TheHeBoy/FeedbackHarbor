@@ -42,7 +42,7 @@
             <el-button link @click="onLike(vModel)">
               <likeNoSVG
                 class="icon-btn"
-                v-if="feedbackLikeIds.map(String).indexOf(str(vModel.id)) == -1"
+                v-if="feedbackLikeIds.indexOf(vModel.id) == -1"
               />
               <likeSVG v-else class="icon-btn" color="#1e80ff" />
               <span class="ml-1">{{ vModel.likes }}</span>
@@ -124,6 +124,7 @@ const onLike = (feedback: FeedbackVO) => {
 onMounted(() => {
   getLikeList(0).then((data) => {
     feedbackLikeIds.value = data;
+    console.log(feedbackLikeIds.value);
   });
 });
 

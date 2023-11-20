@@ -23,7 +23,6 @@ const i18n = createI18n({
 // 提供 api 服务给通用组件使用
 initApi(axiosInstance, import.meta.env.VITE_API_BASEURL);
 
-
 const app = createApp(App);
 app.use(router);
 app.use(store);

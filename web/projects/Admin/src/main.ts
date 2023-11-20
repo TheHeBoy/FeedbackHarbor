@@ -43,6 +43,7 @@ import { initApi } from '@harbor/apis';
 const setupAll = async () => {
   const app = createApp(App);
 
+  // 给通用组件提供 api 请求
   initApi(axiosInstance, import.meta.env.VITE_API_BASEURL);
 
   await setupI18n(app);

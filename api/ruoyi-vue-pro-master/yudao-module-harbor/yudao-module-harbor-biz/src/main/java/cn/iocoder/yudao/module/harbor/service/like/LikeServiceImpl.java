@@ -60,7 +60,20 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Set<Long> listByUid(Long uid, LikeBusTypeEnum busTypeEnum) {
-        return listByUid(uid, true, busTypeEnum);
+        Set<Long> resultSet = new HashSet<>();
+
+        // 缓存中的点赞
+        Set<Long> redisLikeSet = listByUidWithRedis(uid, true, busTypeEnum);
+
+        // mysql 中的点赞
+        Set<Long> mysqlSet = likeMapper.selectList(LikeDO::getUid, uid).stream().map(LikeDO::getRid).collect(Collectors.toSet());
+        // 通过缓存中的取消点赞对 mysql 中的点赞进行过滤
+        Set<Long> cancelLike = listByUidWithRedis(uid, false, busTypeEnum);
+        Set<Long> mysqlLikeSet = mysqlSet.stream().filter(t -> !cancelLike.contains(t)).collect(Collectors.toSet());
+
+        resultSet.addAll(redisLikeSet);
+        resultSet.addAll(mysqlLikeSet);
+        return resultSet;
     }
 
     @Transactional
@@ -98,7 +111,7 @@ public class LikeServiceImpl implements LikeService {
                 likes.add(likeDO);
             }
 
-            // 获取评论点赞数量
+            // 获取点赞数量
             long count = likeRedisDAO.sSize(rid, action, busTypeEnum);
             count = action ? count : -count;
             switch (busTypeEnum) {
@@ -162,32 +175,27 @@ public class LikeServiceImpl implements LikeService {
 
 
     /**
-     * 通过用户id得到所有关联id
+     * 通过用户 id 得到 redis 所有关联id
      *
      * @param uid         用户id
      * @param likeAction  点赞类型
      * @param busTypeEnum 业务类型
      * @return {@link List}<{@link Integer}>
      */
-    private Set<Long> listByUid(Long uid, boolean likeAction, LikeBusTypeEnum busTypeEnum) {
-        Set<Long> feedbackIds = new HashSet<>();
+    private Set<Long> listByUidWithRedis(Long uid, boolean likeAction, LikeBusTypeEnum busTypeEnum) {
+        Set<Long> rids = new HashSet<>();
         //得到所有点赞或取消点赞的key
         Set<String> keyList = likeRedisDAO.list(likeAction, busTypeEnum);
 
         for (String key : keyList) {
-            String feedbackId = key.split(":")[2];
+            String rid = key.split(":")[2];
             Set<Long> uidSet = likeRedisDAO.sGet(key);
             for (Long uid2 : uidSet) {
                 if (ObjectUtil.equal(uid2, uid)) {
-                    feedbackIds.add(Long.valueOf(feedbackId));
+                    rids.add(Long.valueOf(rid));
                 }
             }
         }
-
-        Set<Long> mysqlSet = likeMapper
-                .selectList(LikeDO::getUid, uid).stream().map(LikeDO::getRid).collect(Collectors.toSet());
-
-        feedbackIds.addAll(mysqlSet);
-        return feedbackIds;
+        return rids;
     }
 }

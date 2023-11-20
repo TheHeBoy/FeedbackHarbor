@@ -49,7 +49,7 @@ export interface SubmitParamApi {
 }
 
 export interface ReplyPageParamApi {
-  parentId: string;
+  parentId: number;
   pageNum: number;
   pageSize: number;
   finish: (reply: ReplyApi) => void;

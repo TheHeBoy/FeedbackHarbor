@@ -10,7 +10,7 @@
     >
     </UComment>
     <div class="w-full text-center">
-      <p v-if="loading">加载中</p>
+      <p v-if="loading">loading</p>
       <el-button v-if="!disabled" @click="more" link type="primary"
         >加载更多
       </el-button>
@@ -30,14 +30,12 @@ import {
   uploadFiles,
   getReplyPage,
 } from "@harbor/apis";
-import { formatPast } from "../../util";
 import { ElMessage } from "element-plus";
 import {
   UComment,
   CommentApi,
   ConfigApi,
   SubmitParamApi,
-  UserApi,
   ReplyPageParamApi,
 } from "../index";
 import { UserInfo } from "../feedback";

@@ -16,7 +16,7 @@
             <!-- 回复 -->
             <div
               ref="btnRef"
-              class="item"
+              class="item flex items-center"
               :class="{ active: state.active }"
               @click="reply"
             >
@@ -38,10 +38,8 @@
               <span>{{ state.active ? "取消回复" : "回复" }}</span>
             </div>
             <!-- 点赞 -->
-            <div class="item" @click="like(str(data.id))">
-              <u-icon
-                v-if="user.likeIds.map(String).indexOf(str(data.id)) == -1"
-              >
+            <div class="item flex items-center" @click="like(data.id)">
+              <u-icon v-if="user.likeIds.indexOf(data.id) == -1">
                 <svg
                   t="1650360973068"
                   viewBox="0 0 1024 1024"
@@ -72,10 +70,6 @@
               </u-icon>
               <span>{{ data.likes }}</span>
             </div>
-            <!-- 操作栏 -->
-            <template v-if="slots.operate">
-              <Operate />
-            </template>
           </div>
         </div>
         <div v-if="state.active">
@@ -99,9 +93,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, nextTick, ref, reactive, h } from "vue";
+import { inject, nextTick, ref, reactive } from "vue";
 import {
-  UFold,
   UIcon,
   CommentApi,
   UUserAvatar,
@@ -110,8 +103,8 @@ import {
   UImageContext,
   URelativelyTime,
 } from "../../../components-ui";
-import { str, isEmpty, dayjs } from "../../../util";
-import { InjectContentBox, InjectContentBoxApi, InjectSlots } from "../key";
+import { str } from "../../../util";
+import { InjectContentBox, InjectContentBoxApi } from "../key";
 import { UImageInputBox } from "../../index";
 
 interface Props {
@@ -151,12 +144,6 @@ function hide(event: Event) {
     state.active = false;
   }
 }
-
-//工具slots
-const slots = inject(InjectSlots) as any;
-
-//操作栏卡槽
-const Operate = () => h("div", slots.operate(props.data));
 </script>
 
 <style lang="scss" scoped>
