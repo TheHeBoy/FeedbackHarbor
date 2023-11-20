@@ -24,7 +24,6 @@ public class RedisIdGenerator implements IdentifierGenerator {
 
     @Override
     public Long nextId(Object entity) {
-        log.error("test");
         Long count = stringRedisTemplate.opsForValue().increment("id_worker");
         if (count == null) {
             log.error("Redis Id生成失败");

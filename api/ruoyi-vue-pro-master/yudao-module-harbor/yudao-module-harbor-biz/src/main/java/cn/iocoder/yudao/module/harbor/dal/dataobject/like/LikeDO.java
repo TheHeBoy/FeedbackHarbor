@@ -2,7 +2,6 @@ package cn.iocoder.yudao.module.harbor.dal.dataobject.like;
 
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
-import cn.iocoder.yudao.module.harbor.enums.like.LikeStateEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -35,11 +34,6 @@ public class LikeDO extends TenantBaseDO {
      * 用户id
      */
     private Long uid;
-    /**
-     * 点赞状态
-     * 枚举 {@link LikeStateEnum}
-     */
-    private int state;
     /**
      * 业务类型
      * 枚举 {@link LikeBusTypeEnum}

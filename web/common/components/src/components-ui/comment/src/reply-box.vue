@@ -13,7 +13,7 @@
         <div v-else>
           <div v-if="!state.over">
             共{{ data.total }}条回复,
-            <span class="fetch-more-comment select-none" @click="replyMore">
+            <span class="fetch-more-comment" @click="replyMore">
               点击查看
               <svg
                 width="12"

@@ -1,17 +1,16 @@
 <template>
   <time class="text-sm text-slate-400">
-    {{ formatPast(time, "YYYY-MM-DD HH:mm") }}
+    {{ formatPast(new Date(time), "YYYY-MM-DD HH:mm") }}
   </time>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from "vue";
-import { formatPast } from "../../util";
+import { formatPast, str } from "../../util";
 
 defineOptions({
   name: "URelativelyTime",
 });
-
 const props = defineProps({
   time: {
     type: Number,

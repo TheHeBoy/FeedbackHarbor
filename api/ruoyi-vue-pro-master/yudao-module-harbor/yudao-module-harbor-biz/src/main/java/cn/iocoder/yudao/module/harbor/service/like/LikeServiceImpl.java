@@ -11,7 +11,7 @@ import cn.iocoder.yudao.module.harbor.dal.dataobject.like.LikeDO;
 import cn.iocoder.yudao.module.harbor.dal.mysql.like.LikeMapper;
 import cn.iocoder.yudao.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
-import cn.iocoder.yudao.module.harbor.enums.like.LikeStateEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  * <p>
  */
 @Service
+@Slf4j
 @Validated
 public class LikeServiceImpl implements LikeService {
 
@@ -40,6 +41,7 @@ public class LikeServiceImpl implements LikeService {
     @Resource
     private CommentMapper commentMapper;
 
+    @Transactional
     @Override
     public boolean like(Long uid, AppLikeReqVO appLikeReqVO) {
         Long rid = appLikeReqVO.getRid();
@@ -78,7 +80,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Transactional
     @Override
-    public int syncLike(LikeBusTypeEnum busTypeEnum) {
+    public synchronized int syncLike(LikeBusTypeEnum busTypeEnum) {
         return like(true, busTypeEnum) - like(false, busTypeEnum);
     }
 
@@ -91,9 +93,9 @@ public class LikeServiceImpl implements LikeService {
      */
     private int like(boolean action, LikeBusTypeEnum busTypeEnum) {
         Set<String> keys = likeRedisDAO.list(action, busTypeEnum);
-        // 用户id点赞列表
-        List<LikeDO> likes = new ArrayList<>();
-        //同步的业务表
+        // redis 点赞列表
+        List<LikeDO> redisLikes = new ArrayList<>();
+        // 同步的业务表
         List<FeedbackDO> feedbackDOs = new ArrayList<>();
         List<CommentDO> commentDOS = new ArrayList<>();
 
@@ -107,8 +109,7 @@ public class LikeServiceImpl implements LikeService {
                 likeDO.setUid(uid);
                 likeDO.setRid(rid);
                 likeDO.setBusType(busTypeEnum.getCode());
-                likeDO.setState(action ? LikeStateEnum.LIKED.getCode() : LikeStateEnum.LIKED_CANCEL.getCode());
-                likes.add(likeDO);
+                redisLikes.add(likeDO);
             }
 
             // 获取点赞数量
@@ -118,23 +119,35 @@ public class LikeServiceImpl implements LikeService {
                 case FEEDBACK:
                     FeedbackDO feedbackDO = new FeedbackDO();
                     feedbackDO.setId(rid);
+                    if(feedbackMapper.selectById(rid) == null){
+                        log.error(rid + "-" + action);
+                    }
                     feedbackDO.setLikes(feedbackMapper.selectById(rid).getLikes() + count);
                     feedbackDOs.add(feedbackDO);
                     break;
                 case COMMENT:
                     CommentDO comment = new CommentDO();
                     comment.setId(rid);
+                    if(commentMapper.selectById(rid) == null){
+                        log.error(rid + "-" + action);
+                    }
                     comment.setLikes(commentMapper.selectById(rid).getLikes() + count);
                     commentDOS.add(comment);
                     break;
             }
         }
 
-        // 添加点赞状态
-        List<LikeDO> likeSavaList = likes.stream()
-                .filter(e -> likeMapper.updateByUidAndRid(e, e.getUid(), e.getRid()) == 0)
-                .collect(Collectors.toList());
-        likeMapper.insertBatch(likeSavaList);
+        if (action) {
+            likeMapper.insertBatch(redisLikes);
+        } else { // 删除点赞
+            List<LikeDO> likeList = redisLikes.stream()
+                    .map(e -> likeMapper.getByUidAndRid(e.getUid(), e.getRid()))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            if (CollectionUtil.isNotEmpty(likeList)) {
+                likeMapper.deleteBatchIds(likeList);
+            }
+        }
 
         // 修改点赞数量
         switch (busTypeEnum) {
@@ -151,7 +164,7 @@ public class LikeServiceImpl implements LikeService {
         }
         // 清空redis点赞数据
         likeRedisDAO.removeBatch(action, busTypeEnum);
-        return likes.size();
+        return redisLikes.size();
     }
 
     private boolean isLiked(Long uid, Long rid, LikeBusTypeEnum busTypeEnum) {
@@ -166,8 +179,7 @@ public class LikeServiceImpl implements LikeService {
         //redis中没有点赞和取消点赞的数据从数据库查询
         if (!isCancelLiked) {
             LikeDO feedbackLikeDO = likeMapper.getByUidAndRid(uid, rid);
-            return ObjectUtil.isNotNull(feedbackLikeDO) &&
-                    ObjectUtil.equal(feedbackLikeDO.getState(), LikeStateEnum.LIKED.getCode());
+            return ObjectUtil.isNotNull(feedbackLikeDO);
         }
 
         return false;

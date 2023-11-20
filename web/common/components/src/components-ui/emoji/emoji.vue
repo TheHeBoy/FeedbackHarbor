@@ -7,7 +7,7 @@
       trigger="click"
       @before-enter="onBefore"
     >
-      <div class="face-tooltip-head select-none">
+      <div class="face-tooltip-head">
         <label
           v-for="(item, index) in faceList"
           :key="index"
@@ -18,7 +18,7 @@
         </label>
       </div>
 
-      <div class="emoji-body select-none">
+      <div class="emoji-body">
         <div class="emjio-container" :style="{ transform: `translateX(${offsetX}%)` }">
           <div v-for="(list, index) in emojis" :key="index" class="emoji-wrapper">
             <el-scrollbar>
@@ -43,7 +43,7 @@
         </div>
       </div>
       <template #reference>
-        <div class="emoji-btn select-none">
+        <div class="emoji-btn">
           <div v-if="!$slots.default">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon">
               <path

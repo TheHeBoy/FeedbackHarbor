@@ -1,12 +1,14 @@
 <template>
   <div class="flex items-center">
-    <el-text type="primary" size="large">{{ nickName ? nickName : "注销用户" }}</el-text>
+    <el-text type="primary" size="large"
+      >{{ nickName ?? "注销用户" }}
+    </el-text>
     <el-tag
-      v-if="type === UserTypeEnum.ADMIN"
-      class="ml-1"
-      type="danger"
-      size="small"
-      >{{ t("com.official") }}
+        v-if="type === UserTypeEnum.ADMIN"
+        class="ml-1"
+        type="danger"
+        size="small"
+    >{{ t("com.official") }}
     </el-tag>
   </div>
 </template>

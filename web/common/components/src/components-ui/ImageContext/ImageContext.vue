@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <UFold :unfold="unfold" :line="line">
-      <div v-html="emojiContents"></div>
-    </UFold>
-    <div class="flex flex-wrap">
-      <template v-for="(url, index) in imgs" :key="index">
-        <ElImage
+  <UFold :unfold="unfold" :line="line">
+    <div v-html="emojiContents"></div>
+  </UFold>
+  <div class="flex flex-wrap">
+    <template v-for="(url, index) in imgs" :key="index">
+      <ElImage
           :src="url"
           class="w-16 h-16 mr-1 mt-1"
           lazy
           preview-teleported
           :preview-src-list="imgs"
           :initial-index="index"
-        ></ElImage>
-      </template>
-    </div>
+      ></ElImage>
+    </template>
   </div>
 </template>
 

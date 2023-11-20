@@ -12,32 +12,16 @@
           />
           <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
         </div>
-        <div class="mt-2">
+        <div>
           <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
         </div>
-        <div class="flex justify-between">
-          <div class="mt-1">
+        <div class="flex justify-between mt-1">
+          <div>
             <URelativelyTime :time="vModel.createTime" />
           </div>
           <div>
-            <el-popover trigger="click" placement="bottom">
-              <el-button link size="small" class="w-full text-center">
-                <reportSVG class="icon-btn" />
-                <span class="ml-1">举报</span>
-              </el-button>
-              <template #reference>
-                <el-button link linksize="small">
-                  <i-mdi-dots-vertical />
-                </el-button>
-              </template>
-            </el-popover>
-            <el-button
-              link
-              size="small"
-              @click="isCommentShow = !isCommentShow"
-            >
-              <commentSVG class="icon-btn" />
-              <span class="ml-1">{{ vModel.commentNum }}</span>
+            <el-button link size="small">
+              <span class="ml-1">举报</span>
             </el-button>
             <el-button link @click="onLike(vModel)">
               <likeNoSVG
@@ -46,6 +30,14 @@
               />
               <likeSVG v-else class="icon-btn" color="#1e80ff" />
               <span class="ml-1">{{ vModel.likes }}</span>
+            </el-button>
+            <el-button
+              link
+              size="small"
+              @click="isCommentShow = !isCommentShow"
+            >
+              <commentSVG class="icon-btn" />
+              <span class="ml-1">{{ vModel.commentNum || 0 }}</span>
             </el-button>
           </div>
         </div>
@@ -69,14 +61,12 @@ import {
   UUserAvatar,
   UFeedbackTag,
 } from "../index";
-import reportSVG from "./svg/reportSVG.svg?component";
 import likeSVG from "./svg/likeSVG.svg?component";
 import likeNoSVG from "./svg/likeNoSVG.svg?component";
 import commentSVG from "./svg/commentSVG.svg?component";
 import { FeedbackVO, getLikeList, like } from "@harbor/apis";
 import { UHarborComment, URelativelyTime } from "../index";
 import { UserInfo } from "./index";
-import { str } from "../../util";
 
 defineOptions({
   name: "UFeedback",
@@ -124,7 +114,6 @@ const onLike = (feedback: FeedbackVO) => {
 onMounted(() => {
   getLikeList(0).then((data) => {
     feedbackLikeIds.value = data;
-    console.log(feedbackLikeIds.value);
   });
 });
 
