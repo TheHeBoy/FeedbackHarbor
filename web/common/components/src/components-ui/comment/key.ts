@@ -27,6 +27,13 @@ export interface InjectContentBoxApi {
 
 export const InjectContentBox: InjectionKey<InjectContentBoxApi> = Symbol();
 
+// 用于控制只显示一个回复框
+export interface ReplyShowAction {
+  setActiveShow: (setActive: () => void) => void;
+}
+
+export const InjectReplyShowAction: InjectionKey<ReplyShowAction> = Symbol();
+
 // 回复盒子
 export interface InjectReplyBoxApi {
   page: boolean;

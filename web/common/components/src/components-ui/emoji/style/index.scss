@@ -32,29 +32,6 @@
   }
 }
 
-.emoji-btn {
-  cursor: pointer;
-  color: var(--u-text-color-secondary);
-  div {
-    display: flex;
-    align-items: center;
-  }
-  .icon {
-    fill: var(--u-text-color-secondary);
-    margin-right: 4px;
-  }
-  span {
-    font-size: 14px;
-  }
-}
-.emoji-btn:hover {
-  color: var(--u-color-primary);
-
-  .icon {
-    fill:  var(--u-color-primary);
-  }
-}
-
 .emoji-wrapper {
   flex: 1;
   height: 150px;
@@ -69,9 +46,6 @@
   }
 }
 
-.el-image {
-  display: block;
-}
 
 html.dark {
   .emoji-wrapper {

@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.harbor.dal.dataobject.like;
 
+import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
@@ -19,7 +20,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LikeDO extends TenantBaseDO {
+public class LikeDO extends BaseDO {
 
     /**
      * 主键

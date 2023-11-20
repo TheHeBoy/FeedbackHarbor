@@ -8,7 +8,7 @@
             v-for="tenant in model"
             :key="tenant.id"
             @click="onEntry(tenant)"
-            @mouseover="operation[tenant.id] = true"
+            @mouseenter="operation[tenant.id] = true"
             @mouseleave="operation[tenant.id] = false"
             :class="tenant.id == SystemTenantTypeEnum.SYSTEM ? 'bg-cyan-500' : 'bg-cyan-700'"
             class="text-white h-10 w-full px-3 py-2 block flex items-center rounded-1xl mt-2 hover:bg-cyan-800"

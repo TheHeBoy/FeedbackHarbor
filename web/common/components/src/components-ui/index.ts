@@ -11,3 +11,4 @@ export * from "./feedback";
 export * from "./harbor-comment";
 export * from "./ImageInputBox";
 export * from "./RelativelyTime";
+export * from "./ActionBar";

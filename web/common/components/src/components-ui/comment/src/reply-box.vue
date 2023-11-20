@@ -57,7 +57,7 @@ import { ReplyApi } from "../interface";
 
 interface Props {
   data?: ReplyApi | null;
-  id: string;
+  id: number;
 }
 
 const props = defineProps<Props>();
@@ -105,7 +105,7 @@ const replyMore = () => {
 
 const finish = (val: any) => {
   comments.value.forEach((e) => {
-    if (e.id === Number(props.id)) {
+    if (e.id === props.id) {
       if (e.reply) {
         e.reply = val;
       }

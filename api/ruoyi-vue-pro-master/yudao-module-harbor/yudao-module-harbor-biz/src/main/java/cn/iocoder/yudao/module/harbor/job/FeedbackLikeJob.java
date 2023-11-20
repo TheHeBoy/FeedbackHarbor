@@ -1,8 +1,10 @@
 package cn.iocoder.yudao.module.harbor.job;
 
 import cn.iocoder.yudao.framework.quartz.core.handler.JobHandler;
+import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.framework.tenant.core.job.TenantJob;
+import cn.iocoder.yudao.framework.tenant.core.util.TenantUtils;
 import cn.iocoder.yudao.module.harbor.dal.mysql.comment.CommentMapper;
 import cn.iocoder.yudao.module.harbor.dal.mysql.feedback.FeedbackMapper;
 import cn.iocoder.yudao.module.harbor.enums.like.LikeBusTypeEnum;
@@ -20,7 +22,6 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component("FeedbackLikeJob")
-@TenantJob
 public class FeedbackLikeJob implements JobHandler {
 
     @Resource
@@ -28,8 +29,11 @@ public class FeedbackLikeJob implements JobHandler {
 
     @Override
     public String execute(String param) {
-        return "同步点赞数量：" + (likeService.syncLike(LikeBusTypeEnum.FEEDBACK)
-                + likeService.syncLike(LikeBusTypeEnum.COMMENT));
+        TenantUtils.executeIgnore(() -> {
+            likeService.syncLike(LikeBusTypeEnum.FEEDBACK);
+            likeService.syncLike(LikeBusTypeEnum.COMMENT);
+        });
+        return "同步点赞";
     }
 
 }

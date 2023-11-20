@@ -5,42 +5,30 @@
     </el-col>
     <el-col :span="23">
       <div class="ml-7">
-        <div class="flex justify-between">
-          <UUserNickNameInfo
-            :nick-name="vModel.nickname"
-            :type="vModel.userType"
-          />
-          <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
-        </div>
-        <div>
-          <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
-        </div>
-        <div class="flex justify-between mt-1">
+        <div @mouseenter="reportShow = true" @mouseleave="reportShow = false">
+          <div class="flex justify-between">
+            <UUserNickNameInfo
+              :nick-name="vModel.nickname"
+              :type="vModel.userType"
+            />
+            <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
+          </div>
           <div>
+            <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
+          </div>
+          <div class="flex justify-between mt-1">
             <URelativelyTime :time="vModel.createTime" />
-          </div>
-          <div>
-            <el-button link size="small">
-              <span class="ml-1">举报</span>
-            </el-button>
-            <el-button link @click="onLike(vModel)">
-              <likeNoSVG
-                class="icon-btn"
-                v-if="feedbackLikeIds.indexOf(vModel.id) == -1"
-              />
-              <likeSVG v-else class="icon-btn" color="#1e80ff" />
-              <span class="ml-1">{{ vModel.likes }}</span>
-            </el-button>
-            <el-button
-              link
-              size="small"
-              @click="isCommentShow = !isCommentShow"
-            >
-              <commentSVG class="icon-btn" />
-              <span class="ml-1">{{ vModel.commentNum || 0 }}</span>
-            </el-button>
+            <UActionBar
+              :reportShow="reportShow"
+              :is-like="feedbackLikeIds.indexOf(vModel.id) == -1"
+              :like-num="vModel.likes"
+              :comment-num="vModel.commentNum"
+              @onLike="onLike(vModel)"
+              @onComment="isCommentShow = !isCommentShow"
+            />
           </div>
         </div>
+        <!-- 评论-->
         <UHarborComment
           ref="commentRef"
           v-if="isCommentShow"
@@ -60,10 +48,8 @@ import {
   UUserNickNameInfo,
   UUserAvatar,
   UFeedbackTag,
+  UActionBar,
 } from "../index";
-import likeSVG from "./svg/likeSVG.svg?component";
-import likeNoSVG from "./svg/likeNoSVG.svg?component";
-import commentSVG from "./svg/commentSVG.svg?component";
 import { FeedbackVO, getLikeList, like } from "@harbor/apis";
 import { UHarborComment, URelativelyTime } from "../index";
 import { UserInfo } from "./index";
@@ -111,6 +97,7 @@ const onLike = (feedback: FeedbackVO) => {
   });
 };
 
+const reportShow = ref(false);
 onMounted(() => {
   getLikeList(0).then((data) => {
     feedbackLikeIds.value = data;

@@ -1,38 +1,20 @@
 <template>
-  <div>
-    <el-popover trigger="click" placement="bottom">
-      <el-button link size="small" class="w-full text-center">
-        <reportSVG class="icon-btn" />
-        <span class="ml-1">举报</span>
-      </el-button>
-      <template #reference>
-        <el-button link linksize="small">
-          <i-mdi-dots-vertical />
-        </el-button>
-      </template>
-    </el-popover>
-    <el-button
-        link
-        size="small"
-        @click="isCommentShow = !isCommentShow"
-    >
-      <commentSVG class="icon-btn" />
-      <span class="ml-1">{{ vModel.commentNum }}</span>
-    </el-button>
-    <el-button link @click="onLike(vModel)">
-      <likeNoSVG
-          class="icon-btn"
-          v-if="feedbackLikeIds.map(String).indexOf(str(vModel.id)) == -1"
-      />
+  <div class="flex">
+    <el-button link v-if="reportShow">举报</el-button>
+    <el-button link @click="$emit('onLike')">
+      <span class="mr-1">{{ likeNum || "" }}</span>
+      <likeNoSVG class="icon-btn" v-if="isLike" />
       <likeSVG v-else class="icon-btn" color="#1e80ff" />
-      <span class="ml-1">{{ vModel.likes }}</span>
+    </el-button>
+    <el-button link @click="$emit('onComment')">
+      <span class="mr-1">{{ commentNum || "" }}</span>
+      <commentSVG class="w-4 h-4" />
     </el-button>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from "vue";
-import reportSVG from "./svg/reportSVG.svg?component";
 import likeSVG from "./svg/likeSVG.svg?component";
 import likeNoSVG from "./svg/likeNoSVG.svg?component";
 import commentSVG from "./svg/commentSVG.svg?component";
@@ -45,20 +27,36 @@ defineOptions({
 
 const props = defineProps({
   isLike: {
+    // 点赞状态
     type: Boolean,
     require: true,
   },
-  type: {
-    // 用户类型
+  likeNum: {
+    // 点赞数
     type: Number,
     require: true,
   },
+  commentNum: {
+    // 评论数
+    type: Number,
+    require: true,
+  },
+  reportShow: {
+    // 举报按钮显示
+    type: Boolean,
+    default: () => true,
+  },
 });
 const emit = defineEmits<{
-
+  (e: "onLike"): void;
+  (e: "onComment"): void;
 }>();
 
 onMounted(() => {});
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.icon-btn {
+  @apply w-4 h-4;
+}
+</style>
