@@ -1,0 +1,2 @@
+cn.hh.harbor.framework.security.config.HarborSecurityAutoConfiguration
+cn.hh.harbor.framework.security.config.HarborWebSecurityConfigurerAdapter

@@ -1,0 +1,2 @@
+cn.hh.harbor.framework.tracer.config.HarborTracerAutoConfiguration
+cn.hh.harbor.framework.tracer.config.HarborMetricsAutoConfiguration

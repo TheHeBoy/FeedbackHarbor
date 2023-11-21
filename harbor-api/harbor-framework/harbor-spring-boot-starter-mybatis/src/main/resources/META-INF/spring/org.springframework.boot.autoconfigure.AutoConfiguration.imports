@@ -1,0 +1,4 @@
+cn.hh.harbor.framework.datasource.config.HarborDataSourceAutoConfiguration
+cn.hh.harbor.framework.mybatis.config.HarborMybatisAutoConfiguration
+cn.hh.harbor.framework.mybatis.config.RedisIdGenerator
+
