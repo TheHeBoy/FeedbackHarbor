@@ -1,0 +1,11 @@
+{
+  "name": "@harbor/apis",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@harbor/web": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2"
+  }
+}
