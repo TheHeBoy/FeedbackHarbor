@@ -42,6 +42,13 @@ public interface RoleService {
     void deleteRole(Long id);
 
     /**
+     * 通过租户 id 删除角色
+     *
+     * @param tenantId 租户id
+     */
+    void deleteRoleByTenantId(Long tenantId);
+
+    /**
      * 更新角色状态
      *
      * @param id 角色编号

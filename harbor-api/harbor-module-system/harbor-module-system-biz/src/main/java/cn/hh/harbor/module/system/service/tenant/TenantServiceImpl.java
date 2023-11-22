@@ -1,5 +1,8 @@
 package cn.hh.harbor.module.system.service.tenant;
 
+import cn.hh.harbor.framework.common.util.date.LocalDateTimeUtils;
+import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantUpdateReqVO;
+import cn.hh.harbor.module.system.enums.tenant.TenantPackageDaysEnum;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
@@ -40,6 +43,7 @@ import java.util.stream.Collectors;
 
 import static cn.hh.harbor.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.hh.harbor.module.system.enums.ErrorCodeConstants.*;
+import static cn.hh.harbor.module.system.enums.tenant.TenantPackageDaysEnum.NO_EXPIRATION;
 import static java.util.Collections.singleton;
 
 /**
@@ -103,9 +107,10 @@ public class TenantServiceImpl implements TenantService {
         validTenantRouterUriDuplicate(createReqVO.getName(), null);
         // 创建租户
         TenantDO tenant = TenantConvert.INSTANCE.convert(createReqVO);
-        TenantPackageDO tenantPackage = tenantPackageService.getDefaultTenantPackage();
+        TenantPackageDO tenantPackage = tenantPackageService.getGeneralTenantPackage();
         tenant.setPackageId(tenantPackage.getId());
-        tenant.setExpireTime(LocalDateTime.now().plusDays(tenantPackage.getDays()));
+        // 过期时间
+        tenant.setExpireTime(calculateExpireTime(tenantPackage.getDays()));
         tenantMapper.insert(tenant);
 
         Long tenantId = tenant.getId();
@@ -143,16 +148,24 @@ public class TenantServiceImpl implements TenantService {
     @Override
     @DSTransactional
     public void updateTenant(SelectTenantUpdateReqVO updateReqVO) {
-        // 校验存在
+        // 校验
         TenantDO tenantDO = validateUpdateTenant(updateReqVO.getId());
-        // 内置租户不能修改
-        if (SystemIdEnum.isSystemData(tenantDO.getId())) {
-            throw exception(TENANT_SYSTEM_UPDATE);
-        }
-        // 校验租户路由是否重复
-        validTenantRouterUriDuplicate(updateReqVO.getRouterUri(), updateReqVO.getId());
         // 更新租户
         TenantDO updateObj = TenantConvert.INSTANCE.convert(updateReqVO);
+        tenantMapper.updateById(updateObj);
+    }
+
+    @Override
+    public void updateTenant(TenantUpdateReqVO updateReqVO) {
+        // 校验
+        TenantDO tenantDO = validateUpdateTenant(updateReqVO.getId());
+        // 更新租户
+        TenantDO updateObj = TenantConvert.INSTANCE.convert(updateReqVO);
+        // 更新套餐时重新计算过期时间
+        if (updateReqVO.getPackageId() != null) {
+            TenantPackageDO tenantPackage = tenantPackageService.getTenantPackage(updateReqVO.getPackageId());
+            updateObj.setExpireTime(calculateExpireTime(tenantPackage.getDays()));
+        }
         tenantMapper.updateById(updateObj);
     }
 
@@ -161,7 +174,7 @@ public class TenantServiceImpl implements TenantService {
     public void updateTenantRoleMenu(Long tenantId, Set<Long> menuIds) {
         TenantUtils.execute(tenantId, () -> {
             // 获得所有角色
-            List<RoleDO> roles = roleService.getRoleListByStatus(null);
+            List<RoleDO> roles = roleService.getRoleList();
             roles.forEach(role -> Assert.isTrue(tenantId.equals(role.getTenantId()), "角色({}/{}) 租户不匹配",
                     role.getId(), role.getTenantId(), tenantId)); // 兜底校验
             // 重新分配每个角色的权限
@@ -183,23 +196,20 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public void deleteTenant(Long id) {
         // 校验存在
-        TenantDO tenantDO = validateUpdateTenant(id);
+        TenantDO tenant = tenantMapper.selectById(id);
+        if (tenant == null) {
+            throw exception(TENANT_NOT_EXISTS);
+        }
         // 内置租户不能删除
-        if (SystemIdEnum.isSystemData(tenantDO.getId())) {
+        if (SystemIdEnum.isSystemData(tenant.getId())) {
             throw exception(TENANT_SYSTEM_DELETE);
         }
         // 删除
         tenantMapper.deleteById(id);
         // 删除用户和租户的关联
         tenantUserMapper.deleteBatchByTenantId(id);
-    }
-
-    private TenantDO validateUpdateTenant(Long id) {
-        TenantDO tenant = tenantMapper.selectById(id);
-        if (tenant == null) {
-            throw exception(TENANT_NOT_EXISTS);
-        }
-        return tenant;
+        // 删除租户下角色
+        roleService.deleteRoleByTenantId(id);
     }
 
     @Override
@@ -260,5 +270,23 @@ public class TenantServiceImpl implements TenantService {
         if (!tenant.getId().equals(id)) {
             throw exception(TENANT_ROUTER_URI_DUPLICATE, routerUri);
         }
+    }
+
+    private TenantDO validateUpdateTenant(Long id) {
+        TenantDO tenant = tenantMapper.selectById(id);
+        if (tenant == null) {
+            throw exception(TENANT_NOT_EXISTS);
+        }
+        // 内置租户不能修改
+        if (SystemIdEnum.isSystemData(tenant.getId())) {
+            throw exception(TENANT_SYSTEM_UPDATE);
+        }
+        // 校验租户路由是否重复
+        validTenantRouterUriDuplicate(tenant.getRouterUri(), tenant.getId());
+        return tenant;
+    }
+
+    private LocalDateTime calculateExpireTime(Integer days) {
+        return days == TenantPackageDaysEnum.NO_EXPIRATION ? LocalDateTimeUtils.MAX : LocalDateTime.now().plusDays(days);
     }
 }

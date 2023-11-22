@@ -7,11 +7,8 @@
       :rules="formRules"
       label-width="80px"
     >
-      <el-form-item label="租户名" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入租户名" />
-      </el-form-item>
       <el-form-item label="租户套餐" prop="packageId">
-        <el-select v-model="formData.packageId" clearable placeholder="请选择租户套餐">
+        <el-select v-model="formData.packageId" placeholder="请选择租户套餐">
           <el-option
             v-for="item in packageList"
             :key="item.id"
@@ -20,42 +17,13 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="联系人" prop="contactName">
-        <el-input v-model="formData.contactName" placeholder="请输入联系人" />
-      </el-form-item>
-      <el-form-item label="联系手机" prop="contactMobile">
-        <el-input v-model="formData.contactMobile" placeholder="请输入联系手机" />
-      </el-form-item>
-      <el-form-item v-if="formData.id === undefined" label="用户名称" prop="username">
-        <el-input v-model="formData.username" placeholder="请输入用户名称" />
-      </el-form-item>
-      <el-form-item v-if="formData.id === undefined" label="用户密码" prop="password">
-        <el-input
-          v-model="formData.password"
-          placeholder="请输入用户密码"
-          show-password
-          type="password"
-        />
-      </el-form-item>
-      <el-form-item label="账号额度" prop="accountCount">
-        <el-input-number
-          v-model="formData.accountCount"
-          :min="0"
-          controls-position="right"
-          placeholder="请输入账号额度"
-        />
-      </el-form-item>
       <el-form-item label="过期时间" prop="expireTime">
         <el-date-picker
           v-model="formData.expireTime"
           clearable
           placeholder="请选择过期时间"
-          type="date"
-          value-format="x"
+          type="datetime"
         />
-      </el-form-item>
-      <el-form-item label="绑定域名" prop="domain">
-        <el-input v-model="formData.domain" placeholder="请输入绑定域名" />
       </el-form-item>
       <el-form-item label="租户状态" prop="status">
         <el-radio-group v-model="formData.status">
@@ -91,28 +59,17 @@ const formLoading = ref(false); // 表单的加载中：1）修改时的数据�
 const formType = ref(''); // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
-  name: undefined,
   packageId: undefined,
-  contactName: undefined,
-  contactMobile: undefined,
-  accountCount: undefined,
   expireTime: undefined,
-  domain: undefined,
   status: CommonStatusEnum.ENABLE,
 });
 const formRules = reactive({
-  name: [{ required: true, message: '租户名不能为空', trigger: 'blur' }],
   packageId: [{ required: true, message: '租户套餐不能为空', trigger: 'blur' }],
-  contactName: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
   status: [{ required: true, message: '租户状态不能为空', trigger: 'blur' }],
-  accountCount: [{ required: true, message: '账号额度不能为空', trigger: 'blur' }],
   expireTime: [{ required: true, message: '过期时间不能为空', trigger: 'blur' }],
-  domain: [{ required: true, message: '绑定域名不能为空', trigger: 'blur' }],
-  username: [{ required: true, message: '用户名称不能为空', trigger: 'blur' }],
-  password: [{ required: true, message: '用户密码不能为空', trigger: 'blur' }],
 });
 const formRef = ref(); // 表单 Ref
-const packageList = ref([]); // 租户套餐
+const packageList = ref<any[]>([]); // 租户套餐
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -164,13 +121,8 @@ const submitForm = async () => {
 const resetForm = () => {
   formData.value = {
     id: undefined,
-    name: undefined,
     packageId: undefined,
-    contactName: undefined,
-    contactMobile: undefined,
-    accountCount: undefined,
     expireTime: undefined,
-    domain: undefined,
     status: CommonStatusEnum.ENABLE,
   };
   formRef.value?.resetFields();

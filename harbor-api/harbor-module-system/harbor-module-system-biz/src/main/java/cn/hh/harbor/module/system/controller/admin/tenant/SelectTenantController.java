@@ -6,16 +6,12 @@ import cn.hh.harbor.framework.security.core.util.SecurityFrameworkUtils;
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantCreateReqVO;
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantRespVO;
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantUpdateReqVO;
-import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantCreateReqVO;
-import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantRespVO;
-import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantUpdateReqVO;
 import cn.hh.harbor.module.system.convert.tenant.TenantConvert;
 import cn.hh.harbor.module.system.dal.dataobject.tenant.TenantDO;
 import cn.hh.harbor.module.system.service.tenant.TenantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

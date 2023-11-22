@@ -37,6 +37,13 @@ public interface TenantService {
     void updateTenant(@Valid SelectTenantUpdateReqVO updateReqVO);
 
     /**
+     * 更新租户
+     *
+     * @param updateReqVO 更新信息
+     */
+    void updateTenant(@Valid TenantUpdateReqVO updateReqVO);
+
+    /**
      * 更新租户的角色菜单
      *
      * @param tenantId 租户编号

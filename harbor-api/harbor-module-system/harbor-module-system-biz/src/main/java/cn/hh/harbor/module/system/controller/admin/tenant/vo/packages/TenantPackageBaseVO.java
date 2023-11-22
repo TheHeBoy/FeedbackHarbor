@@ -26,5 +26,5 @@ public class TenantPackageBaseVO {
 
     @Schema(description = "套餐天数", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "套餐天数不能为空")
-    private int days;
+    private Integer days;
 }

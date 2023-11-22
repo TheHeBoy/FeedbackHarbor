@@ -32,7 +32,7 @@ import static cn.hh.harbor.framework.common.util.collection.CollectionUtils.conv
 import static cn.hh.harbor.framework.common.util.collection.CollectionUtils.convertSet;
 import static cn.hh.harbor.framework.operatelog.core.enums.OperateTypeEnum.EXPORT;
 
-@Tag(name = "管理后台 - 用户")
+@Tag(name = "管理后台 - 管理用户")
 @RestController
 @RequestMapping("/system/user")
 @Validated

@@ -17,6 +17,7 @@ public class LocalDateTimeUtils {
      * 空的 LocalDateTime 对象，主要用于 DB 唯一索引的默认值
      */
     public static LocalDateTime EMPTY = buildTime(1970, 1, 1);
+    public static LocalDateTime MAX = LocalDateTime.of(2099, 12, 31, 23, 59, 59);
 
     public static LocalDateTime addTime(Duration duration) {
         return LocalDateTime.now().plus(duration);

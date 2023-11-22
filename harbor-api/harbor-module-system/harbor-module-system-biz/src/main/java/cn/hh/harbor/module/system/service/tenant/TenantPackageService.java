@@ -48,11 +48,11 @@ public interface TenantPackageService {
 
 
     /**
-     * 获得默认租户套餐
+     * 获得普通租户套餐
      *
      * @return 租户套餐
      */
-    TenantPackageDO getDefaultTenantPackage();
+    TenantPackageDO getGeneralTenantPackage();
 
     /**
      * 获得租户套餐分页
@@ -63,11 +63,11 @@ public interface TenantPackageService {
     PageResult<TenantPackageDO> getTenantPackagePage(TenantPackagePageReqVO pageReqVO);
 
     /**
-     * 校验租户套餐
+     * 获得租户套餐列表
      *
-     * @param id 编号
+     * @param status 状态
      * @return 租户套餐
      */
-    TenantPackageDO validTenantPackage(Long id);
+    List<TenantPackageDO> getTenantPackageList();
 
 }

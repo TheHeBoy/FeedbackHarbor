@@ -14,6 +14,9 @@ public class SystemIdEnum {
     // 系统内置数据id, Redis Id在此最小值上增加
     public static final Long SYSTEM_ID = 100000L;
 
+    // 只有一条系统内置数据的默认id
+    public static final Long SYSTEM_ONLY_ID = 1L;
+
     /**
      * 是否是内置系统数据
      */

@@ -64,9 +64,9 @@
     <el-table v-loading="loading" :data="list">
       <el-table-column label="套餐编号" align="center" prop="id" width="120" />
       <el-table-column label="套餐名" align="center" prop="name" />
-      <el-table-column label="状态" align="center" prop="status" width="100">
+      <el-table-column label="套餐时长(天)" align="center" prop="days">
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />
+          {{ scope.row.days != -1 ? scope.row.days : '永久' }}
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
@@ -88,6 +88,7 @@
             修改
           </el-button>
           <el-button
+            v-if="!isSystemData(scope.row.id)"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
@@ -115,6 +116,7 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict';
 import { dateFormatter } from '@/utils/formatTime';
 import * as TenantPackageApi from '@/api/system/tenantPackage';
 import TenantPackageForm from './TenantPackageForm.vue';
+import { isSystemData } from '@harbor/core/src/utils/SystemData';
 
 defineOptions({ name: 'SystemTenantPackage' });
 

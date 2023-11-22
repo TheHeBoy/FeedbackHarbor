@@ -93,8 +93,8 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     }
 
     @Override
-    public TenantPackageDO getDefaultTenantPackage() {
-        return tenantPackageMapper.selectById(SystemIdEnum.SYSTEM_ID);
+    public TenantPackageDO getGeneralTenantPackage() {
+        return tenantPackageMapper.selectById(SystemIdEnum.SYSTEM_ONLY_ID);
     }
 
     @Override
@@ -103,12 +103,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     }
 
     @Override
-    public TenantPackageDO validTenantPackage(Long id) {
-        TenantPackageDO tenantPackage = tenantPackageMapper.selectById(id);
-        if (tenantPackage == null) {
-            throw exception(TENANT_PACKAGE_NOT_EXISTS);
-        }
-        return tenantPackage;
+    public List<TenantPackageDO> getTenantPackageList() {
+        return tenantPackageMapper.selectList();
     }
-
 }

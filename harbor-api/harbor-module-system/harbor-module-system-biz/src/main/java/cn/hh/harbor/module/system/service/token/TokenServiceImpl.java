@@ -133,7 +133,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional
     @Override
     public void addTenantIdByAccessToken(Long tenantId, String accessToken) {
-        TokenAccessDO tokenAccessDO = tokenAccessTokenMapper.selectByAccessToken(accessToken);
+        TokenAccessDO tokenAccessDO = getSelf().getAccessToken(accessToken);
         tokenAccessDO.getTenantIds().add(tenantId);
         tokenAccessTokenMapper.updateById(tokenAccessDO);
         accessTokenRedisDAO.update(accessToken, tokenAccessDO);

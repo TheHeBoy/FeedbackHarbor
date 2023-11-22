@@ -93,6 +93,12 @@ public class RoleServiceImpl implements RoleService {
         permissionService.processRoleDeleted(id);
     }
 
+    @Override
+    public void deleteRoleByTenantId(Long tenantId) {
+        RoleDO roleDO = roleMapper.selectOne(RoleDO::getTenantId, tenantId);
+        getSelf().deleteRole(roleDO.getId());
+    }
+
     /**
      * 校验角色的唯一字段是否重复
      * <p>
@@ -136,7 +142,7 @@ public class RoleServiceImpl implements RoleService {
         if (roleDO == null) {
             throw exception(ROLE_NOT_EXISTS);
         }
-        // 内置角色，不允许删除
+        // 内置角色,不能操作
         if (SystemIdEnum.isSystemData(id)) {
             throw exception(ROLE_CAN_NOT_UPDATE_SYSTEM_TYPE_ROLE);
         }
@@ -148,8 +154,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = RedisKeyConstants.ROLE, key = "#id",
-            unless = "#result == null")
+    @Cacheable(value = RedisKeyConstants.ROLE, key = "#id", unless = "#result == null")
     public RoleDO getRoleFromCache(Long id) {
         return roleMapper.selectById(id);
     }

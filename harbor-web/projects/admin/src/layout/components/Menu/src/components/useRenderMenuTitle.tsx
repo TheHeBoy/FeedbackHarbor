@@ -12,7 +12,7 @@ export const useRenderMenuTitle = () => {
         <span class="v-menu__title">{t(title as string)}</span>
       </>
     ) : (
-      <span class="v-menu__title">{t(title as string)}</span>
+      <span class="v-menu__title ml-2">{t(title as string)}</span>
     );
   };
 

@@ -167,6 +167,14 @@ const { t } = useI18n(); // 国际化
 const loading = ref(true); // 列表的加载中
 const total = ref(0); // 列表的总页数
 const list = ref([]); // 列表的数据
+
+const props = defineProps({
+  replyState: {
+    type: Number,
+    required: true,
+  },
+});
+
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -175,8 +183,9 @@ const queryParams = reactive({
   avatar: undefined,
   userType: undefined,
   nickname: undefined,
-  replyState: undefined,
+  replyState: props.replyState,
 });
+
 const queryFormRef = ref(); // 搜索的表单
 const exportLoading = ref(false); // 导出的加载中
 const drawer = ref(false);

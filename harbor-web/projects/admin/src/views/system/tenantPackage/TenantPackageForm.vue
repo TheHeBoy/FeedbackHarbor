@@ -10,6 +10,19 @@
       <el-form-item label="套餐名" prop="name">
         <el-input v-model="formData.name" placeholder="请输入套餐名" />
       </el-form-item>
+      <el-form-item label="套餐天数" prop="days">
+        <el-input v-model="formData.days" placeholder="请输入套餐天数">
+          <template #append>
+            <el-select v-model="formData.days" placeholder="生成器" style="width: 115px">
+              <el-option :key="-1" label="永久" :value="-1" />
+              <el-option :key="1" label="一天" :value="1" />
+              <el-option :key="30" label="一月" :value="30" />
+              <el-option :key="90" label="一季度" :value="90" />
+              <el-option :key="365" label="一年" :value="365" />
+            </el-select>
+          </template>
+        </el-input>
+      </el-form-item>
       <el-form-item label="菜单权限">
         <el-card class="cardHeight">
           <template #header>
@@ -40,17 +53,6 @@
           />
         </el-card>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-radio-group v-model="formData.status">
-          <el-radio
-            v-for="dict in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
-            :key="dict.value"
-            :label="parseInt(dict.value)"
-          >
-            {{ dict.label }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input v-model="formData.remark" placeholder="请输入备注" />
       </el-form-item>
@@ -62,8 +64,6 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict';
-import { CommonStatusEnum } from '@/utils/constants';
 import { defaultProps, handleTree } from '@/utils/tree';
 import * as TenantPackageApi from '@/api/system/tenantPackage';
 import * as MenuApi from '@/api/system/menu';
@@ -81,13 +81,12 @@ const formType = ref(''); // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: null,
   name: null,
+  days: null,
   remark: null,
   menuIds: [],
-  status: CommonStatusEnum.ENABLE,
 });
 const formRules = reactive({
   name: [{ required: true, message: '套餐名不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
   menuIds: [{ required: true, message: '关联的菜单编号不能为空', trigger: 'blur' }],
 });
 const formRef = ref(); // 表单 Ref
@@ -113,7 +112,7 @@ const open = async (type: string, id?: number) => {
       formData.value = res;
       // 设置选中
       res.menuIds.forEach((menuId: number) => {
-        treeRef.value.setChecked(menuId, true, false);
+        treeRef.value?.setChecked(menuId, true, false);
       });
     } finally {
       formLoading.value = false;
@@ -134,8 +133,8 @@ const submitForm = async () => {
   try {
     const data = formData.value as unknown as TenantPackageApi.TenantPackageVO;
     data.menuIds = [
-      ...(treeRef.value.getCheckedKeys(false) as unknown as Array<number>), // 获得当前选中节点
-      ...(treeRef.value.getHalfCheckedKeys() as unknown as Array<number>), // 获得半选中的父节点
+      ...(treeRef.value?.getCheckedKeys(false) as unknown as Array<number>), // 获得当前选中节点
+      ...(treeRef.value?.getHalfCheckedKeys() as unknown as Array<number>), // 获得半选中的父节点
     ];
     if (formType.value === 'create') {
       await TenantPackageApi.createTenantPackage(data);
@@ -161,9 +160,9 @@ const resetForm = () => {
   formData.value = {
     id: null,
     name: null,
+    days: null,
     remark: null,
     menuIds: [],
-    status: CommonStatusEnum.ENABLE,
   };
   treeRef.value?.setCheckedNodes([]);
   formRef.value?.resetFields();
@@ -171,7 +170,7 @@ const resetForm = () => {
 
 /** 全选/全不选 */
 const handleCheckedTreeNodeAll = () => {
-  treeRef.value.setCheckedNodes(treeNodeAll.value ? menuOptions.value : []);
+  treeRef.value?.setCheckedNodes(treeNodeAll.value ? menuOptions.value : []);
 };
 
 /** 展开/折叠全部 */

@@ -118,7 +118,6 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
 // 图片上传成功提示
 const uploadSuccess: UploadProps['onSuccess'] = (res: any): void => {
   message.success('上传成功');
-  console.log(res.data);
   emit('update:modelValue', res.data);
 };
 

@@ -4,6 +4,7 @@ import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.framework.excel.core.util.ExcelUtils;
 import cn.hh.harbor.framework.operatelog.core.annotations.OperateLog;
+import cn.hh.harbor.module.system.controller.admin.tenant.vo.selecttenant.SelectTenantUpdateReqVO;
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.*;
 import cn.hh.harbor.module.system.convert.tenant.TenantConvert;
 import cn.hh.harbor.module.system.dal.dataobject.tenant.TenantDO;
@@ -35,7 +36,7 @@ public class TenantController {
 
     @GetMapping("/get-id-by-name")
     @PermitAll
-    @Operation(summary = "使用租户名，获得租户编号", description = "登录界面，根据用户的租户名，获得租户编号")
+    @Operation(summary = "使用租户名，获得租户编号")
     @Parameter(name = "name", description = "租户名", required = true, example = "1024")
     public CommonResult<Long> getTenantIdByName(@RequestParam("name") String name) {
         TenantDO tenantDO = tenantService.getTenantByName(name);
@@ -55,6 +56,13 @@ public class TenantController {
     @PreAuthorize("@ss.hasPermission('system:tenant:delete')")
     public CommonResult<Boolean> deleteTenant(@RequestParam("id") Long id) {
         tenantService.deleteTenant(id);
+        return success(true);
+    }
+
+    @PutMapping("/update")
+    @Operation(summary = "更新租户")
+    public CommonResult<Boolean> updateTenant(@Valid @RequestBody TenantUpdateReqVO updateReqVO) {
+        tenantService.updateTenant(updateReqVO);
         return success(true);
     }
 
