@@ -70,8 +70,3 @@ export const updateUserStatus = (id: number, status: number) => {
   };
   return request.put({ url: '/system/user/update-status', data: data });
 };
-
-// 获取用户精简信息列表
-export const getSimpleUserList = (): Promise<UserVO[]> => {
-  return request.get({ url: '/system/user/list-all-simple' });
-};

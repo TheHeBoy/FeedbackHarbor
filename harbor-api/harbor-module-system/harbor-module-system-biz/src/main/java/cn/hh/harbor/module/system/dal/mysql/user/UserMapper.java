@@ -46,6 +46,12 @@ public interface UserMapper extends BaseMapperX<UserDO> {
         return selectList(new LambdaQueryWrapperX<UserDO>().like(UserDO::getNickname, nickname));
     }
 
+    default List<UserDO> selectListByNicknameAndIds(String nickname, List<Long> userIds) {
+        return selectList(new LambdaQueryWrapperX<UserDO>()
+                .likeIfPresent(UserDO::getNickname, nickname)
+                .in(UserDO::getId, userIds));
+    }
+
     default List<UserDO> selectListByStatus(Integer status) {
         return selectList(UserDO::getStatus, status);
     }

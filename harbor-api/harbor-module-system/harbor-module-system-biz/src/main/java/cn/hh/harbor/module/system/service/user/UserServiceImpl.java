@@ -1,7 +1,10 @@
 package cn.hh.harbor.module.system.service.user;
 
+import cn.hh.harbor.module.system.dal.dataobject.tenant.TenantUserDO;
+import cn.hh.harbor.module.system.dal.mysql.tenant.TenantUserMapper;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
 import cn.hh.harbor.framework.common.enums.UserTypeEnum;
@@ -30,8 +33,11 @@ import javax.annotation.Resource;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cn.hh.harbor.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.hh.harbor.framework.common.util.collection.CollectionUtils.convertList;
+import static cn.hh.harbor.framework.common.util.collection.CollectionUtils.convertSet;
 import static cn.hh.harbor.module.system.enums.ErrorCodeConstants.*;
 
 /**
@@ -43,7 +49,6 @@ public class UserServiceImpl implements UserService {
 
     @Value("${sys.user.init-password:harboryuanma}")
     private String userInitPassword;
-
     @Resource
     private UserMapper userMapper;
     @Resource
@@ -52,17 +57,18 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Resource
     private FileApi fileApi;
+    @Resource
+    private TenantUserMapper tenantUserMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Long createUser(UserCreateReqVO reqVO, UserTypeEnum userTypeEnum) {
+    public Long createUser(UserCreateReqVO reqVO) {
         // 校验正确性
         validateUserForCreateOrUpdate(null, reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
         // 插入管理员
         UserDO user = UserConvert.INSTANCE.convert(reqVO);
         user.setStatus(CommonStatusEnum.ENABLE.getStatus()); // 默认开启
         user.setPassword(encodePassword(reqVO.getPassword())); // 加密密码
-        user.setUserType(userTypeEnum.getValue());
         if (user.getNickname() == null) { // 没有昵称时填充用户账号
             user.setNickname(user.getUsername());
         }
@@ -75,9 +81,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Long createSocialUser(UserCreateSocialReqVO reqVO, UserTypeEnum userTypeEnum) {
+    public Long createSocialUser(UserCreateSocialReqVO reqVO) {
         UserDO user = UserConvert.INSTANCE.convert(reqVO);
-        user.setUserType(userTypeEnum.getValue());
+        // 随机生成用户名
+        user.setUsername(IdUtil.simpleUUID());
         userMapper.insert(user);
         return user.getId();
     }
@@ -369,6 +376,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDO getUserByOpenIdAndSocialType(String openId, Integer socialType) {
         return userMapper.selectByOpenIdAndSocialType(openId, socialType);
+    }
+
+    @Override
+    public List<UserDO> getUserListByTenantIdOrNickname(Long tenantId, String nickname) {
+        List<Long> userIdList = convertList(tenantUserMapper.selectList(TenantUserDO::getTenantId, tenantId), TenantUserDO::getUserId);
+        return userMapper.selectListByNicknameAndIds(nickname, userIdList);
+    }
+
+    @Override
+    public List<UserDO> getUsersByNicknameFilter(Long tenantId, String nickname) {
+        // 当前租户下的管理用户
+        List<Long> userIdList = convertList(tenantUserMapper.selectList(TenantUserDO::getTenantId, tenantId), TenantUserDO::getUserId);
+
+        // 过滤掉已经加入团队的用户
+        List<UserDO> userDOList = userMapper.selectListByNickname(nickname);
+        return userDOList.stream().filter(e -> !userIdList.contains(e.getId())).collect(Collectors.toList());
     }
 
     /**

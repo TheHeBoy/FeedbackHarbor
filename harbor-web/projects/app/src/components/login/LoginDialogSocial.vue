@@ -39,7 +39,6 @@ import { useLoginStoreWithOut } from '@/store/login';
 import giteeLogo from '@/assets/svg/giteeLogoSVG.svg?component';
 import googleLogo from '@/assets/svg/googleLogoSVG.svg?component';
 import githubLogo from '@/assets/svg/githubLogoSVG.svg?component';
-import { useUserStoreWithOut } from '@/store/user';
 
 const loginDialogsStore = useLoginStoreWithOut();
 const { isShow } = storeToRefs(loginDialogsStore);

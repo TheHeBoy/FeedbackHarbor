@@ -34,7 +34,6 @@ public class PermissionController {
     @Operation(summary = "获得角色拥有的菜单编号")
     @Parameter(name = "roleId", description = "角色编号", required = true)
     @GetMapping("/list-role-menus")
-    @PreAuthorize("@ss.hasPermission('system:permission:assign-role-menu')")
     public CommonResult<Set<Long>> getRoleMenuList(Long roleId) {
         return success(permissionService.getRoleMenuListByRoleId(roleId));
     }
@@ -51,11 +50,10 @@ public class PermissionController {
         return success(true);
     }
 
-    @Operation(summary = "获得管理员拥有的角色编号列表")
+    @Operation(summary = "获得用户拥有的角色编号列表")
     @Parameter(name = "userId", description = "用户编号", required = true)
     @GetMapping("/list-user-roles")
-    @PreAuthorize("@ss.hasPermission('system:permission:assign-user-role')")
-    public CommonResult<Set<Long>> listAdminRoles(@RequestParam("userId") Long userId) {
+    public CommonResult<Set<Long>> listRoles(@RequestParam("userId") Long userId) {
         return success(permissionService.getUserRoleIdListByUserId(userId));
     }
 

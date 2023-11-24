@@ -17,9 +17,7 @@
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
-    <description>
-        uservoice后端api
-    </description>
+    <description></description>
 
 
 </project>

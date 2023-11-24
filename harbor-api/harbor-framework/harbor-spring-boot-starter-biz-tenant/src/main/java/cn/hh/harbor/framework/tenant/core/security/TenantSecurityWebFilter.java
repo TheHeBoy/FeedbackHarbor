@@ -68,7 +68,7 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
 
             // 2. 登陆的用户，admin需要校验是否有权限访问该租户，避免越权问题。
             LoginUser user = SecurityFrameworkUtils.getLoginUser();
-            if (user != null && !user.getTenantIds().contains(tenantId) && Objects.equals(user.getUserType(), UserTypeEnum.ADMIN.getValue())) {
+            if (user != null && Objects.equals(user.getUserType(), UserTypeEnum.ADMIN.getValue()) && !user.getTenantIds().contains(tenantId)) {
                 log.error("[doFilterInternal][租户({}) User({}/{}) 越权访问租户({}) URL({}/{})]",
                         user.getTenantIds(), user.getId(), user.getUserType(),
                         TenantContextHolder.getTenantId(), request.getRequestURI(), request.getMethod());

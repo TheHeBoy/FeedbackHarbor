@@ -45,8 +45,6 @@ public class PermissionServiceImpl implements PermissionService {
     private RoleService roleService;
     @Resource
     private MenuService menuService;
-    @Resource
-    private UserService userService;
 
     @Override
     public boolean hasAnyPermissions(Long userId, String... permissions) {

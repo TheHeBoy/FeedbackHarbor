@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 public class HarborWebConfiguration {
 
     /**
-     * UserVoice 模块的 API 分组
+     * Harbor 模块的 API 分组
      */
     @Bean
-    public GroupedOpenApi UserVoiceGroupedOpenApi() {
+    public GroupedOpenApi HarborGroupedOpenApi() {
         return HarborSwaggerAutoConfiguration.buildGroupedOpenApi("harbor");
     }
 

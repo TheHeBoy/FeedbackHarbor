@@ -25,7 +25,7 @@ public interface UserService {
      * @param reqVO 用户信息
      * @return 用户编号
      */
-    Long createUser(@Valid UserCreateReqVO reqVO, UserTypeEnum userTypeEnum);
+    Long createUser(@Valid UserCreateReqVO reqVO);
 
 
     /**
@@ -34,7 +34,7 @@ public interface UserService {
      * @param reqVO 用户信息
      * @return 用户编号
      */
-    Long createSocialUser(UserCreateSocialReqVO reqVO, UserTypeEnum userTypeEnum);
+    Long createSocialUser(UserCreateSocialReqVO reqVO);
 
     /**
      * 修改用户
@@ -210,4 +210,24 @@ public interface UserService {
      * @return {@link UserDO}
      */
     UserDO getUserByOpenIdAndSocialType(String openId, Integer socialType);
+
+    /**
+     * 得到租户下管理用户
+     *
+     * @param tenantId 租户id
+     * @param nickname 用户昵称
+     * @return 用户集合
+     */
+    List<UserDO> getUserListByTenantIdOrNickname(Long tenantId, String nickname);
+
+    /**
+     * 用户昵称模糊匹配，并且过滤已经加入管理团队的用户
+     *
+     * @param tenantId 租户id
+     * @param nickname 用户昵称
+     * @return 用户集合
+     */
+    List<UserDO> getUsersByNicknameFilter(Long tenantId, String nickname);
+
+
 }

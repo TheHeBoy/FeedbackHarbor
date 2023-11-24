@@ -43,7 +43,7 @@ public class CommentController {
     @DeleteMapping("/delete")
     @Operation(summary = "删除评论")
     @Parameter(name = "id", description = "编号", required = true)
-    @PreAuthorize("@ss.hasPermission('uservoice:comment:delete')")
+    @PreAuthorize("@ss.hasPermission('Harbor:comment:delete')")
     public CommonResult<Boolean> deleteComment(@RequestParam("id") Long id) {
         commentService.deleteComment(id);
         return success(true);

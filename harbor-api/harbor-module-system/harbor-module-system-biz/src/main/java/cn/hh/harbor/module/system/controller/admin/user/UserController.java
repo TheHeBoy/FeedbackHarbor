@@ -1,21 +1,20 @@
 package cn.hh.harbor.module.system.controller.admin.user;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hh.harbor.framework.common.enums.UserTypeEnum;
-import cn.hh.harbor.module.system.controller.admin.user.vo.user.*;
-import cn.hh.harbor.module.system.convert.user.UserConvert;
-import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
-import cn.hh.harbor.module.system.service.user.UserService;
-import cn.hh.harbor.module.system.enums.common.SexEnum;
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
+import cn.hh.harbor.framework.common.enums.UserTypeEnum;
 import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.framework.excel.core.util.ExcelUtils;
 import cn.hh.harbor.framework.operatelog.core.annotations.OperateLog;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import cn.hh.harbor.module.system.controller.admin.user.vo.user.*;
+import cn.hh.harbor.module.system.convert.user.UserConvert;
+import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
+import cn.hh.harbor.module.system.service.user.UserService;
+import cn.hutool.core.collection.CollUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +24,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static cn.hh.harbor.framework.common.pojo.CommonResult.success;
-import static cn.hh.harbor.framework.common.util.collection.CollectionUtils.convertList;
-import static cn.hh.harbor.framework.common.util.collection.CollectionUtils.convertSet;
 import static cn.hh.harbor.framework.operatelog.core.enums.OperateTypeEnum.EXPORT;
 
 @Tag(name = "管理后台 - 管理用户")
@@ -45,7 +44,7 @@ public class UserController {
     @Operation(summary = "新增用户")
     @PreAuthorize("@ss.hasPermission('system:user:create')")
     public CommonResult<Long> createUser(@Valid @RequestBody UserCreateReqVO reqVO) {
-        Long id = userService.createUser(reqVO, getUserType());
+        Long id = userService.createUser(reqVO);
         return success(id);
     }
 
@@ -85,19 +84,9 @@ public class UserController {
     @GetMapping("/page")
     @Operation(summary = "获得用户分页列表")
     @PreAuthorize("@ss.hasPermission('system:user:list')")
-    public CommonResult<PageResult<UserPageItemRespVO>> getUserPage(@Valid UserPageReqVO reqVO) {
+    public CommonResult<PageResult<UserRespVO>> getUserPage(@Valid UserPageReqVO reqVO) {
         // 获得用户分页列表
-        PageResult<UserDO> pageResult = userService.getUserPage(reqVO);
-        if (CollUtil.isEmpty(pageResult.getList())) {
-            return success(new PageResult<>(pageResult.getTotal())); // 返回空
-        }
-        // 拼接结果返回
-        List<UserPageItemRespVO> userList = new ArrayList<>(pageResult.getList().size());
-        pageResult.getList().forEach(user -> {
-            UserPageItemRespVO respVO = UserConvert.INSTANCE.convert(user);
-            userList.add(respVO);
-        });
-        return success(new PageResult<>(userList, pageResult.getTotal()));
+        return success(UserConvert.INSTANCE.convert(userService.getUserPage(reqVO)));
     }
 
     @GetMapping("/list-all-simple")
@@ -129,9 +118,7 @@ public class UserController {
 
         // 拼接数据
         List<UserExcelVO> excelUsers = new ArrayList<>(users.size());
-        users.forEach(user -> {
-            excelUsers.add(UserConvert.INSTANCE.convert02(user));
-        });
+        users.forEach(user -> excelUsers.add(UserConvert.INSTANCE.convert02(user)));
 
         // 输出
         ExcelUtils.write(response, "用户数据.xls", "用户列表", UserExcelVO.class, excelUsers);
@@ -143,9 +130,9 @@ public class UserController {
         // 手动创建导出 demo
         List<UserImportExcelVO> list = Arrays.asList(
                 UserImportExcelVO.builder().username("yunai").email("yunai@iocoder.cn").mobile("15601691300")
-                        .nickname("芋道").status(CommonStatusEnum.ENABLE.getStatus()).sex(SexEnum.MALE.getSex()).build(),
+                        .nickname("harbor1").status(CommonStatusEnum.ENABLE.getStatus()).build(),
                 UserImportExcelVO.builder().username("yuanma").email("yuanma@iocoder.cn").mobile("15601701300")
-                        .nickname("源码").status(CommonStatusEnum.DISABLE.getStatus()).sex(SexEnum.FEMALE.getSex()).build()
+                        .nickname("harbor2").status(CommonStatusEnum.DISABLE.getStatus()).build()
         );
 
         // 输出

@@ -29,10 +29,6 @@ public class UserExcelVO {
     @ExcelProperty("手机号码")
     private String mobile;
 
-    @ExcelProperty(value = "用户性别", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.USER_SEX)
-    private Integer sex;
-
     @ExcelProperty(value = "帐号状态", converter = DictConvert.class)
     @DictFormat(DictTypeConstants.COMMON_STATUS)
     private Integer status;

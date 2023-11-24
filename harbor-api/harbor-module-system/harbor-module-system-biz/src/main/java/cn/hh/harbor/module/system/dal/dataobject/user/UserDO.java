@@ -1,9 +1,7 @@
 package cn.hh.harbor.module.system.dal.dataobject.user;
 
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
-import cn.hh.harbor.framework.common.enums.UserTypeEnum;
 import cn.hh.harbor.framework.mybatis.core.dataobject.BaseDO;
-import cn.hh.harbor.module.system.enums.common.SexEnum;
 import cn.hh.harbor.module.system.enums.social.SocialTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -56,11 +54,6 @@ public class UserDO extends BaseDO {
      */
     private String mobile;
     /**
-     * 用户性别
-     * 枚举类 {@link SexEnum}
-     */
-    private Integer sex;
-    /**
      * 用户头像
      */
     private String avatar;
@@ -77,11 +70,6 @@ public class UserDO extends BaseDO {
      * 最后登录时间
      */
     private LocalDateTime loginDate;
-    /**
-     * 用户类型
-     * 枚举 {@link UserTypeEnum}
-     */
-    private Integer userType;
     /**
      * 社交平台的类型
      * 枚举 {@link SocialTypeEnum}

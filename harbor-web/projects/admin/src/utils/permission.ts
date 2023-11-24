@@ -8,7 +8,7 @@ const { t } = useI18n(); // 国际化
  * @returns {Boolean}
  */
 export function checkPermi(value: string[]) {
-  if (value && value instanceof Array && value.length > 0) {
+  if (value && value.length > 0) {
     const { wsCache } = useCache();
     const permissionDatas = value;
     const all_permission = '*:*:*';
