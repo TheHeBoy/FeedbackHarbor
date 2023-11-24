@@ -4,6 +4,7 @@
       <el-card shadow="hover" class="w-100 !rounded-3xl">
         <div class="text-3xl font-bold text-center mb-4">请选择管理系统</div>
         <div class="overflow-y-auto max-h-100">
+          <InviteList :refresh="getList" />
           <button
             v-for="tenant in model"
             :key="tenant.id"
@@ -51,6 +52,9 @@ import Icon from '@/components/Icon/src/Icon.vue';
 import { setTenant } from '@/utils/auth';
 import { ElLoading } from 'element-plus';
 import { SystemTenantTypeEnum } from '@/utils/constants';
+import InviteList from './inviteList.vue';
+
+const message = useMessage(); // 消息弹窗
 
 const model = ref<SelectTenantVO[]>();
 const operation = ref({});
@@ -67,7 +71,7 @@ const onDelete = (tenantVO: SelectTenantVO) => {
 
 const dialogDelete = async () => {
   await SelectTenantApi.deleteTenant(waitDeleteTenant.value!.id);
-  ElMessage.success('删除成功');
+  message.success('删除成功');
   getList();
   confirmDialog.value = false;
 };

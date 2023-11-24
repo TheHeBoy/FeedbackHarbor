@@ -4,6 +4,7 @@ import cn.hh.harbor.framework.common.util.date.LocalDateTimeUtils;
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantUpdateReqVO;
 import cn.hh.harbor.module.system.enums.tenant.TenantPackageDaysEnum;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
 import cn.hh.harbor.framework.common.enums.SystemIdEnum;
@@ -37,6 +38,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -232,7 +234,7 @@ public class TenantServiceImpl implements TenantService {
         List<Long> tenantIds = tenantUserMapper.selectList(TenantUserDO::getUserId, uid).stream()
                 .map(TenantUserDO::getTenantId)
                 .collect(Collectors.toList());
-        return tenantMapper.selectBatchIds(tenantIds);
+        return CollUtil.isEmpty(tenantIds) ? new ArrayList<>() : tenantMapper.selectBatchIds(tenantIds);
     }
 
     @Override

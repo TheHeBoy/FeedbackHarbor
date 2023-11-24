@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -131,7 +132,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDO> getMenuList(Collection<Long> ids) {
-        return menuMapper.selectBatchIds(ids);
+        return CollUtil.isEmpty(ids) ? new ArrayList<>() : menuMapper.selectBatchIds(ids);
     }
 
     /**

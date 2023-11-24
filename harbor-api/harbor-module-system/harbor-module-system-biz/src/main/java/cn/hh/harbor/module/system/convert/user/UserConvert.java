@@ -6,7 +6,7 @@ import cn.hh.harbor.module.system.controller.admin.user.vo.profile.UserProfileRe
 import cn.hh.harbor.module.system.controller.admin.user.vo.profile.UserProfileUpdatePasswordReqVO;
 import cn.hh.harbor.module.system.controller.admin.user.vo.profile.UserProfileUpdateReqVO;
 import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamListRespVO;
-import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamRespVO;
+import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamInviteRespVO;
 import cn.hh.harbor.module.system.controller.admin.user.vo.user.*;
 import cn.hh.harbor.module.system.dal.dataobject.permission.RoleDO;
 import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
@@ -55,5 +55,5 @@ public interface UserConvert {
 
     List<UserTeamListRespVO> convert(List<UserDO> bean);
 
-    List<UserTeamRespVO> convertTeam(List<UserDO> bean);
+    List<UserTeamInviteRespVO> convertTeam(List<UserDO> bean);
 }

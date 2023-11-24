@@ -51,7 +51,10 @@
 <script lang="ts" setup>
 import { getTenantName } from '@/utils/auth';
 import * as UserTeamApi from '@/api/system/user/team';
+import * as InviteApi from '@/api/system/invite';
 import { UserTeamVO } from '@/api/system/user/team';
+import { useUserStore } from '@/store/modules/user';
+import { InviteUserReqVO } from '@/api/system/invite';
 
 const dialogShow = ref(false);
 const options = ref<UserTeamVO[] | string>();
@@ -81,16 +84,21 @@ function isEmail(str: string) {
   return reg.test(str);
 }
 
-function send() {
-  let userIds: number[] = [];
-
+async function send() {
+  let inviteeUserIds: number[] = [];
+  let emails: string[] = [];
   for (let d of emailOrUsers.value) {
-    if (!isEmail(d)) {
-      userIds.push(d);
+    if (isEmail(d)) {
+      emails.push(d);
+    } else {
+      inviteeUserIds.push(d);
     }
   }
-
-  console.log(userIds);
+  const userId = useUserStore().user.id;
+  await InviteApi.inviteUser({
+    inviterUserId: userId,
+    inviteeUserIds: inviteeUserIds,
+  } as InviteUserReqVO);
 }
 
 /** 初始化 */

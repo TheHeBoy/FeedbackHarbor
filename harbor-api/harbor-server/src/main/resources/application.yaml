@@ -123,13 +123,14 @@ harbor:
   tenant: # 多租户相关配置项
     ignore-urls:
       - /admin-api/system/tenant/**
-      - /admin-api/system/select-tenant/**
+      - /admin-api/system/select-tenant/** # 租户选择界面
       - /admin-api/system/dict-data/** # 字典和，和租户无关
       - /admin-api/system/auth/** # 用户登录，和租户无关
       - /admin-api/system/captcha/get # 获取图片验证码，和租户无关
       - /admin-api/system/captcha/check # 校验图片验证码，和租户无关
       - /admin-api/infra/file/** # 文件，和租户无关
       - /admin-api/system/sms/callback/** # 短信回调接口，无法带上租户编号
+      - /admin-api/system/invite/list-replay # 租户选择界面
       - /app-api/system/auth/**
     ignore-tables:
       - system_users
@@ -149,6 +150,7 @@ harbor:
       - system_mail_template
       - system_mail_log
       - system_notify_template
+      - system_invite
       - infra_codegen_column
       - infra_codegen_table
       - infra_config

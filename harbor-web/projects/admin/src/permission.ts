@@ -52,8 +52,8 @@ router.beforeEach(async (to, from, next) => {
         }
       }
 
-      // 菜单权限
-      if (!permissionStore.getIsSetPermission) {
+      // 菜单权限，租户选择界面不需要菜单权限
+      if (tenantWhiteList.indexOf(to.path) === -1 && !permissionStore.getIsSetPermission) {
         await permissionStore.generateRoutes();
         permissionStore.getAddRouters.forEach((route) => {
           router.addRoute(route as unknown as RouteRecordRaw); // 动态添加可访问路由表

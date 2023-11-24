@@ -9,7 +9,6 @@ import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantCreate
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantExcelVO;
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantRespVO;
 import cn.hh.harbor.module.system.controller.admin.tenant.vo.tenant.TenantUpdateReqVO;
-import cn.hh.harbor.module.system.controller.admin.user.vo.user.UserCreateReqVO;
 import cn.hh.harbor.module.system.dal.dataobject.tenant.TenantDO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

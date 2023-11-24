@@ -17,7 +17,6 @@ import lombok.experimental.Accessors;
  *
  */
 @TableName(value = "infra_codegen_column", autoResultMap = true)
-@KeySequence("infra_codegen_column_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)

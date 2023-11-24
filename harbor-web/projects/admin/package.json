@@ -2,16 +2,14 @@
   "name": "@harbor/admin",
   "private": false,
   "scripts": {
-    "install": "pnpm install",
     "dev": "vite --mode dev"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.1.0",
     "@harbor/apis": "workspace:^",
     "@harbor/components": "workspace:^",
     "@harbor/config": "workspace:^",
     "@harbor/core": "workspace:^",
-    "@harbor/web": "workspace:^",
+    "@element-plus/icons-vue": "^2.1.0",
     "@videojs-player/vue": "^1.0.0",
     "@vueuse/core": "^10.2.1",
     "@wangeditor/editor": "^5.1.23",
@@ -48,9 +46,6 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.6.6",
-    "@commitlint/config-conventional": "^17.6.6",
-    "@intlify/unplugin-vue-i18n": "^0.12.1",
     "@purge-icons/generated": "^0.9.0",
     "@types/intro.js": "^5.1.1",
     "@types/lodash-es": "^4.17.7",

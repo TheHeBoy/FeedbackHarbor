@@ -98,8 +98,6 @@ public interface ErrorCodeConstants {
 
     // ========== 社交用户 1002018000 ==========
     ErrorCode SOCIAL_USER_AUTH_FAILURE = new ErrorCode(1002018000, "社交授权失败，原因是：{}");
-    ErrorCode SOCIAL_USER_UNBIND_NOT_SELF = new ErrorCode(1002018001, "社交解绑失败，非当前用户绑定");
-    ErrorCode SOCIAL_USER_NOT_FOUND = new ErrorCode(1002018002, "社交授权失败，找不到对应的用户");
 
     // ========== 系统敏感词 1002019000 =========
     ErrorCode SENSITIVE_WORD_NOT_EXISTS = new ErrorCode(1002019000, "系统敏感词在所有标签中都不存在");
@@ -116,4 +114,7 @@ public interface ErrorCodeConstants {
     // ========== 邮件发送 1002025000 ==========
     ErrorCode MAIL_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1002025000, "模板参数({})缺失");
     ErrorCode MAIL_SEND_MAIL_NOT_EXISTS = new ErrorCode(1002025001, "邮箱不存在");
+
+    // ========== 团队邀请 1002026000 ==========
+    ErrorCode INVITE_NO_EXISTS = new ErrorCode(1002026000, "邀请不存在");
 }

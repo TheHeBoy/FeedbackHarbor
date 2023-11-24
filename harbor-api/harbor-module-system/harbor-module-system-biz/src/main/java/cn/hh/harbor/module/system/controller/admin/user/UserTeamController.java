@@ -2,8 +2,8 @@ package cn.hh.harbor.module.system.controller.admin.user;
 
 import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.tenant.core.context.TenantContextHolder;
+import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamInviteRespVO;
 import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamListRespVO;
-import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamRespVO;
 import cn.hh.harbor.module.system.convert.user.UserConvert;
 import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
 import cn.hh.harbor.module.system.service.permission.PermissionService;
@@ -52,7 +52,7 @@ public class UserTeamController {
 
     @GetMapping("/query")
     @Operation(summary = "根据用户昵称进行模糊查询,并过滤已经加入当前租户的用户", description = "发送邀请的下拉框匹配")
-    public CommonResult<List<UserTeamRespVO>> getUserListByNickName(@Validated @NotBlank String nickname) {
+    public CommonResult<List<UserTeamInviteRespVO>> getUserListByNickName(@Validated @NotBlank String nickname) {
         List<UserDO> userDOList = userService.getUsersByNicknameFilter(TenantContextHolder.getTenantId(), nickname);
         return success(UserConvert.INSTANCE.convertTeam(userDOList));
     }

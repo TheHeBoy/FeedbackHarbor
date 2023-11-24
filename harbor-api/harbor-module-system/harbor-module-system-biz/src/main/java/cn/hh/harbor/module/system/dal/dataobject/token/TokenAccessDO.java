@@ -17,7 +17,6 @@ import java.util.List;
  * Token 访问令牌 DO
  */
 @TableName(value = "system_token_access", autoResultMap = true)
-@KeySequence("system_token_access_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TokenAccessDO extends BaseDO {

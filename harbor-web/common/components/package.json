@@ -4,7 +4,6 @@
   "main": "src/index.ts",
   "type": "module",
   "dependencies": {
-    "@harbor/apis": "workspace:^",
-    "@harbor/web": "workspace:^"
+    "@harbor/apis": "workspace:^"
   }
 }

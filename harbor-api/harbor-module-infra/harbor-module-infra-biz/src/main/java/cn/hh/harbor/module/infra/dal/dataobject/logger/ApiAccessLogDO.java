@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
  * 
  */
 @TableName("infra_api_access_log")
-@KeySequence(value = "infra_api_access_log_seq")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
