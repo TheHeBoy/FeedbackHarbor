@@ -394,6 +394,11 @@ public class UserServiceImpl implements UserService {
         return userDOList.stream().filter(e -> !userIdList.contains(e.getId())).collect(Collectors.toList());
     }
 
+    @Override
+    public void quitTeam(Long tenantId, Long userId) {
+        tenantUserMapper.deleteByTenantIdAndUserId(tenantId, userId);
+    }
+
     /**
      * 对密码进行加密
      *

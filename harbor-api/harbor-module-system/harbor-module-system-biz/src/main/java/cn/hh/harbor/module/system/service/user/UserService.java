@@ -230,4 +230,11 @@ public interface UserService {
     List<UserDO> getUsersByNicknameFilter(Long tenantId, String nickname);
 
 
+    /**
+     * 退出团队
+     *
+     * @param tenantId 租户id
+     * @param userId 用户id
+     */
+    void quitTeam(Long tenantId, Long userId);
 }

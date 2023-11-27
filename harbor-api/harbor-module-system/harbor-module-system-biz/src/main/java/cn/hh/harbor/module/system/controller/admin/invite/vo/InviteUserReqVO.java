@@ -21,4 +21,8 @@ public class InviteUserReqVO {
     @Schema(description = "受邀人用户id", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "受邀人用户Id不能为空")
     private List<Long> inviteeUserIds;
+
+    @Schema(description = "租户id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "租户id不能为空")
+    private Long tenantId;
 }

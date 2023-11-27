@@ -76,6 +76,11 @@ export const SystemTenantTypeEnum = {
   SYSTEM: 1, // 系统租户id
 };
 
+export const SystemInviteStatusEnum = {
+  REFUSE: 2, // 已拒绝
+  NO_REPLAY: 3, // 待回复
+};
+
 export const HarborFeedbackReplayStateEnum = {
   NO_REPLY: 0, // 待回复
   REPLIED: 1, // 已回复

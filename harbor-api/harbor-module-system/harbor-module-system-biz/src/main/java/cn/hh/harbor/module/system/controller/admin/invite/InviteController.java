@@ -44,7 +44,7 @@ public class InviteController {
     @PostMapping("/invite-user")
     @PreAuthorize("@ss.hasPermission('system:invite:invite-user')")
     public CommonResult<Boolean> inviteUser(@Valid @RequestBody InviteUserReqVO reqVO) {
-        inviteService.inviteUser(reqVO, TenantContextHolder.getTenantId());
+        inviteService.inviteUser(reqVO);
         return CommonResult.success(true);
     }
 

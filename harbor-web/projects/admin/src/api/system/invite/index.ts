@@ -3,6 +3,7 @@ import { request } from '@harbor/apis';
 export interface InviteUserReqVO {
   inviterUserId: number;
   inviteeUserIds: number[];
+  tenantId: number;
 }
 
 export interface InviteUserReqVO {
@@ -22,9 +23,9 @@ export const listReplay = (): Promise<InviteUserReqVO[]> => {
 };
 
 export const accept = (id: number) => {
-  return request.post({ url: '/system/invite/accept', params: { id: id } });
+  return request.post({ url: '/system/invite/accept', params: { id } });
 };
 
 export const refuse = (id: number) => {
-  return request.put({ url: '/system/invite/refuse', params: { id: id } });
+  return request.put({ url: '/system/invite/refuse', params: { id } });
 };

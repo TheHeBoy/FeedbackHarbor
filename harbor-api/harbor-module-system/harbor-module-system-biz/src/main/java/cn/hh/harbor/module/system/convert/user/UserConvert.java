@@ -52,6 +52,7 @@ public interface UserConvert {
     UserRespVO convert(UserDO bean);
 
     UserTeamListRespVO convertTeam(UserDO bean);
+    UserTeamInviteRespVO convertTeam2(UserDO bean);
 
     List<UserTeamListRespVO> convert(List<UserDO> bean);
 

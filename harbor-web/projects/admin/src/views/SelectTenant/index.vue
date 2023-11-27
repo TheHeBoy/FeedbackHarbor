@@ -2,7 +2,17 @@
   <div class="bg-[var(--dark-bg-color)] flex h-full items-center justify-center">
     <Transition appear enter-active-class="animate__animated animate__bounceInRight">
       <el-card shadow="hover" class="w-100 !rounded-3xl">
-        <div class="text-3xl font-bold text-center mb-4">请选择管理系统</div>
+        <div class="flex relative justify-center mb-4">
+          <el-dropdown placement="top" class="!absolute !left-0">
+            <el-avatar :src="useUserStore().user.avatar" />
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="logout" :icon="Back">登出</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <div class="text-3xl font-bold text-center">请选择管理系统</div>
+        </div>
         <div class="overflow-y-auto max-h-100">
           <InviteList :refresh="getList" />
           <button
@@ -53,6 +63,8 @@ import { setTenant } from '@/utils/auth';
 import { ElLoading } from 'element-plus';
 import { SystemTenantTypeEnum } from '@/utils/constants';
 import InviteList from './inviteList.vue';
+import { useUserStore } from '@/store/modules/user';
+import { Back } from '@element-plus/icons-vue';
 
 const message = useMessage(); // 消息弹窗
 
@@ -96,9 +108,18 @@ const onUpdate = (tenantId: number) => {
   router.push({ path: 'createTenant', query: { tenantId } });
 };
 
+const logout = async () => {
+  await useUserStore().loginOut();
+  location.reload();
+};
+
 onMounted(() => {
   getList();
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.el-tooltip__trigger:focus-visible) {
+  outline: unset;
+}
+</style>

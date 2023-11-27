@@ -23,4 +23,11 @@ public interface TenantUserMapper extends BaseMapperX<TenantUserDO> {
                 TenantUserDO::getTenantId, tenantId
         ));
     }
+
+    default int deleteByTenantIdAndUserId(Long tenantId, Long userId) {
+        return delete(new LambdaQueryWrapperX<TenantUserDO>()
+                .eq(TenantUserDO::getTenantId, tenantId)
+                .eq(TenantUserDO::getUserId, userId)
+        );
+    }
 }

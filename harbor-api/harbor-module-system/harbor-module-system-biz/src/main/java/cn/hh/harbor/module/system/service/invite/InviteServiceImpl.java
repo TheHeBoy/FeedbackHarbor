@@ -11,6 +11,8 @@ import cn.hh.harbor.module.system.dal.mysql.invite.InviteMapper;
 import cn.hh.harbor.module.system.dal.mysql.tenant.TenantUserMapper;
 import cn.hh.harbor.module.system.enums.invite.InviteStatusEnum;
 import cn.hh.harbor.module.system.enums.invite.InviteTypeEnum;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,16 +33,16 @@ public class InviteServiceImpl implements InviteService {
 
 
     @Override
-    public void inviteUser(InviteUserReqVO reqVO, Long tenantId) {
+    public void inviteUser(InviteUserReqVO reqVO) {
         List<Long> inviteeUserIds = reqVO.getInviteeUserIds();
         List<InviteDO> inviteInsert = new ArrayList<>();
         for (Long inviteeUserId : inviteeUserIds) {
             InviteDO inviteDO = new InviteDO();
             inviteDO.setInviterUserId(reqVO.getInviterUserId());
             inviteDO.setInviteeUserId(inviteeUserId);
+            inviteDO.setTenantId(reqVO.getTenantId());
             inviteDO.setType(InviteTypeEnum.USER.getCode());
             inviteDO.setStatus(InviteStatusEnum.NO_REPLY.getCode());
-            inviteDO.setTenantId(tenantId);
             inviteInsert.add(inviteDO);
         }
 
@@ -75,6 +77,15 @@ public class InviteServiceImpl implements InviteService {
         validateExists(id);
         // 更新邀请状态
         inviteMapper.updateById(new InviteDO().setId(id).setStatus(InviteStatusEnum.REFUSE.getCode()));
+    }
+
+    @Override
+    public InviteDO selectUserInviteFilter(Long inviteeUserId, Long inviterUserId) {
+        return inviteMapper.selectOne(new LambdaQueryWrapperX<InviteDO>()
+                .eq(InviteDO::getInviteeUserId, inviteeUserId)
+                .eq(InviteDO::getInviterUserId, inviterUserId)
+                .eq(InviteDO::getType, InviteTypeEnum.USER.getCode())
+                .in(InviteDO::getStatus, CollUtil.toList(InviteStatusEnum.NO_REPLY.getCode(), InviteStatusEnum.REFUSE.getCode())));
     }
 
 

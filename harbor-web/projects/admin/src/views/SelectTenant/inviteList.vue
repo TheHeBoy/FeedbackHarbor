@@ -61,13 +61,13 @@ const props = defineProps({
 async function accept(id: number) {
   await InviteApi.accept(id);
   message.success('加入成功');
-  getList();
-  props.refresh();
+  refreshList();
 }
 
 async function refuse(id: number) {
   await message.delConfirm('你确定要拒绝此邀请吗？');
   await InviteApi.refuse(id);
+  refreshList();
 }
 
 async function getList() {
@@ -77,6 +77,11 @@ async function getList() {
   } finally {
     loading.value = false;
   }
+}
+
+function refreshList() {
+  getList();
+  props.refresh();
 }
 
 onMounted(() => {

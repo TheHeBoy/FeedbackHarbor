@@ -1,5 +1,11 @@
 <template>
-  <el-dialog class="!w-150" align-center v-model="dialogShow" title="邀请加入管理团队">
+  <el-dialog
+    class="!w-150"
+    align-center
+    v-model="dialogShow"
+    title="邀请加入管理团队"
+    destroy-on-close
+  >
     <el-form>
       <el-form-item class="w-full">
         <div class="flex w-full">
@@ -25,16 +31,18 @@
                 :key="option.id"
                 :label="option.nickname"
                 :value="option.id"
+                :disabled="option.inviteStatus == SystemInviteStatusEnum.NO_REPLAY"
                 class="!leading-6 !h-12"
               >
                 <div class="flex items-center">
                   <el-avatar :src="option.avatar" />
                   <div class="ml-2">
-                    <el-text size="large" type="" class="block font-bold"
-                      >{{ option.nickname }}
-                    </el-text>
+                    <el-text size="large" class="block font-bold">{{ option.nickname }}</el-text>
                     <el-text size="small" class="block">@{{ option.username }}</el-text>
                   </div>
+                  <el-text v-if="option.inviteStatus" size="small" type="info" class="!ml-2">
+                    {{ getDictLabel(DICT_TYPE.SYSTEM_INVITE_STATUS, option.inviteStatus) }}
+                  </el-text>
                 </div>
               </el-option>
             </template>
@@ -49,12 +57,15 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getTenantName } from '@/utils/auth';
+import { getTenantId, getTenantName } from '@/utils/auth';
 import * as UserTeamApi from '@/api/system/user/team';
 import * as InviteApi from '@/api/system/invite';
 import { UserTeamVO } from '@/api/system/user/team';
 import { useUserStore } from '@/store/modules/user';
 import { InviteUserReqVO } from '@/api/system/invite';
+import { DICT_TYPE, getDictLabel } from '@/utils/dict';
+import { useDictStoreWithOut } from '@/store/modules/dict';
+import { SystemInviteStatusEnum } from '@/utils/constants';
 
 const dialogShow = ref(false);
 const options = ref<UserTeamVO[] | string>();
@@ -62,6 +73,7 @@ const emailOrUsers = ref([]);
 const emailDescribe = ref(`加入我管理团队，一起来参与管理${getTenantName()}系统的吧！`);
 const loading = ref(false);
 const isEmailOption = ref(false);
+const message = useMessage(); // 消息弹窗
 
 async function remoteMethod(emailOrNickname: string) {
   if (emailOrNickname) {
@@ -98,7 +110,10 @@ async function send() {
   await InviteApi.inviteUser({
     inviterUserId: userId,
     inviteeUserIds: inviteeUserIds,
+    tenantId: getTenantId(),
   } as InviteUserReqVO);
+  message.success('邀请成功');
+  dialogShow.value = false;
 }
 
 /** 初始化 */
@@ -107,6 +122,7 @@ onMounted(async () => {});
 defineExpose({
   open: () => {
     dialogShow.value = true;
+    emailOrUsers.value = [];
   },
 });
 </script>

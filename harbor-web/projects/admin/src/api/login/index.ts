@@ -51,3 +51,13 @@ export const reqCheck = (data) => {
 export const getUserLoginInfo = () => {
   return request.get({ url: '/system/auth/login-user-info' });
 };
+
+//获取登录验证码
+export const sendSmsCode = (data: SmsCodeVO) => {
+  return request.post({ url: '/system/auth/send-sms-code', data });
+};
+
+// 短信验证码登录
+export const smsLogin = (data: SmsLoginVO) => {
+  return request.post({ url: '/system/auth/sms-login', data });
+};
