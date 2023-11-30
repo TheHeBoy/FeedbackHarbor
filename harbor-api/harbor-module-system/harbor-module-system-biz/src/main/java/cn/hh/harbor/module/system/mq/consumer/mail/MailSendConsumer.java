@@ -2,7 +2,6 @@ package cn.hh.harbor.module.system.mq.consumer.mail;
 
 import cn.hh.harbor.framework.mq.core.stream.AbstractStreamMessageListener;
 import cn.hh.harbor.module.system.mq.message.mail.MailSendMessage;
-import cn.hh.harbor.module.system.mq.message.sms.SmsSendMessage;
 import cn.hh.harbor.module.system.service.mail.MailSendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

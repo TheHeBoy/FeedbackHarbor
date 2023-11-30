@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex items-center justify-center">
     <ContentWrap class="w-[50%] min-w-130">
-      <div v-hasPermi="['system:invite:invite-user']">
+      <div v-hasPermi="['system:invite:invite']">
         <h1 class="font-bold">邀请成员加入您的团队</h1>
         <el-row>
           <el-col :span="18">
@@ -15,7 +15,7 @@
                 <Icon icon="ep:link" />
                 <span class="ml-1">复制邀请链接</span>
               </el-button>
-              <div v-if="inviteLink" class="flex" @click="onDisableInviteLink">
+              <div v-if="linkCode" class="flex" @click="onDisableInviteLink">
                 <el-button link type="primary">
                   <el-text type="danger">停用链接</el-text>
                 </el-button>
@@ -60,6 +60,7 @@
                 v-model="data.roleIds"
                 :disabled="!checkPermi(['system:permission:assign-user-role'])"
                 multiple
+                @change="assignRole(data)"
                 placeholder="请选择角色"
               >
                 <el-option
@@ -89,9 +90,12 @@
 <script lang="ts" setup>
 import * as UserTeamApi from '@/api/system/user/team';
 import * as RoleApi from '@/api/system/role';
+import * as InviteLinkApi from '@/api/system/invite/link';
 import { UserTeamVO } from '@/api/system/user/team';
 import { checkPermi } from '@/utils/permission';
 import EmailInvite from './EmailInvite.vue';
+import * as PermissionApi from '@/api/system/permission';
+import { getTenantId } from '@/utils/auth';
 
 defineOptions({ name: 'SystemUserTeam' });
 
@@ -99,20 +103,29 @@ const message = useMessage(); // 消息弹窗
 const list = ref<UserTeamVO[]>([]);
 const roleList = ref<any[]>([]);
 const nicknameQuery = ref('');
-const inviteLink = ref('test');
+const linkCode = ref();
 const emailInviteRef = ref();
 const loading = ref(true);
 
-function onDisableInviteLink() {}
+async function onDisableInviteLink() {
+  await InviteLinkApi.deleteLink(linkCode.value);
+  linkCode.value = undefined;
+  message.success('停用成功');
+}
 
-function onCopyInviteLink() {
+async function onCopyInviteLink() {
+  if (!linkCode.value) {
+    linkCode.value = await InviteLinkApi.createLink(getTenantId());
+  }
+  const inviteLink = `${import.meta.env.VITE_LOGIN_URL}?code=${linkCode.value}`;
+
   //执行复制
-  navigator.clipboard.writeText(inviteLink.value).then(
+  navigator.clipboard.writeText(inviteLink).then(
     () => {
-      message.notifySuccess('复制成功');
+      message.success(`复制成功：${inviteLink}`);
     },
     () => {
-      message.notifyError('复制失败');
+      message.error('复制失败');
     },
   );
 }
@@ -127,14 +140,30 @@ async function getList() {
 }
 
 async function quit(userId: number) {
+  await message.confirm('确定要退出管理团队吗');
   await UserTeamApi.quit(userId);
   getList();
   message.success('成功退出');
+}
+
+async function assignRole(vo: UserTeamVO) {
+  loading.value = true;
+  try {
+    await PermissionApi.assignUserRole({
+      userId: vo.id,
+      roleIds: vo.roleIds,
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
 /** 初始化 */
 onMounted(async () => {
   getList();
   roleList.value = await RoleApi.getSimpleRoleList();
+  if (checkPermi(['system:invite:invite'])) {
+    linkCode.value = await InviteLinkApi.getLink(getTenantId());
+  }
 });
 </script>

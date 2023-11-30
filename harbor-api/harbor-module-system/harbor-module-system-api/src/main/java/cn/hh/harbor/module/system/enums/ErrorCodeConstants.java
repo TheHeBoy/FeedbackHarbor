@@ -12,10 +12,6 @@ public interface ErrorCodeConstants {
     // ========== AUTH 模块 1002000000 ==========
     ErrorCode AUTH_LOGIN_BAD_CREDENTIALS = new ErrorCode(1002000000, "登录失败，账号密码不正确");
     ErrorCode AUTH_LOGIN_USER_DISABLED = new ErrorCode(1002000001, "登录失败，账号被禁用");
-    ErrorCode AUTH_LOGIN_CAPTCHA_CODE_ERROR = new ErrorCode(1002000004, "验证码不正确，原因：{}");
-    ErrorCode AUTH_THIRD_LOGIN_NOT_BIND = new ErrorCode(1002000005, "未绑定账号，需要进行绑定");
-    ErrorCode AUTH_TOKEN_EXPIRED = new ErrorCode(1002000006, "Token 已经过期");
-    ErrorCode AUTH_MOBILE_NOT_EXISTS = new ErrorCode(1002000007, "手机号不存在");
 
     // ========== 菜单模块 1002001000 ==========
     ErrorCode MENU_NAME_DUPLICATE = new ErrorCode(1002001000, "已经存在该名字的菜单");
@@ -28,10 +24,8 @@ public interface ErrorCodeConstants {
     // ========== 角色模块 1002002000 ==========
     ErrorCode ROLE_NOT_EXISTS = new ErrorCode(1002002000, "角色不存在");
     ErrorCode ROLE_NAME_DUPLICATE = new ErrorCode(1002002001, "已经存在名为【{}】的角色");
-    ErrorCode ROLE_CODE_DUPLICATE = new ErrorCode(1002002002, "已经存在编码为【{}】的角色");
     ErrorCode ROLE_CAN_NOT_UPDATE_SYSTEM_TYPE_ROLE = new ErrorCode(1002002003, "不能操作类型为系统内置的角色");
     ErrorCode ROLE_IS_DISABLE = new ErrorCode(1002002004, "名字为【{}】的角色已被禁用");
-    ErrorCode ROLE_ADMIN_CODE_ERROR = new ErrorCode(1002002005, "编码【{}】不能使用");
 
     // ========== 用户模块 1002003000 ==========
     ErrorCode USER_USERNAME_EXISTS = new ErrorCode(1002003000, "用户账号已经存在");
@@ -41,7 +35,6 @@ public interface ErrorCodeConstants {
     ErrorCode USER_IMPORT_LIST_IS_EMPTY = new ErrorCode(1002003004, "导入用户数据不能为空！");
     ErrorCode USER_PASSWORD_FAILED = new ErrorCode(1002003005, "用户密码校验失败");
     ErrorCode USER_IS_DISABLE = new ErrorCode(1002003006, "名字为【{}】的用户已被禁用");
-    ErrorCode USER_COUNT_MAX = new ErrorCode(1002003008, "创建用户失败，原因：超过租户最大租户配额({})！");
 
 
     // ========== 字典类型 1002006000 ==========
@@ -55,33 +48,6 @@ public interface ErrorCodeConstants {
     ErrorCode DICT_DATA_NOT_EXISTS = new ErrorCode(1002007001, "当前字典数据不存在");
     ErrorCode DICT_DATA_NOT_ENABLE = new ErrorCode(1002007002, "字典数据({})不处于开启状态，不允许选择");
     ErrorCode DICT_DATA_VALUE_DUPLICATE = new ErrorCode(1002007003, "已经存在该值的字典数据");
-
-    // ========== 通知公告 1002008000 ==========
-    ErrorCode NOTICE_NOT_FOUND = new ErrorCode(1002008001, "当前通知公告不存在");
-
-    // ========== 短信渠道 1002011000 ==========
-    ErrorCode SMS_CHANNEL_NOT_EXISTS = new ErrorCode(1002011000, "短信渠道不存在");
-    ErrorCode SMS_CHANNEL_DISABLE = new ErrorCode(1002011001, "短信渠道不处于开启状态，不允许选择");
-    ErrorCode SMS_CHANNEL_HAS_CHILDREN = new ErrorCode(1002011002, "无法删除，该短信渠道还有短信模板");
-
-    // ========== 短信模板 1002012000 ==========
-    ErrorCode SMS_TEMPLATE_NOT_EXISTS = new ErrorCode(1002012000, "短信模板不存在");
-    ErrorCode SMS_TEMPLATE_CODE_DUPLICATE = new ErrorCode(1002012001, "已经存在编码为【{}】的短信模板");
-
-    // ========== 短信发送 1002013000 ==========
-    ErrorCode SMS_SEND_MOBILE_NOT_EXISTS = new ErrorCode(1002013000, "手机号不存在");
-    ErrorCode SMS_SEND_MOBILE_TEMPLATE_PARAM_MISS = new ErrorCode(1002013001, "模板参数({})缺失");
-    ErrorCode SMS_SEND_TEMPLATE_NOT_EXISTS = new ErrorCode(1002013002, "短信模板不存在");
-
-    // ========== 短信验证码 1002014000 ==========
-    ErrorCode SMS_CODE_NOT_FOUND = new ErrorCode(1002014000, "验证码不存在");
-    ErrorCode SMS_CODE_EXPIRED = new ErrorCode(1002014001, "验证码已过期");
-    ErrorCode SMS_CODE_USED = new ErrorCode(1002014002, "验证码已使用");
-    ErrorCode SMS_CODE_NOT_CORRECT = new ErrorCode(1002014003, "验证码不正确");
-    ErrorCode SMS_CODE_EXCEED_SEND_MAXIMUM_QUANTITY_PER_DAY = new ErrorCode(1002014004, "超过每日短信发送数量");
-    ErrorCode SMS_CODE_SEND_TOO_FAST = new ErrorCode(1002014005, "短信发送过于频率");
-    ErrorCode SMS_CODE_IS_EXISTS = new ErrorCode(1002014006, "手机号已被使用");
-    ErrorCode SMS_CODE_IS_UNUSED = new ErrorCode(1002014007, "验证码未被使用");
 
     // ========== 租户信息 1002015000 ==========
     ErrorCode TENANT_NOT_EXISTS = new ErrorCode(1002015000, "租户不存在");
@@ -115,6 +81,20 @@ public interface ErrorCodeConstants {
     ErrorCode MAIL_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1002025000, "模板参数({})缺失");
     ErrorCode MAIL_SEND_MAIL_NOT_EXISTS = new ErrorCode(1002025001, "邮箱不存在");
 
-    // ========== 团队邀请 1002026000 ==========
-    ErrorCode INVITE_NO_EXISTS = new ErrorCode(1002026000, "邀请不存在");
+    // ========== 用户邀请 1002026000 ==========
+    ErrorCode INVITE_USER_NO_EXISTS = new ErrorCode(1002026000, "用户邀请不存在");
+
+    // ========== 链接邀请 1002027000 ==========
+    ErrorCode INVITE_LINK_EXISTS = new ErrorCode(1002027000, "当前租户已存在邀请链接");
+    ErrorCode INVITE_LINK_NO_EXISTS = new ErrorCode(1002027001, "邀请链接不存在");
+
+    // ========== 租户用户关系 1002028000 ==========
+    ErrorCode TENANT_USER_EXISTS = new ErrorCode(1002027000, "当前用户已存在管理团队中");
+
+    // ========== 邮件验证码 1002029000 ==========
+    ErrorCode MAIL_CAPTCHA_NOT_FOUND = new ErrorCode(1002014000, "验证码不存在");
+    ErrorCode MAIL_CAPTCHA_EXPIRED = new ErrorCode(1002014001, "验证码已过期");
+    ErrorCode MAIL_CAPTCHA_USED = new ErrorCode(1002014002, "验证码已使用");
+    ErrorCode MAIL_CAPTCHA_EXCEED_SEND_MAXIMUM_QUANTITY_PER_DAY = new ErrorCode(1002014004, "超过每日短信发送数量");
+    ErrorCode MAIL_CAPTCHA_SEND_TOO_FAST = new ErrorCode(1002014005, "短信发送过于频率");
 }

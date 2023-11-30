@@ -47,8 +47,7 @@ public class MailSendServiceImpl implements MailSendService {
     private MailProducer mailProducer;
 
     @Override
-    public Long sendSingleMail(String mail, Long userId, Integer userType,
-                               String templateCode, Map<String, Object> templateParams) {
+    public Long sendSingleMail(String mail, Long userId, String templateCode, Map<String, Object> templateParams) {
         // 校验邮箱模版是否合法
         MailTemplateDO template = validateMailTemplate(templateCode);
         // 校验邮箱账号是否合法
@@ -58,13 +57,12 @@ public class MailSendServiceImpl implements MailSendService {
         mail = validateMail(mail);
         validateTemplateParams(template, templateParams);
 
-        // 创建发送日志。如果模板被禁用，则不发送短信，只记录日志
+        // 创建发送日志。如果模板被禁用，则不发送邮件，只记录日志
         Boolean isSend = CommonStatusEnum.ENABLE.getStatus().equals(template.getStatus());
         String title = mailTemplateService.formatMailTemplateContent(template.getTitle(), templateParams);
         String content = mailTemplateService.formatMailTemplateContent(template.getContent(), templateParams);
-        Long sendLogId = mailLogService.createMailLog(userId, userType, mail,
-                account, template, content, templateParams, isSend);
-        // 发送 MQ 消息，异步执行发送短信
+        Long sendLogId = mailLogService.createMailLog(userId, mail, account, template, content, templateParams, isSend);
+        // 发送 MQ 消息，异步执行发送邮件
         if (isSend) {
             mailProducer.sendMailSendMessage(sendLogId, mail, account.getId(),
                     template.getNickname(), title, content);

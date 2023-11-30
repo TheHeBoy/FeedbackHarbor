@@ -85,14 +85,12 @@ const formLoading = ref(false); // 表单的加载中：1）修改时的数据�
 const formType = ref(''); // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   nickname: '',
-  deptId: '',
   mobile: '',
   email: '',
   id: undefined,
   username: '',
   password: '',
   sex: undefined,
-  postIds: [],
   remark: '',
   status: CommonStatusEnum.ENABLE,
   roleIds: [],
@@ -166,14 +164,12 @@ const submitForm = async () => {
 const resetForm = () => {
   formData.value = {
     nickname: '',
-    deptId: '',
     mobile: '',
     email: '',
     id: undefined,
     username: '',
     password: '',
     sex: undefined,
-    postIds: [],
     remark: '',
     status: CommonStatusEnum.ENABLE,
     roleIds: [],

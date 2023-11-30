@@ -1,7 +1,5 @@
 package cn.hh.harbor.module.system.convert.auth;
 
-import cn.hh.harbor.module.system.api.sms.dto.code.SmsCodeSendReqDTO;
-import cn.hh.harbor.module.system.api.sms.dto.code.SmsCodeUseReqDTO;
 import cn.hh.harbor.module.system.controller.admin.auth.vo.*;
 import cn.hh.harbor.module.system.controller.app.auth.vo.AppAuthLoginRespVO;
 import cn.hh.harbor.module.system.controller.app.auth.vo.AppAuthUserInfoRespVO;
@@ -75,9 +73,4 @@ public interface AuthConvert {
         // 获得到所有的根节点
         return filterList(treeNodeMap.values(), node -> ID_ROOT.equals(node.getParentId()));
     }
-
-    SmsCodeSendReqDTO convert(AuthSmsSendReqVO reqVO);
-
-    SmsCodeUseReqDTO convert(AuthSmsLoginReqVO reqVO, Integer scene, String usedIp);
-
 }

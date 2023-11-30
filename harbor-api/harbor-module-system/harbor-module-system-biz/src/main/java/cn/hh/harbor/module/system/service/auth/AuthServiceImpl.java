@@ -1,5 +1,11 @@
 package cn.hh.harbor.module.system.service.auth;
 
+import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthMailRegisterReqVO;
+import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthResetPasswdReqVO;
+import cn.hh.harbor.module.system.controller.admin.user.vo.user.UserCreateReqVO;
+import cn.hh.harbor.module.system.enums.mail.MailSceneEnum;
+import cn.hh.harbor.module.system.service.mail.MailCaptchaService;
+import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaUseReqVO;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
 import cn.hh.harbor.framework.common.enums.UserTypeEnum;
@@ -8,10 +14,7 @@ import cn.hh.harbor.framework.common.util.monitor.TracerUtils;
 import cn.hh.harbor.framework.common.util.servlet.ServletUtils;
 import cn.hh.harbor.framework.social.core.HarborAuthRequestFactory;
 import cn.hh.harbor.module.system.api.logger.dto.LoginLogCreateReqDTO;
-import cn.hh.harbor.module.system.api.sms.SmsCodeApi;
 import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthLoginRespVO;
-import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthSmsLoginReqVO;
-import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthSmsSendReqVO;
 import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthSocialLoginReqVO;
 import cn.hh.harbor.module.system.convert.auth.AuthConvert;
 import cn.hh.harbor.module.system.dal.dataobject.tenant.TenantUserDO;
@@ -20,7 +23,6 @@ import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
 import cn.hh.harbor.module.system.dal.mysql.tenant.TenantUserMapper;
 import cn.hh.harbor.module.system.enums.logger.LoginLogTypeEnum;
 import cn.hh.harbor.module.system.enums.logger.LoginResultEnum;
-import cn.hh.harbor.module.system.enums.sms.SmsSceneEnum;
 import cn.hh.harbor.module.system.enums.social.SocialTypeEnum;
 import cn.hh.harbor.module.system.service.logger.LoginLogService;
 import cn.hh.harbor.module.system.service.token.TokenService;
@@ -32,7 +34,6 @@ import com.xingyuv.jushauth.model.AuthUser;
 import com.xingyuv.jushauth.request.AuthRequest;
 import com.xingyuv.jushauth.utils.AuthStateUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -63,13 +64,7 @@ public class AuthServiceImpl implements AuthService {
     @Resource
     private TenantUserMapper tenantUserMapper;
     @Resource
-    private SmsCodeApi smsCodeApi;
-
-    /**
-     * 验证码的开关，默认为 true
-     */
-    @Value("${harbor.captcha.enable:true}")
-    private Boolean captchaEnable;
+    private MailCaptchaService mailCaptchaService;
 
     @Override
     public TokenAccessDO login(String username, String password, UserTypeEnum userTypeEnum) {
@@ -93,31 +88,6 @@ public class AuthServiceImpl implements AuthService {
 
         // 创建 Token 令牌，记录登录日志
         return createTokenAfterLoginSuccess(user.getId(), username, userTypeEnum, LoginLogTypeEnum.LOGIN_USERNAME);
-    }
-
-    @Override
-    public void sendSmsCode(AuthSmsSendReqVO reqVO) {
-        // 登录场景，验证是否存在
-        if (userService.getUserByMobile(reqVO.getMobile()) == null) {
-            throw exception(AUTH_MOBILE_NOT_EXISTS);
-        }
-        // 发送验证码
-        smsCodeApi.sendSmsCode(AuthConvert.INSTANCE.convert(reqVO).setCreateIp(getClientIP()));
-    }
-
-    @Override
-    public TokenAccessDO smsLogin(AuthSmsLoginReqVO reqVO, UserTypeEnum userTypeEnum) {
-        // 校验验证码
-        smsCodeApi.useSmsCode(AuthConvert.INSTANCE.convert(reqVO, SmsSceneEnum.ADMIN_MEMBER_LOGIN.getScene(), getClientIP()));
-
-        // 获得用户信息
-        UserDO user = userService.getUserByMobile(reqVO.getMobile());
-        if (user == null) {
-            throw exception(USER_NOT_EXISTS);
-        }
-
-        // 创建 Token 令牌，记录登录日志
-        return createTokenAfterLoginSuccess(user.getId(), reqVO.getMobile(), userTypeEnum, LoginLogTypeEnum.LOGIN_MOBILE);
     }
 
     @Override
@@ -168,6 +138,35 @@ public class AuthServiceImpl implements AuthService {
         // 生成跳转地址
         String authorizeUri = authRequest.authorize(AuthStateUtils.createState());
         return HttpUtils.replaceUrlQuery(authorizeUri, "redirect_uri", redirectUri);
+    }
+
+    @Override
+    public void mailRegister(AuthMailRegisterReqVO reqVO) {
+        // 校验验证码
+        mailCaptchaService.useMailCaptcha(new MailCaptchaUseReqVO()
+                .setUsedIp(getClientIP())
+                .setMail(reqVO.getMail())
+                .setCaptcha(reqVO.getCaptcha())
+                .setScene(MailSceneEnum.REGISTER.getScene()));
+
+        // 插入用户
+        UserCreateReqVO userCreateReqVO = new UserCreateReqVO();
+        userCreateReqVO.setEmail(reqVO.getMail());
+        userCreateReqVO.setUsername(reqVO.getUsername());
+        userCreateReqVO.setPassword(reqVO.getPassword());
+        userService.createUser(userCreateReqVO);
+    }
+
+    @Override
+    public void resetPasswd(AuthResetPasswdReqVO reqVO) {
+        // 校验验证码
+        mailCaptchaService.useMailCaptcha(new MailCaptchaUseReqVO()
+                .setUsedIp(getClientIP())
+                .setMail(reqVO.getMail())
+                .setCaptcha(reqVO.getCaptcha())
+                .setScene(MailSceneEnum.RESET_PASSWD.getScene()));
+
+        userService.updateUserPassword(reqVO.getUserId(), reqVO.getPassword());
     }
 
     private TokenAccessDO createTokenAfterLoginSuccess(Long userId, String username, UserTypeEnum userTypeEnum, LoginLogTypeEnum logType) {

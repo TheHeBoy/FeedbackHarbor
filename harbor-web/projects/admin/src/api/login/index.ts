@@ -2,14 +2,18 @@ import { request } from '@harbor/apis';
 import { getRefreshToken } from '@/utils/auth';
 import type { UserLoginVO } from './types';
 
-export interface SmsCodeVO {
-  mobile: string;
-  scene: number;
+export interface MailCaptchaVO {
+  username: string;
+  password: string;
+  mail: string;
+  captcha: string;
 }
 
-export interface SmsLoginVO {
-  mobile: string;
-  code: string;
+export interface ResetPasswdVO {
+  userId: number;
+  password: string;
+  mail: string;
+  captcha: string;
 }
 
 // 登录
@@ -20,11 +24,6 @@ export const login = (data: UserLoginVO) => {
 // 刷新访问令牌
 export const refreshToken = () => {
   return request.post({ url: '/system/auth/refresh-token?refreshToken=' + getRefreshToken() });
-};
-
-// 使用租户名，获得租户编号
-export const getTenantIdByName = (name: string) => {
-  return request.get({ url: '/system/tenant/get-id-by-name?name=' + name });
 };
 
 // 登出
@@ -52,12 +51,26 @@ export const getUserLoginInfo = () => {
   return request.get({ url: '/system/auth/login-user-info' });
 };
 
-//获取登录验证码
-export const sendSmsCode = (data: SmsCodeVO) => {
-  return request.post({ url: '/system/auth/send-sms-code', data });
+// 邮箱注册
+export const mailRegister = (data: MailCaptchaVO) => {
+  return request.post({ url: '/system/auth/mail-register', data });
 };
 
-// 短信验证码登录
-export const smsLogin = (data: SmsLoginVO) => {
-  return request.post({ url: '/system/auth/sms-login', data });
+// 发送邮箱验证码
+export const sendRegisterMailCaptcha = (mail: String) => {
+  return request.post({ url: '/system/auth/send-mail-captcha', params: { mail } });
+};
+
+// 检查用户名是否存在
+export const checkUsername = (username: String) => {
+  return request.get({ url: '/system/auth/check-username', params: { username } });
+};
+
+// 发送重置密码验证吗
+export const sendResetPasswdMailCaptcha = (mail: String) => {
+  return request.post({ url: '/system/auth/send-reset-passwd-mail-captcha', params: { mail } });
+};
+
+export const resetPasswd = (data: ResetPasswdVO) => {
+  return request.post({ url: '/system/auth/reset-passwd', data });
 };

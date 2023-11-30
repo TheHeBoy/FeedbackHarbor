@@ -69,6 +69,9 @@ public class TenantServiceImpl implements TenantService {
     private PermissionService permissionService;
 
     @Resource
+    private TenantUserService tenantUserService;
+
+    @Resource
     private TenantUserMapper tenantUserMapper;
 
     @Resource
@@ -117,10 +120,7 @@ public class TenantServiceImpl implements TenantService {
 
         Long tenantId = tenant.getId();
         // 插入租户和用户的关联
-        tenantUserMapper.insert(TenantUserDO.builder()
-                .tenantId(tenant.getId())
-                .userId(userId)
-                .build());
+        tenantUserService.insert(tenant.getId(), userId);
         // 创建超级租户管理员角色
         TenantUtils.execute(tenant.getId(), () -> {
             Long roleId = createRole(tenantPackage);
@@ -136,11 +136,7 @@ public class TenantServiceImpl implements TenantService {
 
     private Long createRole(TenantPackageDO tenantPackage) {
         // 创建角色
-        RoleCreateReqVO reqVO = new RoleCreateReqVO();
-        reqVO.setName(RoleCodeEnum.SUPER_TENANT_ADMIN.getName())
-                .setCode(RoleCodeEnum.SUPER_TENANT_ADMIN.getCode())
-                .setSort(0);
-        Long roleId = roleService.createRole(reqVO);
+        Long roleId = roleService.createSuperTenantAdminRole();
         // 分配权限
         permissionService.assignRoleMenu(roleId, tenantPackage.getMenuIds());
         return roleId;

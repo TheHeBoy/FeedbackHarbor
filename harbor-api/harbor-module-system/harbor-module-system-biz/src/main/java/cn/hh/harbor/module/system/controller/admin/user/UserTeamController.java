@@ -6,9 +6,9 @@ import cn.hh.harbor.framework.tenant.core.context.TenantContextHolder;
 import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamInviteRespVO;
 import cn.hh.harbor.module.system.controller.admin.user.vo.team.UserTeamListRespVO;
 import cn.hh.harbor.module.system.convert.user.UserConvert;
-import cn.hh.harbor.module.system.dal.dataobject.invite.InviteDO;
+import cn.hh.harbor.module.system.dal.dataobject.invite.InviteUserDO;
 import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
-import cn.hh.harbor.module.system.service.invite.InviteService;
+import cn.hh.harbor.module.system.service.invite.InviteUserService;
 import cn.hh.harbor.module.system.service.permission.PermissionService;
 import cn.hh.harbor.module.system.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +39,7 @@ public class UserTeamController {
     @Resource
     private PermissionService permissionService;
     @Resource
-    private InviteService inviteService;
+    private InviteUserService inviteUserService;
 
     @GetMapping("/list")
     @Operation(summary = "获得当前租户下的管理用户")
@@ -64,9 +64,9 @@ public class UserTeamController {
         List<UserTeamInviteRespVO> result = userDOList.stream().map(e -> {
             UserTeamInviteRespVO respVO = UserConvert.INSTANCE.convertTeam2(e);
             // 填充邀请状态
-            InviteDO inviteDO = inviteService.selectUserInviteFilter(respVO.getId(), loginUserId);
-            if (inviteDO != null){
-                respVO.setInviteStatus(inviteDO.getStatus());
+            InviteUserDO inviteUserDO = inviteUserService.selectUserInviteFilter(respVO.getId(), loginUserId);
+            if (inviteUserDO != null){
+                respVO.setInviteStatus(inviteUserDO.getStatus());
             }
             return respVO;
         }).collect(Collectors.toList());

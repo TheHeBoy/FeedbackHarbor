@@ -46,7 +46,6 @@ public class MailAccountServiceImpl implements MailAccountService {
     }
 
     @Override
-    @Cacheable(value = RedisKeyConstants.MAIL_ACCOUNT, key = "#updateReqVO.id")
     public void updateMailAccount(MailAccountUpdateReqVO updateReqVO) {
         // 校验是否存在
         validateMailAccountExists(updateReqVO.getId());
@@ -57,7 +56,6 @@ public class MailAccountServiceImpl implements MailAccountService {
     }
 
     @Override
-    @Cacheable(value = RedisKeyConstants.MAIL_ACCOUNT, key = "#id")
     public void deleteMailAccount(Long id) {
         // 校验是否存在账号
         validateMailAccountExists(id);
@@ -82,7 +80,6 @@ public class MailAccountServiceImpl implements MailAccountService {
     }
 
     @Override
-    @Cacheable(value = RedisKeyConstants.MAIL_ACCOUNT, key = "#id", unless = "#result == null")
     public MailAccountDO getMailAccountFromCache(Long id) {
         return getMailAccount(id);
     }

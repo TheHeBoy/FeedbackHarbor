@@ -4,8 +4,6 @@ import cn.hh.harbor.module.system.dal.dataobject.token.TokenAccessDO;
 
 /**
  * System Redis Key 枚举类
- *
- *
  */
 public interface RedisKeyConstants {
     /**
@@ -50,14 +48,6 @@ public interface RedisKeyConstants {
      * 由于动态过期时间，使用 RedisTemplate 操作
      */
     String ACCESS_TOKEN = "access_token:%s";
-
-    /**
-     * 邮件账号的缓存
-     * <p>
-     * KEY 格式：sms_template:{id}
-     * VALUE 数据格式：String 账号信息
-     */
-    String MAIL_ACCOUNT = "mail_account";
 
     /**
      * 邮件模版的缓存

@@ -4,9 +4,6 @@
       <el-form-item label="角色名称">
         <el-tag>{{ formData.name }}</el-tag>
       </el-form-item>
-      <el-form-item label="角色标识">
-        <el-tag>{{ formData.code }}</el-tag>
-      </el-form-item>
       <el-form-item label="菜单权限">
         <el-card class="cardHeight">
           <template #header>
@@ -60,7 +57,6 @@ const formLoading = ref(false); // 表单的加载中：1）修改时的数据�
 const formData = reactive({
   id: 0,
   name: '',
-  code: '',
   menuIds: [],
 });
 const formRef = ref(); // 表单 Ref
@@ -78,7 +74,6 @@ const open = async (row: RoleApi.RoleVO) => {
   // 设置数据
   formData.id = row.id;
   formData.name = row.name;
-  formData.code = row.code;
   formLoading.value = true;
   try {
     formData.menuIds = await PermissionApi.getRoleMenuList(row.id);
@@ -128,7 +123,6 @@ const resetForm = () => {
   formData.value = {
     id: 0,
     name: '',
-    code: '',
     menuIds: [],
   };
   treeRef.value?.setCheckedNodes([]);

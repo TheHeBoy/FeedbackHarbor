@@ -29,7 +29,13 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.path === '/login') {
-      next({ path: '/' });
+      const code = to.query.code;
+      // 通过邀请链接进入登录页面时,已经登录了就之间跳转到选择租户界面
+      if (code) {
+        next({ path: '/selectTenant', query: { code } });
+      } else {
+        next({ path: '/' });
+      }
     } else {
       // 获取所有字典
       const dictStore = useDictStoreWithOut();
@@ -71,12 +77,10 @@ router.beforeEach(async (to, from, next) => {
         next();
       }
     }
+  } else if (whiteList.indexOf(to.path) !== -1) {
+    next();
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
-      next();
-    } else {
-      next(`/login?redirect=${to.fullPath}`); // 否则全部重定向到登录页
-    }
+    next(`/login?redirect=${to.fullPath}`); // 否则全部重定向到登录页
   }
 
   // 如果有租户信息修改页面图标

@@ -26,7 +26,6 @@ public class LoginLogCreateReqDTO {
     /**
      * 用户编号
      */
-    @NotNull(message = "用户id不能为空")
     private Long userId;
     /**
      * 用户类型

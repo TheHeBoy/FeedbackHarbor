@@ -10,9 +10,6 @@
       <el-form-item label="角色名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入角色名称" />
       </el-form-item>
-      <el-form-item label="角色标识" prop="code">
-        <el-input v-model="formData.code" placeholder="请输入角色标识" />
-      </el-form-item>
       <el-form-item label="显示顺序" prop="sort">
         <el-input v-model="formData.sort" placeholder="请输入显示顺序" />
       </el-form-item>
@@ -53,17 +50,14 @@ const formType = ref(''); // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
   name: '',
-  code: '',
   sort: undefined,
   status: CommonStatusEnum.ENABLE,
   remark: '',
 });
 const formRules = reactive({
-  name: [{ required: true, message: '岗位标题不能为空', trigger: 'blur' }],
-  code: [{ required: true, message: '岗位编码不能为空', trigger: 'change' }],
-  sort: [{ required: true, message: '岗位顺序不能为空', trigger: 'change' }],
+  name: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
+  sort: [{ required: true, message: '显示顺序不能为空', trigger: 'change' }],
   status: [{ required: true, message: '岗位状态不能为空', trigger: 'change' }],
-  remark: [{ required: false, message: '岗位内容不能为空', trigger: 'blur' }],
 });
 const formRef = ref(); // 表单 Ref
 
@@ -89,7 +83,6 @@ const resetForm = () => {
   formData.value = {
     id: undefined,
     name: '',
-    code: '',
     sort: undefined,
     status: CommonStatusEnum.ENABLE,
     remark: '',

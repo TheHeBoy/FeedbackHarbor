@@ -154,13 +154,6 @@
                     <Icon icon="ep:key" />
                     重置密码
                   </el-dropdown-item>
-                  <el-dropdown-item
-                    command="handleRole"
-                    v-if="checkPermi(['system:permission:assign-user-role'])"
-                  >
-                    <Icon icon="ep:circle-check" />
-                    分配角色
-                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -180,8 +173,6 @@
   <UserForm ref="formRef" @success="getList" />
   <!-- 用户导入对话框 -->
   <UserImportForm ref="importFormRef" @success="getList" />
-  <!-- 分配角色 -->
-  <UserAssignRoleForm ref="assignRoleFormRef" @success="getList" />
 </template>
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict';
@@ -192,7 +183,6 @@ import { CommonStatusEnum } from '@/utils/constants';
 import * as UserApi from '@/api/system/user';
 import UserForm from './UserForm.vue';
 import UserImportForm from './UserImportForm.vue';
-import UserAssignRoleForm from './UserAssignRoleForm.vue';
 
 defineOptions({ name: 'SystemUser' });
 
@@ -291,9 +281,6 @@ const handleCommand = (command: string, row: UserApi.UserVO) => {
     case 'handleResetPwd':
       handleResetPwd(row);
       break;
-    case 'handleRole':
-      handleRole(row);
-      break;
     default:
       break;
   }
@@ -325,12 +312,6 @@ const handleResetPwd = async (row: UserApi.UserVO) => {
     await UserApi.resetUserPwd(row.id, password);
     message.success('修改成功，新密码是：' + password);
   } catch {}
-};
-
-/** 分配角色 */
-const assignRoleFormRef = ref();
-const handleRole = (row: UserApi.UserVO) => {
-  assignRoleFormRef.value.open(row);
 };
 
 /** 初始化 */

@@ -3,8 +3,6 @@ import { isDark } from '@/utils/is';
 import { useAppStore } from '@/store/modules/app';
 import { useDesign } from '@/hooks/web/useDesign';
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
-import { getTenantLogo } from '@/utils/auth';
-import { changeFavicon } from '@harbor/core/src/utils/favicon';
 
 defineOptions({ name: 'APP' });
 

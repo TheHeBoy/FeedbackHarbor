@@ -59,13 +59,13 @@
 <script lang="ts" setup>
 import { getTenantId, getTenantName } from '@/utils/auth';
 import * as UserTeamApi from '@/api/system/user/team';
-import * as InviteApi from '@/api/system/invite';
+import * as InviteApi from '@/api/system/invite/user';
 import { UserTeamVO } from '@/api/system/user/team';
 import { useUserStore } from '@/store/modules/user';
-import { InviteUserReqVO } from '@/api/system/invite';
+import { InviteUserReqVO } from '@/api/system/invite/user';
 import { DICT_TYPE, getDictLabel } from '@/utils/dict';
-import { useDictStoreWithOut } from '@/store/modules/dict';
 import { SystemInviteStatusEnum } from '@/utils/constants';
+import { emailValidate } from '@/utils/validate';
 
 const dialogShow = ref(false);
 const options = ref<UserTeamVO[] | string>();
@@ -78,7 +78,7 @@ const message = useMessage(); // 消息弹窗
 async function remoteMethod(emailOrNickname: string) {
   if (emailOrNickname) {
     loading.value = true;
-    if (isEmail(emailOrNickname)) {
+    if (emailValidate(emailOrNickname)) {
       isEmailOption.value = true;
       options.value = emailOrNickname;
     } else {
@@ -89,11 +89,6 @@ async function remoteMethod(emailOrNickname: string) {
   } else {
     options.value = undefined;
   }
-}
-
-function isEmail(str: string) {
-  const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-  return reg.test(str);
 }
 
 async function send() {

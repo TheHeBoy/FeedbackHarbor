@@ -19,11 +19,6 @@ public class RoleBaseVO {
     @Size(max = 30, message = "角色名称长度不能超过30个字符")
     private String name;
 
-    @NotBlank(message = "角色标志不能为空")
-    @Size(max = 100, message = "角色标志长度不能超过100个字符")
-    @Schema(description = "角色编码", requiredMode = Schema.RequiredMode.REQUIRED, example = "ADMIN")
-    private String code;
-
     @Schema(description = "显示顺序不能为空", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     @NotNull(message = "显示顺序不能为空")
     private Integer sort;

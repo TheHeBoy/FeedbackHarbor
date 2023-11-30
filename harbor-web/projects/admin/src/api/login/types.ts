@@ -1,7 +1,6 @@
 export type UserLoginVO = {
   username: string;
   password: string;
-  captchaVerification: string;
 };
 
 export type TokenType = {
@@ -12,17 +11,4 @@ export type TokenType = {
   userType: number; //用户类型
   clientId: string; //客户端编号
   expiresTime: number; //过期时间
-};
-
-export type UserVO = {
-  id: number;
-  username: string;
-  nickname: string;
-  deptId: number;
-  email: string;
-  mobile: string;
-  sex: number;
-  avatar: string;
-  loginIp: string;
-  loginDate: string;
 };

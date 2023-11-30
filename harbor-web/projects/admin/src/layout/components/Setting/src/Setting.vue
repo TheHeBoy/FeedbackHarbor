@@ -212,8 +212,8 @@ const clear = () => {
 
     <div class="text-center">
       <!-- 主题 -->
-      <ElDivider>{{ t('setting.theme') }}</ElDivider>
-      <ThemeSwitch />
+      <!--      <ElDivider>{{ t('setting.theme') }}</ElDivider>-->
+      <!--      <ThemeSwitch />-->
 
       <!-- 布局 -->
       <ElDivider>{{ t('setting.layout') }}</ElDivider>

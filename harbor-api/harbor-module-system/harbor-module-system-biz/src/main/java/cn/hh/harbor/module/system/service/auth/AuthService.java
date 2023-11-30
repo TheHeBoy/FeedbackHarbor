@@ -3,7 +3,6 @@ package cn.hh.harbor.module.system.service.auth;
 import cn.hh.harbor.framework.common.enums.UserTypeEnum;
 import cn.hh.harbor.module.system.controller.admin.auth.vo.*;
 import cn.hh.harbor.module.system.dal.dataobject.token.TokenAccessDO;
-import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
 import cn.hh.harbor.module.system.enums.social.SocialTypeEnum;
 
 import javax.validation.Valid;
@@ -33,21 +32,6 @@ public interface AuthService {
     void logout(String token, Integer logType);
 
     /**
-     * 短信验证码发送
-     *
-     * @param reqVO 发送请求
-     */
-    void sendSmsCode(AuthSmsSendReqVO reqVO);
-
-    /**
-     * 短信登录
-     *
-     * @param reqVO 登录信息
-     * @return 登录结果
-     */
-    TokenAccessDO smsLogin(AuthSmsLoginReqVO reqVO, UserTypeEnum userTypeEnum);
-
-    /**
      * 社交快捷登录，使用 code 授权码
      *
      * @param reqVO 登录信息
@@ -71,4 +55,16 @@ public interface AuthService {
      * @return 社交平台的授权 URL
      */
     String getAuthorizeUrl(Integer type, String redirectUri);
+
+    /**
+     * 邮箱注册
+     * @param reqVO 注册信息
+     */
+    void mailRegister(AuthMailRegisterReqVO reqVO);
+
+    /**
+     * 重置密码
+     * @param reqVO 重置信息
+     */
+    void resetPasswd(AuthResetPasswdReqVO reqVO);
 }

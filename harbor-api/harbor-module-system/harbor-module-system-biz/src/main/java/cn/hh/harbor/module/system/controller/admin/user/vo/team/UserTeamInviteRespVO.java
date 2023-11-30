@@ -1,7 +1,7 @@
 package cn.hh.harbor.module.system.controller.admin.user.vo.team;
 
 import cn.hh.harbor.framework.common.validation.InEnum;
-import cn.hh.harbor.module.system.enums.invite.InviteStatusEnum;
+import cn.hh.harbor.module.system.enums.invite.user.InviteStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

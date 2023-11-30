@@ -30,4 +30,9 @@ public interface TenantUserMapper extends BaseMapperX<TenantUserDO> {
                 .eq(TenantUserDO::getUserId, userId)
         );
     }
+
+    default TenantUserDO selectByTenantIdAndUserId(Long tenantId, Long userId) {
+        return selectOne(TenantUserDO::getTenantId, tenantId,
+                TenantUserDO::getUserId, userId);
+    }
 }

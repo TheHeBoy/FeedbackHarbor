@@ -34,22 +34,6 @@ public class TenantController {
     @Resource
     private TenantService tenantService;
 
-    @GetMapping("/get-id-by-name")
-    @PermitAll
-    @Operation(summary = "使用租户名，获得租户编号")
-    @Parameter(name = "name", description = "租户名", required = true, example = "1024")
-    public CommonResult<Long> getTenantIdByName(@RequestParam("name") String name) {
-        TenantDO tenantDO = tenantService.getTenantByName(name);
-        return success(tenantDO != null ? tenantDO.getId() : null);
-    }
-
-    @GetMapping("/listByUser")
-    @Operation(summary = "通过用户得到所有社区租户")
-    public CommonResult<List<TenantRespVO>> listByUser() {
-        List<TenantDO> list = tenantService.getTenantList(getLoginUserId());
-        return success(TenantConvert.INSTANCE.convertList(list));
-    }
-
     @DeleteMapping("/delete")
     @Operation(summary = "删除租户")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")

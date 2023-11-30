@@ -1,18 +1,16 @@
 package cn.hh.harbor.module.system.service.mail;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.extra.mail.MailAccount;
-import cn.hutool.extra.mail.MailUtil;
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
-import cn.hh.harbor.framework.common.enums.UserTypeEnum;
 import cn.hh.harbor.framework.test.core.ut.BaseMockitoUnitTest;
 import cn.hh.harbor.framework.test.core.util.RandomUtils;
 import cn.hh.harbor.module.system.dal.dataobject.mail.MailAccountDO;
 import cn.hh.harbor.module.system.dal.dataobject.mail.MailTemplateDO;
-import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
 import cn.hh.harbor.module.system.mq.message.mail.MailSendMessage;
 import cn.hh.harbor.module.system.mq.producer.mail.MailProducer;
 import cn.hh.harbor.module.system.service.user.UserService;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.extra.mail.MailAccount;
+import cn.hutool.extra.mail.MailUtil;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,6 @@ import org.mockito.MockedStatic;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cn.hutool.core.util.RandomUtil.randomEle;
 import static cn.hh.harbor.framework.test.core.util.AssertUtils.assertServiceException;
 import static cn.hh.harbor.framework.test.core.util.RandomUtils.*;
 import static cn.hh.harbor.module.system.enums.ErrorCodeConstants.*;
@@ -71,7 +68,6 @@ public class MailSendServiceImplTest extends BaseMockitoUnitTest {
         // 准备参数
         String mail = randomEmail();
         Long userId = randomLongId();
-        Integer userType = randomEle(UserTypeEnum.values()).getValue();
         String templateCode = RandomUtils.randomString();
         Map<String, Object> templateParams = MapUtil.<String, Object>builder().put("code", "1234")
                 .put("op", "login").build();
@@ -93,11 +89,11 @@ public class MailSendServiceImplTest extends BaseMockitoUnitTest {
         when(mailAccountService.getMailAccountFromCache(eq(template.getAccountId()))).thenReturn(account);
         // mock MailLogService 的方法
         Long mailLogId = randomLongId();
-        when(mailLogService.createMailLog(eq(userId), eq(userType), eq(mail),
+        when(mailLogService.createMailLog(eq(userId), eq(mail),
                 eq(account), eq(template), eq(content), eq(templateParams), eq(true))).thenReturn(mailLogId);
 
         // 调用
-        Long resultMailLogId = mailSendService.sendSingleMail(mail, userId, userType, templateCode, templateParams);
+        Long resultMailLogId = mailSendService.sendSingleMail(mail, userId, templateCode, templateParams);
         // 断言
         assertEquals(mailLogId, resultMailLogId);
         // 断言调用
@@ -113,7 +109,6 @@ public class MailSendServiceImplTest extends BaseMockitoUnitTest {
         // 准备参数
         String mail = randomEmail();
         Long userId = randomLongId();
-        Integer userType = randomEle(UserTypeEnum.values()).getValue();
         String templateCode = RandomUtils.randomString();
         Map<String, Object> templateParams = MapUtil.<String, Object>builder().put("code", "1234")
                 .put("op", "login").build();
@@ -135,11 +130,11 @@ public class MailSendServiceImplTest extends BaseMockitoUnitTest {
         when(mailAccountService.getMailAccountFromCache(eq(template.getAccountId()))).thenReturn(account);
         // mock MailLogService 的方法
         Long mailLogId = randomLongId();
-        when(mailLogService.createMailLog(eq(userId), eq(userType), eq(mail),
+        when(mailLogService.createMailLog(eq(userId), eq(mail),
                 eq(account), eq(template), eq(content), eq(templateParams), eq(false))).thenReturn(mailLogId);
 
         // 调用
-        Long resultMailLogId = mailSendService.sendSingleMail(mail, userId, userType, templateCode, templateParams);
+        Long resultMailLogId = mailSendService.sendSingleMail(mail, userId, templateCode, templateParams);
         // 断言
         assertEquals(mailLogId, resultMailLogId);
         // 断言调用

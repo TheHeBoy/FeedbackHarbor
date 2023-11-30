@@ -25,7 +25,14 @@ public interface RoleService {
      * @param reqVO 创建角色信息
      * @return 角色编号
      */
-    Long createRole(@Valid RoleCreateReqVO reqVO);
+    Long createRole(@Valid RoleCreateReqVO reqVO, Long tenantId);
+
+    /**
+     * 在当前租户下创建超级租户管理角色
+     *
+     * @return 角色编号
+     */
+    Long createSuperTenantAdminRole();
 
     /**
      * 更新角色

@@ -5,6 +5,7 @@ import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.framework.excel.core.util.ExcelUtils;
 import cn.hh.harbor.framework.operatelog.core.annotations.OperateLog;
+import cn.hh.harbor.framework.tenant.core.context.TenantContextHolder;
 import cn.hh.harbor.module.system.controller.admin.permission.vo.role.*;
 import cn.hh.harbor.module.system.convert.permission.RoleConvert;
 import cn.hh.harbor.module.system.dal.dataobject.permission.RoleDO;
@@ -40,7 +41,7 @@ public class RoleController {
     @Operation(summary = "创建角色")
     @PreAuthorize("@ss.hasPermission('system:role:create')")
     public CommonResult<Long> createRole(@Valid @RequestBody RoleCreateReqVO reqVO) {
-        return success(roleService.createRole(reqVO));
+        return success(roleService.createRole(reqVO, TenantContextHolder.getTenantId()));
     }
 
     @PutMapping("/update")

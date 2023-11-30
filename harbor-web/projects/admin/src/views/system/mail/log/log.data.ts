@@ -39,14 +39,6 @@ const crudSchemas = reactive<CrudSchema[]>([
     isTable: false,
   },
   {
-    label: '用户类型',
-    field: 'userType',
-    dictType: DICT_TYPE.USER_TYPE,
-    dictClass: 'number',
-    isSearch: true,
-    isTable: false,
-  },
-  {
     label: '邮件标题',
     field: 'templateTitle',
   },

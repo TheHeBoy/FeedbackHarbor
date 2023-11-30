@@ -46,15 +46,32 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long createRole(RoleCreateReqVO reqVO) {
+    public Long createRole(RoleCreateReqVO reqVO, Long tenantId) {
         // 校验角色
-        validateRoleDuplicate(reqVO.getName(), reqVO.getCode(), null);
+        validateRoleDuplicate(reqVO.getName(), null);
         // 插入到数据库
         RoleDO role = RoleConvert.INSTANCE.convert(reqVO);
         role.setStatus(CommonStatusEnum.ENABLE.getStatus());
+        // 如果为系统租户创建的为系统管理员
+        if (Objects.equals(SystemIdEnum.SYSTEM_ONLY_ID, tenantId)) {
+            role.setCode(RoleCodeEnum.ADMIN.getCode());
+        } else {
+            role.setCode(RoleCodeEnum.TENANT_ADMIN.getCode());
+        }
         roleMapper.insert(role);
         // 返回
         return role.getId();
+    }
+
+    @Override
+    public Long createSuperTenantAdminRole() {
+        RoleDO roleDO = new RoleDO()
+                .setName(RoleCodeEnum.SUPER_TENANT_ADMIN.getName())
+                .setCode(RoleCodeEnum.SUPER_TENANT_ADMIN.getCode())
+                .setRemark("系统生成")
+                .setSort(0);
+        roleMapper.insert(roleDO);
+        return roleDO.getId();
     }
 
     @Override
@@ -63,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
         // 校验是否可以更新
         validateRoleForUpdate(reqVO.getId());
         // 校验角色的唯一字段是否重复
-        validateRoleDuplicate(reqVO.getName(), reqVO.getCode(), reqVO.getId());
+        validateRoleDuplicate(reqVO.getName(), reqVO.getId());
 
         // 更新到数据库
         RoleDO updateObj = RoleConvert.INSTANCE.convert(reqVO);
@@ -102,32 +119,17 @@ public class RoleServiceImpl implements RoleService {
     /**
      * 校验角色的唯一字段是否重复
      * <p>
-     * 1. 是否存在相同名字的角色
-     * 2. 是否存在相同编码的角色
+     * 是否存在相同名字的角色
      *
      * @param name 角色名字
-     * @param code 角色额编码
      * @param id   角色编号
      */
     @VisibleForTesting
-    void validateRoleDuplicate(String name, String code, Long id) {
-        // 0. 超级管理员，不允许创建
-        if (RoleCodeEnum.isSuperAdmin(code)) {
-            throw exception(ROLE_ADMIN_CODE_ERROR, code);
-        }
-        // 1. 该 name 名字被其它角色所使用
+    void validateRoleDuplicate(String name, Long id) {
+        // 该 name 名字被其它角色所使用
         RoleDO role = roleMapper.selectByName(name);
         if (role != null && !role.getId().equals(id)) {
             throw exception(ROLE_NAME_DUPLICATE, name);
-        }
-        // 2. 是否存在相同编码的角色
-        if (!StringUtils.hasText(code)) {
-            return;
-        }
-        // 该 code 编码被其它角色所使用
-        role = roleMapper.selectByCode(code);
-        if (role != null && !role.getId().equals(id)) {
-            throw exception(ROLE_CODE_DUPLICATE, code);
         }
     }
 

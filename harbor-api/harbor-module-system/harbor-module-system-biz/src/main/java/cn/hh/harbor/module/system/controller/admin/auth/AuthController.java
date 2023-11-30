@@ -1,5 +1,9 @@
 package cn.hh.harbor.module.system.controller.admin.auth;
 
+import cn.hh.harbor.framework.common.util.servlet.ServletUtils;
+import cn.hh.harbor.module.system.enums.mail.MailSceneEnum;
+import cn.hh.harbor.module.system.service.mail.MailCaptchaService;
+import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaSendReqVO;
 import cn.hutool.core.util.StrUtil;
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
 import cn.hh.harbor.framework.common.enums.UserTypeEnum;
@@ -32,6 +36,8 @@ import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +65,9 @@ public class AuthController {
     private PermissionService permissionService;
     @Resource
     private SecurityProperties securityProperties;
+
+    @Resource
+    private MailCaptchaService mailCaptchaService;
 
     @PostMapping("/login")
     @PermitAll
@@ -114,23 +123,59 @@ public class AuthController {
         return success(UserConvert.INSTANCE.convert5(user));
     }
 
-    // ========== 短信登录相关 ==========
+    // ========== 注册相关 ==========
 
-    @PostMapping("/sms-login")
+    @PostMapping("/mail-register")
     @PermitAll
-    @Operation(summary = "使用短信验证码登录")
-    @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
-    public CommonResult<AuthLoginRespVO> smsLogin(@RequestBody @Valid AuthSmsLoginReqVO reqVO) {
-        TokenAccessDO tokenAccessDO = authService.smsLogin(reqVO, getUserType());
-        return success(AuthConvert.INSTANCE.convert(tokenAccessDO));
+    @Operation(summary = "邮箱注册")
+    public CommonResult<Boolean> mailRegister(@RequestBody @Valid AuthMailRegisterReqVO reqVO) {
+        authService.mailRegister(reqVO);
+        return success(true);
     }
 
-    @PostMapping("/send-sms-code")
+    @PostMapping("/send-register-mail-captcha")
     @PermitAll
-    @Operation(summary = "发送手机验证码")
+    @Operation(summary = "发送邮箱注册验证码")
     @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
-    public CommonResult<Boolean> sendLoginSmsCode(@RequestBody @Valid AuthSmsSendReqVO reqVO) {
-        authService.sendSmsCode(reqVO);
+    public CommonResult<Boolean> sendRegisterMailCaptcha(@NotNull @Email @RequestParam(value = "mail") String mail) {
+        mailCaptchaService.sendMailCaptcha(new MailCaptchaSendReqVO()
+                .setMail(mail)
+                .setScene(MailSceneEnum.REGISTER.getScene())
+                .setCreateIp(ServletUtils.getClientIP()));
+        return success(true);
+    }
+
+    // ========== 重置密码相关 ==========
+
+    @GetMapping("/check-username")
+    @PermitAll
+    @Operation(summary = "检查用户名")
+    public CommonResult<AuthCheckUsernameRespVO> checkUsername(@RequestParam(value = "username") @Valid String username) {
+        UserDO userDO = userService.getUserByUsername(username);
+        AuthCheckUsernameRespVO respVO = new AuthCheckUsernameRespVO();
+        if (userDO != null) {
+            respVO.setUserId(userDO.getId()).setMail(userDO.getEmail());
+        }
+        return success(respVO);
+    }
+
+    @PostMapping("/send-reset-passwd-mail-captcha")
+    @PermitAll
+    @Operation(summary = "发送邮箱重置密码验证码")
+    @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
+    public CommonResult<Boolean> sendResetPasswdMailCaptcha(@NotNull @Email @RequestParam(value = "mail") String mail) {
+        mailCaptchaService.sendMailCaptcha(new MailCaptchaSendReqVO()
+                .setMail(mail)
+                .setScene(MailSceneEnum.RESET_PASSWD.getScene())
+                .setCreateIp(ServletUtils.getClientIP()));
+        return success(true);
+    }
+
+    @PostMapping("/reset-passwd")
+    @PermitAll
+    @Operation(summary = "重置密码")
+    public CommonResult<Boolean> resetPasswd(@RequestBody @Valid AuthResetPasswdReqVO reqVO) {
+        authService.resetPasswd(reqVO);
         return success(true);
     }
 

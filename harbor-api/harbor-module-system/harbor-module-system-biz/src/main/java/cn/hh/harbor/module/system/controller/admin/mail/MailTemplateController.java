@@ -80,10 +80,10 @@ public class MailTemplateController {
     }
 
     @PostMapping("/send-mail")
-    @Operation(summary = "发送短信")
+    @Operation(summary = "发送邮件")
     @PreAuthorize("@ss.hasPermission('system:mail-template:send-mail')")
     public CommonResult<Long> sendMail(@Valid @RequestBody MailTemplateSendReqVO sendReqVO) {
-        return success(mailSendService.sendSingleMail(sendReqVO.getMail(), getLoginUserId(), UserTypeEnum.ADMIN.getValue(),
+        return success(mailSendService.sendSingleMail(sendReqVO.getMail(), getLoginUserId(),
                 sendReqVO.getTemplateCode(), sendReqVO.getTemplateParams()));
     }
 

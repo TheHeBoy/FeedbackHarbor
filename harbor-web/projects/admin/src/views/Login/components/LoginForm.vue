@@ -1,101 +1,79 @@
 <template>
   <el-form
     v-show="getShow"
-    ref="formLogin"
+    ref="formLoginRef"
     :model="loginData.loginForm"
     :rules="LoginRules"
-    class="login-form"
     label-position="top"
-    label-width="120px"
-    size="large"
+    class="w-100"
   >
-    <el-row style="margin-left: -10px; margin-right: -10px">
-      <el-col :span="24" style="padding-left: 10px; padding-right: 10px">
-        <el-form-item>
-          <h2 class="w-full mb-3 text-2xl font-bold text-center xl:text-3xl enter-x xl:text-center">
-            登录
-          </h2>
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" style="padding-left: 10px; padding-right: 10px">
-        <el-form-item prop="username">
-          <el-input
-            v-model="loginData.loginForm.username"
-            :placeholder="t('login.usernamePlaceholder')"
-            :prefix-icon="iconAvatar"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" style="padding-left: 10px; padding-right: 10px">
-        <el-form-item prop="password">
-          <el-input
-            v-model="loginData.loginForm.password"
-            :placeholder="t('login.passwordPlaceholder')"
-            :prefix-icon="iconLock"
-            show-password
-            type="password"
-            @keyup.enter="getCode()"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col
-        :span="24"
-        style="padding-left: 10px; padding-right: 10px; margin-top: -20px; margin-bottom: -20px"
-      >
-        <el-form-item>
-          <el-row justify="space-between" style="width: 100%">
-            <el-col :span="6">
-              <el-checkbox v-model="loginData.loginForm.rememberMe">
-                {{ t('login.remember') }}
-              </el-checkbox>
-            </el-col>
-          </el-row>
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" style="padding-left: 10px; padding-right: 10px">
-        <el-form-item>
-          <XButton
-            :loading="loginLoading"
-            :title="t('login.login')"
-            class="w-[100%]"
-            type="primary"
-            @click="getCode()"
-          />
-        </el-form-item>
-      </el-col>
-      <Verify
-        ref="verify"
-        :captchaType="captchaType"
-        :imgSize="{ width: '400px', height: '200px' }"
-        mode="pop"
-        @success="handleLogin"
+    <el-form-item>
+      <h2 class="w-full mb-3 text-2xl font-bold text-center xl:text-3xl enter-x xl:text-center">
+        登录
+      </h2>
+    </el-form-item>
+
+    <el-form-item prop="username" label="用户名">
+      <el-input
+        v-model="loginData.loginForm.username"
+        :placeholder="t('login.usernamePlaceholder')"
       />
-    </el-row>
+    </el-form-item>
+
+    <el-form-item prop="password" label="密码">
+      <el-input
+        v-model="loginData.loginForm.password"
+        :placeholder="t('login.passwordPlaceholder')"
+        show-password
+        type="password"
+        @keyup.enter="getCode()"
+      />
+    </el-form-item>
+
+    <el-form-item>
+      <div class="w-full flex justify-between">
+        <el-checkbox v-model="loginData.loginForm.rememberMe">
+          {{ t('login.remember') }}
+        </el-checkbox>
+        <el-button link type="primary" @click="setLoginState(LoginStateEnum.FORGETP_ASSWDFORM)"
+          >忘记密码?
+        </el-button>
+      </div>
+    </el-form-item>
+
+    <el-form-item>
+      <XButton
+        :loading="loginLoading"
+        :title="t('login.login')"
+        class="w-[100%]"
+        type="primary"
+        @click="getCode()"
+      />
+    </el-form-item>
+
+    <el-form-item>
+      <XButton
+        :title="t('login.btnRegister')"
+        class="w-[100%]"
+        @click="setLoginState(LoginStateEnum.REGISTER)"
+      />
+    </el-form-item>
   </el-form>
 </template>
 <script lang="ts" setup>
-import { ElLoading } from 'element-plus';
-import type { RouteLocationNormalizedLoaded } from 'vue-router';
-import { useIcon } from '@/hooks/web/useIcon';
+import { ElLoading, FormInstance } from 'element-plus';
 import * as authUtil from '@/utils/auth';
 import * as LoginApi from '@/api/login';
-import { LoginStateEnum, useFormValid, useLoginState } from './useLogin';
+import { LoginStateEnum, useLoginState } from './useLogin';
 import { getTenant } from '@/utils/auth';
 import router from '@/router';
 
 defineOptions({ name: 'LoginForm' });
 
 const { t } = useI18n();
-const iconAvatar = useIcon({ icon: 'ep:avatar' });
-const iconLock = useIcon({ icon: 'ep:lock' });
-const formLogin = ref();
-const { validForm } = useFormValid(formLogin);
-const { getLoginState } = useLoginState();
-const { currentRoute } = useRouter();
-const redirect = ref<string>('/');
+const formLoginRef = ref<FormInstance>();
+const { getLoginState, setLoginState } = useLoginState();
 const loginLoading = ref(false);
-const verify = ref();
-const captchaType = ref('blockPuzzle'); // blockPuzzle 滑块 clickWord 点击文字
 
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
 
@@ -106,25 +84,16 @@ const LoginRules = {
 
 const loginData = reactive({
   isShowPassword: false,
-  captchaEnable: import.meta.env.VITE_APP_CAPTCHA_ENABLE,
   loginForm: {
     username: 'admin',
     password: 'admin123',
-    captchaVerification: '',
     rememberMe: false,
   },
 });
 
 // 获取验证码
 const getCode = async () => {
-  // 情况一，未开启：则直接登录
-  if (loginData.captchaEnable === 'false') {
-    await handleLogin({});
-  } else {
-    // 情况二，已开启：则展示验证码；只有完成验证码的情况，才进行登录
-    // 弹出验证码
-    verify.value.show();
-  }
+  await handleLogin({});
 };
 // 记住我
 const getCookie = () => {
@@ -139,78 +108,44 @@ const getCookie = () => {
   }
 };
 // 登录
-const handleLogin = async (params) => {
-  loginLoading.value = true;
-  try {
-    const data = await validForm();
-    if (!data) {
-      return;
-    }
-    loginData.loginForm.captchaVerification = params.captchaVerification;
-    const res = await LoginApi.login(loginData.loginForm);
-    if (!res) {
-      return;
-    }
-    ElLoading.service({
-      lock: true,
-      text: '正在加载系统中...',
-      background: 'rgba(0, 0, 0, 0.7)',
-    });
-    if (loginData.loginForm.rememberMe) {
-      authUtil.setLoginForm(loginData.loginForm);
-    } else {
-      authUtil.removeLoginForm();
-    }
-    authUtil.setToken(res);
+const handleLogin = async (params: any) => {
+  formLoginRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      loginLoading.value = true;
+      try {
+        const res = await LoginApi.login(loginData.loginForm);
+        if (!res) {
+          return;
+        }
+        if (loginData.loginForm.rememberMe) {
+          authUtil.setLoginForm(loginData.loginForm);
+        } else {
+          authUtil.removeLoginForm();
+        }
+        authUtil.setToken(res);
 
-    // 是否有租户信息
-    if (getTenant()) {
-      router.push({ path: redirect.value });
-    } else {
-      router.push({ path: '/selectTenant' });
+        // 是否有链接标识,如果有说明是通过邀请链接进入到登录页面的
+        const code = router.currentRoute.value.query.code as string;
+        if (code) {
+          router.push({ path: '/selectTenant', query: { code } });
+        } else {
+          // 是否有租户信息
+          if (getTenant()) {
+            router.push({ path: router.currentRoute.value.query.redirect as string });
+          } else {
+            router.push({ path: '/selectTenant' });
+          }
+        }
+      } finally {
+        loginLoading.value = false;
+      }
     }
-  } catch {
-    loginLoading.value = false;
-  } finally {
-    setTimeout(() => {
-      const loadingInstance = ElLoading.service();
-      loadingInstance.close();
-    }, 400);
-  }
+  });
 };
 
-watch(
-  () => currentRoute.value,
-  (route: RouteLocationNormalizedLoaded) => {
-    redirect.value = route?.query?.redirect as string;
-  },
-  {
-    immediate: true,
-  },
-);
 onMounted(() => {
   getCookie();
 });
 </script>
 
-<style lang="scss" scoped>
-:deep(.anticon) {
-  &:hover {
-    color: var(--el-color-primary) !important;
-  }
-}
-
-.login-code {
-  width: 100%;
-  height: 38px;
-  float: right;
-
-  img {
-    cursor: pointer;
-    width: 100%;
-    max-width: 100px;
-    height: auto;
-    vertical-align: middle;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

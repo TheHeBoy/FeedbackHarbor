@@ -44,8 +44,8 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import * as InviteApi from '@/api/system/invite';
-import { InviteUserReqVO } from '@/api/system/invite';
+import * as InviteApi from '@/api/system/invite/user';
+import { InviteUserReqVO } from '@/api/system/invite/user';
 import Icon from '@/components/Icon/src/Icon.vue';
 
 const message = useMessage(); // 消息弹窗

@@ -1,7 +1,6 @@
 package cn.hh.harbor.module.harbor.enums.like;
 
 import cn.hh.harbor.framework.common.core.IntArrayValuable;
-import cn.hh.harbor.module.system.enums.sms.SmsSceneEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

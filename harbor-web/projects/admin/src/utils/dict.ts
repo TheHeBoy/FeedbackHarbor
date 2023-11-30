@@ -97,12 +97,8 @@ export enum DICT_TYPE {
   SYSTEM_OPERATE_TYPE = 'system_operate_type',
   SYSTEM_LOGIN_TYPE = 'system_login_type',
   SYSTEM_LOGIN_RESULT = 'system_login_result',
-  SYSTEM_SMS_CHANNEL_CODE = 'system_sms_channel_code',
-  SYSTEM_SMS_TEMPLATE_TYPE = 'system_sms_template_type',
-  SYSTEM_SMS_SEND_STATUS = 'system_sms_send_status',
-  SYSTEM_SMS_RECEIVE_STATUS = 'system_sms_receive_status',
   SYSTEM_MAIL_SEND_STATUS = 'system_mail_send_status',
-
+  SYSTEM_ROLE_CODE = 'system_role_code',
   // ========== INFRA 模块 ==========
   INFRA_BOOLEAN_STRING = 'infra_boolean_string',
   INFRA_JOB_STATUS = 'infra_job_status',
@@ -113,7 +109,6 @@ export enum DICT_TYPE {
   INFRA_CODEGEN_FRONT_TYPE = 'infra_codegen_front_type',
   INFRA_CODEGEN_SCENE = 'infra_codegen_scene',
   INFRA_FILE_STORAGE = 'infra_file_storage',
-
   // ========== Harbor 模块 ==========
   HARBOR_REPLY_STATE = 'harbor_reply_state',
 }

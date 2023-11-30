@@ -204,7 +204,6 @@ public class UserServiceImpl implements UserService {
         if (CollUtil.isEmpty(ids)) {
             return;
         }
-        // 获得岗位信息
         List<UserDO> users = userMapper.selectBatchIds(ids);
         Map<Long, UserDO> userMap = CollectionUtils.convertMap(users, UserDO::getId);
         // 校验
@@ -231,17 +230,14 @@ public class UserServiceImpl implements UserService {
 
 
     private void validateUserForCreateOrUpdate(Long id, String username, String mobile, String email) {
-        // 关闭数据权限，避免因为没有数据权限，查询不到数据，进而导致唯一校验不正确
-        DataPermissionUtils.executeIgnore(() -> {
-            // 校验用户存在
-            validateUserExists(id);
-            // 校验用户名唯一
-            validateUsernameUnique(id, username);
-            // 校验手机号唯一
-            validateMobileUnique(id, mobile);
-            // 校验邮箱唯一
-            validateEmailUnique(id, email);
-        });
+        // 校验用户存在
+        validateUserExists(id);
+        // 校验用户名唯一
+        validateUsernameUnique(id, username);
+        // 校验手机号唯一
+        validateMobileUnique(id, mobile);
+        // 校验邮箱唯一
+        validateEmailUnique(id, email);
     }
 
     @VisibleForTesting

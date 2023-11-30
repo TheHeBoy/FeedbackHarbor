@@ -1,6 +1,7 @@
 /**
  * 枚举类
  */
+export const SystemIdEnum = 1;
 
 // 全局通用状态枚举
 export const CommonStatusEnum = {
@@ -15,14 +16,6 @@ export const SystemMenuTypeEnum = {
   DIR: 1, // 目录
   MENU: 2, // 菜单
   BUTTON: 3, // 按钮
-};
-
-/**
- * 角色的类型枚举
- */
-export const SystemRoleTypeEnum = {
-  SYSTEM: 1, // 内置角色
-  CUSTOM: 2, // 自定义角色
 };
 
 /**
@@ -68,12 +61,6 @@ export const SystemUserSocialTypeEnum = {
     source: 'wechat_enterprise',
     img: 'https://s1.ax1x.com/2022/05/22/OzMrzn.png',
   },
-};
-/**
- * 租户枚举
- */
-export const SystemTenantTypeEnum = {
-  SYSTEM: 1, // 系统租户id
 };
 
 export const SystemInviteStatusEnum = {

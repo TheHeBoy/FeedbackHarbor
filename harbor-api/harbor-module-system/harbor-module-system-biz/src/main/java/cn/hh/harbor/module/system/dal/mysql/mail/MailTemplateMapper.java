@@ -3,14 +3,9 @@ package cn.hh.harbor.module.system.dal.mysql.mail;
 import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.framework.mybatis.core.mapper.BaseMapperX;
 import cn.hh.harbor.framework.mybatis.core.query.LambdaQueryWrapperX;
-import cn.hh.harbor.framework.mybatis.core.query.QueryWrapperX;
 import cn.hh.harbor.module.system.controller.admin.mail.vo.template.MailTemplatePageReqVO;
 import cn.hh.harbor.module.system.dal.dataobject.mail.MailTemplateDO;
-import cn.hh.harbor.module.system.dal.dataobject.sms.SmsTemplateDO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.Date;
 
 @Mapper
 public interface MailTemplateMapper extends BaseMapperX<MailTemplateDO> {

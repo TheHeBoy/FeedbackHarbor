@@ -21,16 +21,13 @@
             @click="onEntry(tenant)"
             @mouseenter="operation[tenant.id] = true"
             @mouseleave="operation[tenant.id] = false"
-            :class="tenant.id == SystemTenantTypeEnum.SYSTEM ? 'bg-cyan-500' : 'bg-cyan-700'"
+            :class="tenant.id == SystemIdEnum ? 'bg-cyan-500' : 'bg-cyan-700'"
             class="text-white h-10 w-full px-3 py-2 block flex items-center rounded-1xl mt-2 hover:bg-cyan-800"
           >
             <img class="w-6 h-6" :src="tenant.logo" alt="" />
             <span class="ml-3 text-1xl">{{ tenant.name }}</span>
             <div class="flex-grow"></div>
-            <div
-              v-if="operation[tenant.id] && tenant.id != SystemTenantTypeEnum.SYSTEM"
-              class="flex items-center"
-            >
+            <div v-if="operation[tenant.id] && tenant.id != SystemIdEnum" class="flex items-center">
               <Icon @click.stop="onUpdate(tenant.id)" class="mr-1" icon="ep:edit" />
               <Icon @click.stop="onDelete(tenant)" icon="ep:delete" />
             </div>
@@ -56,12 +53,13 @@
 
 <script lang="ts" setup>
 import * as SelectTenantApi from '@/api/system/selectTenant';
+import * as InviteLinkApi from '@/api/system/invite/link';
 import { SelectTenantVO } from '@/api/system/selectTenant';
 import router from '@/router';
 import Icon from '@/components/Icon/src/Icon.vue';
 import { setTenant } from '@/utils/auth';
 import { ElLoading } from 'element-plus';
-import { SystemTenantTypeEnum } from '@/utils/constants';
+import { SystemIdEnum } from '@/utils/constants';
 import InviteList from './inviteList.vue';
 import { useUserStore } from '@/store/modules/user';
 import { Back } from '@element-plus/icons-vue';
@@ -113,7 +111,15 @@ const logout = async () => {
   location.reload();
 };
 
-onMounted(() => {
+onMounted(async () => {
+  const code = router.currentRoute.value.query.code as string;
+  if (code) {
+    try {
+      await InviteLinkApi.join(code);
+    } catch (ex) {
+      console.error(ex);
+    }
+  }
   getList();
 });
 </script>

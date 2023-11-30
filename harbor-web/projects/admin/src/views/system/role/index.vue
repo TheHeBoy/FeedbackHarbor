@@ -18,13 +18,19 @@
         />
       </el-form-item>
       <el-form-item label="角色标识" prop="code">
-        <el-input
+        <el-select
           v-model="queryParams.code"
           class="!w-240px"
           clearable
-          placeholder="请输入角色标识"
-          @keyup.enter="handleQuery"
-        />
+          placeholder="请选择角色标识"
+        >
+          <el-option
+            v-for="dict in getStrDictOptions(DICT_TYPE.SYSTEM_ROLE_CODE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" class="!w-240px" clearable placeholder="请选择状态">
@@ -84,8 +90,11 @@
     <el-table v-loading="loading" :data="list">
       <el-table-column align="center" label="角色编号" prop="id" />
       <el-table-column align="center" label="角色名称" prop="name" />
-      <el-table-column align="center" label="角色类型" prop="type" />
-      <el-table-column align="center" label="角色标识" prop="code" />
+      <el-table-column align="center" label="角色标识" prop="code">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.SYSTEM_ROLE_CODE" :value="scope.row.code" />
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="显示顺序" prop="sort" />
       <el-table-column align="center" label="备注" prop="remark" />
       <el-table-column align="center" label="状态" prop="status">
@@ -144,11 +153,9 @@
   <RoleForm ref="formRef" @success="getList" />
   <!-- 表单弹窗：菜单权限 -->
   <RoleAssignMenuForm ref="assignMenuFormRef" @success="getList" />
-  <!-- 表单弹窗：数据权限 -->
-  <RoleDataPermissionForm ref="dataPermissionFormRef" @success="getList" />
 </template>
 <script lang="ts" setup>
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict';
+import { DICT_TYPE, getIntDictOptions, getStrDictOptions } from '@/utils/dict';
 import { dateFormatter } from '@/utils/formatTime';
 import download from '@/utils/download';
 import * as RoleApi from '@/api/system/role';
