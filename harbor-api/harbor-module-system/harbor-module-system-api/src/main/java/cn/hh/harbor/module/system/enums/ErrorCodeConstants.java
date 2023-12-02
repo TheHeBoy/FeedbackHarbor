@@ -87,6 +87,7 @@ public interface ErrorCodeConstants {
     // ========== 链接邀请 1002027000 ==========
     ErrorCode INVITE_LINK_EXISTS = new ErrorCode(1002027000, "当前租户已存在邀请链接");
     ErrorCode INVITE_LINK_NO_EXISTS = new ErrorCode(1002027001, "邀请链接不存在");
+    ErrorCode INVITE_LINK_EXPIRE = new ErrorCode(1002027001, "邀请链接已过期");
 
     // ========== 租户用户关系 1002028000 ==========
     ErrorCode TENANT_USER_EXISTS = new ErrorCode(1002027000, "当前用户已存在管理团队中");

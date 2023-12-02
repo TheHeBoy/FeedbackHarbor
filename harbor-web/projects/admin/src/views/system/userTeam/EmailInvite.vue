@@ -59,13 +59,15 @@
 <script lang="ts" setup>
 import { getTenantId, getTenantName } from '@/utils/auth';
 import * as UserTeamApi from '@/api/system/user/team';
-import * as InviteApi from '@/api/system/invite/user';
+import * as InviteUserApi from '@/api/system/invite/user';
+import * as InviteLinkApi from '@/api/system/invite/link';
 import { UserTeamVO } from '@/api/system/user/team';
 import { useUserStore } from '@/store/modules/user';
 import { InviteUserReqVO } from '@/api/system/invite/user';
 import { DICT_TYPE, getDictLabel } from '@/utils/dict';
 import { SystemInviteStatusEnum } from '@/utils/constants';
 import { emailValidate } from '@/utils/validate';
+import { sendInviteMail } from '@/api/system/invite/link';
 
 const dialogShow = ref(false);
 const options = ref<UserTeamVO[] | string>();
@@ -93,21 +95,28 @@ async function remoteMethod(emailOrNickname: string) {
 
 async function send() {
   let inviteeUserIds: number[] = [];
-  let emails: string[] = [];
+  let mails: string[] = [];
   for (let d of emailOrUsers.value) {
-    if (isEmail(d)) {
-      emails.push(d);
+    if (emailValidate(d)) {
+      mails.push(d);
     } else {
       inviteeUserIds.push(d);
     }
   }
   const userId = useUserStore().user.id;
-  await InviteApi.inviteUser({
+  await InviteUserApi.inviteUser({
     inviterUserId: userId,
     inviteeUserIds: inviteeUserIds,
     tenantId: getTenantId(),
   } as InviteUserReqVO);
-  message.success('邀请成功');
+
+  await InviteLinkApi.sendInviteMail({
+    mails: mails,
+    tenantId: getTenantId(),
+    loginUrl: import.meta.env.VITE_LOGIN_URL,
+  });
+
+  message.success('发送邀请成功');
   dialogShow.value = false;
 }
 

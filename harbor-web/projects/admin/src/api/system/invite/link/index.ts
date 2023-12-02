@@ -1,5 +1,11 @@
 import { request } from '@harbor/apis';
 
+export interface InviteSendMailReqVO {
+  mails: string[];
+  tenantId: number;
+  loginUrl: string;
+}
+
 export const createLink = (tenantId: number) => {
   return request.post({ url: '/system/invite/link/create', params: { tenantId } });
 };
@@ -14,4 +20,8 @@ export const getLink = (tenantId: number) => {
 
 export const deleteLink = (code: number) => {
   return request.delete({ url: '/system/invite/link/delete', params: { code } });
+};
+
+export const sendInviteMail = (data: InviteSendMailReqVO) => {
+  return request.post({ url: '/system/invite/link/send-invite-mail', data });
 };

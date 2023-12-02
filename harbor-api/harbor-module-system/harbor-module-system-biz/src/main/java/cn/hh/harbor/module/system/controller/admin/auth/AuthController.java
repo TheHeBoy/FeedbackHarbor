@@ -1,7 +1,7 @@
 package cn.hh.harbor.module.system.controller.admin.auth;
 
 import cn.hh.harbor.framework.common.util.servlet.ServletUtils;
-import cn.hh.harbor.module.system.enums.mail.MailSceneEnum;
+import cn.hh.harbor.module.system.enums.mail.MailCaptchaSceneEnum;
 import cn.hh.harbor.module.system.service.mail.MailCaptchaService;
 import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaSendReqVO;
 import cn.hutool.core.util.StrUtil;
@@ -140,7 +140,7 @@ public class AuthController {
     public CommonResult<Boolean> sendRegisterMailCaptcha(@NotNull @Email @RequestParam(value = "mail") String mail) {
         mailCaptchaService.sendMailCaptcha(new MailCaptchaSendReqVO()
                 .setMail(mail)
-                .setScene(MailSceneEnum.REGISTER.getScene())
+                .setScene(MailCaptchaSceneEnum.REGISTER.getScene())
                 .setCreateIp(ServletUtils.getClientIP()));
         return success(true);
     }
@@ -166,7 +166,7 @@ public class AuthController {
     public CommonResult<Boolean> sendResetPasswdMailCaptcha(@NotNull @Email @RequestParam(value = "mail") String mail) {
         mailCaptchaService.sendMailCaptcha(new MailCaptchaSendReqVO()
                 .setMail(mail)
-                .setScene(MailSceneEnum.RESET_PASSWD.getScene())
+                .setScene(MailCaptchaSceneEnum.RESET_PASSWD.getScene())
                 .setCreateIp(ServletUtils.getClientIP()));
         return success(true);
     }

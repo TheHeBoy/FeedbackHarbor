@@ -1,7 +1,7 @@
 package cn.hh.harbor.module.system.service.mail.vo;
 
 import cn.hh.harbor.framework.common.validation.InEnum;
-import cn.hh.harbor.module.system.enums.mail.MailSceneEnum;
+import cn.hh.harbor.module.system.enums.mail.MailCaptchaSceneEnum;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -20,7 +20,7 @@ public class MailCaptchaUseReqVO {
      * 发送场景
      */
     @NotNull(message = "发送场景不能为空")
-    @InEnum(MailSceneEnum.class)
+    @InEnum(MailCaptchaSceneEnum.class)
     private Integer scene;
     /**
      * 验证码

@@ -15,4 +15,8 @@ public interface MailTemplateEnum {
      * 忘记密码-验证码
      */
     String RESET_PASSWD_CAPTCHA = "reset_passwd_captcha";
+    /**
+     * 邀请邮件
+     */
+    String INVITE_JOIN_TEAM = "invite_join_team";
 }

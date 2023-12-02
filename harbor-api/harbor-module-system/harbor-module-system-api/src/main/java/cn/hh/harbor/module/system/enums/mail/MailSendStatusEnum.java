@@ -3,11 +3,12 @@ package cn.hh.harbor.module.system.enums.mail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+
 /**
- * 邮件的发送状态枚举
+ * 邮件发送状态
  *
- *  wangjingyi
- * @since 2022/4/10 13:39
+ * @author hehong
+ * @date 2023-12-01
  */
 @Getter
 @AllArgsConstructor

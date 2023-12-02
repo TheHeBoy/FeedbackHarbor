@@ -5,146 +5,41 @@
       <el-link :href="appUrl" target="_Blank" type="primary"> {{ appUrl }}</el-link>
     </div>
   </el-card>
-  <el-row :class="prefixCls" :gutter="20" justify="space-between">
-    <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
-      <el-card class="mb-20px" shadow="hover">
-        <el-skeleton :loading="loading" :rows="2" animated>
-          <template #default>
-            <div :class="`${prefixCls}__item flex justify-between`">
-              <div>
-                <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--peoples p-16px inline-block rounded-6px`"
-                >
-                  <Icon :size="40" icon="svg-icon:peoples" />
-                </div>
-              </div>
-              <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
-                  {{ t('analysis.newUser') }}
-                </div>
-                <CountTo
-                  :duration="2600"
-                  :end-val="102400"
-                  :start-val="0"
-                  class="text-20px font-700 text-right"
-                />
-              </div>
+  <el-card>
+    <div class="flex flex-col space-y-4">
+      <el-radio-group v-model="duration">
+        <el-radio-button :label="1">当天</el-radio-button>
+        <el-radio-button :label="2">周</el-radio-button>
+        <el-radio-button :label="3">月</el-radio-button>
+        <el-radio-button :label="4">全部</el-radio-button>
+      </el-radio-group>
+      <div class="grid grid-cols-4 grid-rows-1 gap-4">
+        <el-card shadow="hover">
+          <div class="flex justify-between">
+            <div>
+              <Icon color="#40c9c6" :size="40" icon="ep:postcard" />
             </div>
-          </template>
-        </el-skeleton>
-      </el-card>
-    </el-col>
-
-    <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
-      <el-card class="mb-20px" shadow="hover">
-        <el-skeleton :loading="loading" :rows="2" animated>
-          <template #default>
-            <div :class="`${prefixCls}__item flex justify-between`">
-              <div>
-                <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--message p-16px inline-block rounded-6px`"
-                >
-                  <Icon :size="40" icon="svg-icon:message" />
-                </div>
-              </div>
-              <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
-                  {{ t('analysis.unreadInformation') }}
-                </div>
-                <CountTo
-                  :duration="2600"
-                  :end-val="81212"
-                  :start-val="0"
-                  class="text-20px font-700 text-right"
-                />
-              </div>
+            <div class="flex flex-col justify-between text-right">
+              <div class="text-16px text-gray-500">新增反馈</div>
+              <CountTo
+                :duration="2600"
+                :end-val="102400"
+                :start-val="0"
+                class="text-xl font-bold"
+              />
             </div>
-          </template>
-        </el-skeleton>
-      </el-card>
-    </el-col>
-
-    <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
-      <el-card class="mb-20px" shadow="hover">
-        <el-skeleton :loading="loading" :rows="2" animated>
-          <template #default>
-            <div :class="`${prefixCls}__item flex justify-between`">
-              <div>
-                <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--money p-16px inline-block rounded-6px`"
-                >
-                  <Icon :size="40" icon="svg-icon:money" />
-                </div>
-              </div>
-              <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
-                  {{ t('analysis.transactionAmount') }}
-                </div>
-                <CountTo
-                  :duration="2600"
-                  :end-val="9280"
-                  :start-val="0"
-                  class="text-20px font-700 text-right"
-                />
-              </div>
-            </div>
-          </template>
-        </el-skeleton>
-      </el-card>
-    </el-col>
-
-    <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
-      <el-card class="mb-20px" shadow="hover">
-        <el-skeleton :loading="loading" :rows="2" animated>
-          <template #default>
-            <div :class="`${prefixCls}__item flex justify-between`">
-              <div>
-                <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--shopping p-16px inline-block rounded-6px`"
-                >
-                  <Icon :size="40" icon="svg-icon:shopping" />
-                </div>
-              </div>
-              <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
-                  {{ t('analysis.totalShopping') }}
-                </div>
-                <CountTo
-                  :duration="2600"
-                  :end-val="13600"
-                  :start-val="0"
-                  class="text-20px font-700 text-right"
-                />
-              </div>
-            </div>
-          </template>
-        </el-skeleton>
-      </el-card>
-    </el-col>
-  </el-row>
-  <el-row :gutter="20" justify="space-between">
-    <el-col :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
-      <el-card class="mb-20px" shadow="hover">
-        <el-skeleton :loading="loading" animated>
-          <Echart :height="300" :options="pieOptionsData" />
-        </el-skeleton>
-      </el-card>
-    </el-col>
-    <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
-      <el-card class="mb-20px" shadow="hover">
-        <el-skeleton :loading="loading" animated>
-          <Echart :height="300" :options="barOptionsData" />
-        </el-skeleton>
-      </el-card>
-    </el-col>
-    <el-col :span="24">
-      <el-card class="mb-20px" shadow="hover">
-        <el-skeleton :loading="loading" :rows="4" animated>
-          <Echart :height="350" :options="lineOptionsData" />
-        </el-skeleton>
-      </el-card>
-    </el-col>
-  </el-row>
+          </div>
+        </el-card>
+      </div>
+      <div>
+        <el-card shadow="hover">
+          <el-skeleton :loading="loading" :rows="4" animated>
+            <Echart :height="350" :options="lineOptionsData" />
+          </el-skeleton>
+        </el-card>
+      </div>
+    </div>
+  </el-card>
 </template>
 <script lang="ts" setup>
 import { set } from 'lodash-es';
@@ -159,6 +54,7 @@ defineOptions({ name: 'Home2' });
 
 const { t } = useI18n();
 const loading = ref(true);
+const duration = ref(1);
 const { getPrefixCls } = useDesign();
 const prefixCls = getPrefixCls('panel');
 const pieOptionsData = reactive<EChartsOption>(pieOptions) as EChartsOption;
@@ -282,52 +178,4 @@ getAllApi();
 const appUrl = `${import.meta.env.VITE_APP_URL + getTenantRouterUri()}/home`;
 </script>
 
-<style lang="scss" scoped>
-$prefix-cls: #{$namespace}-panel;
-
-.#{$prefix-cls} {
-  &__item {
-    &--peoples {
-      color: #40c9c6;
-    }
-
-    &--message {
-      color: #36a3f7;
-    }
-
-    &--money {
-      color: #f4516c;
-    }
-
-    &--shopping {
-      color: #34bfa3;
-    }
-
-    &:hover {
-      :deep(.#{$namespace}-icon) {
-        color: #fff !important;
-      }
-
-      .#{$prefix-cls}__item--icon {
-        transition: all 0.38s ease-out;
-      }
-
-      .#{$prefix-cls}__item--peoples {
-        background: #40c9c6;
-      }
-
-      .#{$prefix-cls}__item--message {
-        background: #36a3f7;
-      }
-
-      .#{$prefix-cls}__item--money {
-        background: #f4516c;
-      }
-
-      .#{$prefix-cls}__item--shopping {
-        background: #34bfa3;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

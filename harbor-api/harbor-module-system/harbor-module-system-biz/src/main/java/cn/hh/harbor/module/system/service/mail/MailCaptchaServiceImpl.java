@@ -2,7 +2,7 @@ package cn.hh.harbor.module.system.service.mail;
 
 import cn.hh.harbor.module.system.dal.dataobject.mail.MailCaptchaDO;
 import cn.hh.harbor.module.system.dal.mysql.mail.MailCaptchaMapper;
-import cn.hh.harbor.module.system.enums.mail.MailSceneEnum;
+import cn.hh.harbor.module.system.enums.mail.MailCaptchaSceneEnum;
 import cn.hh.harbor.module.system.framework.sms.MailCaptchaProperties;
 import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaSendReqVO;
 import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaUseReqVO;
@@ -33,7 +33,7 @@ public class MailCaptchaServiceImpl implements MailCaptchaService {
 
     @Override
     public void sendMailCaptcha(MailCaptchaSendReqVO reqVO) {
-        MailSceneEnum sceneEnum = MailSceneEnum.getCodeByScene(reqVO.getScene());
+        MailCaptchaSceneEnum sceneEnum = MailCaptchaSceneEnum.getCodeByScene(reqVO.getScene());
         // 创建验证码
         String captcha = createCaptcha(reqVO.getMail(), reqVO.getScene(), reqVO.getCreateIp());
         // 发送验证码

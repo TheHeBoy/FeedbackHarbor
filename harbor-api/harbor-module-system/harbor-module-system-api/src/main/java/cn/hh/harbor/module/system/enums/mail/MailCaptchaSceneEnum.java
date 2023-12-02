@@ -8,17 +8,17 @@ import lombok.Getter;
 import java.util.Arrays;
 
 /**
- * 用户短信验证码发送场景的枚举
+ * 邮箱验证码发送场景的枚举
  */
 @Getter
 @AllArgsConstructor
-public enum MailSceneEnum implements IntArrayValuable {
+public enum MailCaptchaSceneEnum implements IntArrayValuable {
 
     REGISTER(1, MailTemplateEnum.REGISTER_CAPTCHA, "注册"),
     RESET_PASSWD(2, MailTemplateEnum.RESET_PASSWD_CAPTCHA, "重置密码"),
     ;
 
-    public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(MailSceneEnum::getScene).toArray();
+    public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(MailCaptchaSceneEnum::getScene).toArray();
 
     /**
      * 验证场景的编号
@@ -38,7 +38,7 @@ public enum MailSceneEnum implements IntArrayValuable {
         return ARRAYS;
     }
 
-    public static MailSceneEnum getCodeByScene(Integer scene) {
+    public static MailCaptchaSceneEnum getCodeByScene(Integer scene) {
         return ArrayUtil.firstMatch(sceneEnum -> sceneEnum.getScene().equals(scene),
                 values());
     }

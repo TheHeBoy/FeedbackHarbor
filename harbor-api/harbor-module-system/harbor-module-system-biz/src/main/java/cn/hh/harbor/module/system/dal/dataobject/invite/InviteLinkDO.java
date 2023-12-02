@@ -2,6 +2,7 @@ package cn.hh.harbor.module.system.dal.dataobject.invite;
 
 import cn.hh.harbor.framework.common.enums.CommonStatusEnum;
 import cn.hh.harbor.framework.mybatis.core.dataobject.BaseDO;
+import cn.hh.harbor.module.system.enums.invite.link.InviteLinkTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
@@ -36,6 +37,11 @@ public class InviteLinkDO extends BaseDO {
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
+    /**
+     * 链接类型
+     * 枚举 {@link InviteLinkTypeEnum}
+     */
+    private Integer type;
     /**
      * 过期时间
      */

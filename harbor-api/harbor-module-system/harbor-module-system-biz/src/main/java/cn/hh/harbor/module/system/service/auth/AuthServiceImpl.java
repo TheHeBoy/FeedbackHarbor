@@ -3,7 +3,7 @@ package cn.hh.harbor.module.system.service.auth;
 import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthMailRegisterReqVO;
 import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthResetPasswdReqVO;
 import cn.hh.harbor.module.system.controller.admin.user.vo.user.UserCreateReqVO;
-import cn.hh.harbor.module.system.enums.mail.MailSceneEnum;
+import cn.hh.harbor.module.system.enums.mail.MailCaptchaSceneEnum;
 import cn.hh.harbor.module.system.service.mail.MailCaptchaService;
 import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaUseReqVO;
 import cn.hutool.core.util.ObjectUtil;
@@ -147,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
                 .setUsedIp(getClientIP())
                 .setMail(reqVO.getMail())
                 .setCaptcha(reqVO.getCaptcha())
-                .setScene(MailSceneEnum.REGISTER.getScene()));
+                .setScene(MailCaptchaSceneEnum.REGISTER.getScene()));
 
         // 插入用户
         UserCreateReqVO userCreateReqVO = new UserCreateReqVO();
@@ -164,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
                 .setUsedIp(getClientIP())
                 .setMail(reqVO.getMail())
                 .setCaptcha(reqVO.getCaptcha())
-                .setScene(MailSceneEnum.RESET_PASSWD.getScene()));
+                .setScene(MailCaptchaSceneEnum.RESET_PASSWD.getScene()));
 
         userService.updateUserPassword(reqVO.getUserId(), reqVO.getPassword());
     }
