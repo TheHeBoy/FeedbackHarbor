@@ -1,6 +1,6 @@
 package cn.hh.harbor.module.harbor.dal.redis.like;
 
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import org.redisson.api.RKeys;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -34,11 +34,11 @@ public class LikeRedisDAO {
      * @param uid             用户id
      * @param rid             关联id
      * @param likeAction      ture-点赞 false-取消点赞
-     * @param likeBusTypeEnum 业务枚举
+     * @param busTypeEnum 业务枚举
      * @return {@link Boolean}
      */
-    public Boolean isMember(Long uid, Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
-        String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
+    public Boolean isMember(Long uid, Long rid, boolean likeAction, BusTypeEnum busTypeEnum) {
+        String redisKey = formatKey(String.valueOf(rid), likeAction, busTypeEnum);
         return stringRedisTemplate.opsForSet().isMember(redisKey, String.valueOf(uid));
     }
 
@@ -46,11 +46,11 @@ public class LikeRedisDAO {
      * @param uid             用户id
      * @param rid             关联id
      * @param likeAction      ture-点赞 false-取消点赞
-     * @param likeBusTypeEnum 业务枚举
+     * @param busTypeEnum 业务枚举
      * @return {@link Long}
      */
-    public Long set(Long uid, Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
-        String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
+    public Long set(Long uid, Long rid, boolean likeAction, BusTypeEnum busTypeEnum) {
+        String redisKey = formatKey(String.valueOf(rid), likeAction, busTypeEnum);
         return stringRedisTemplate.opsForSet().add(redisKey, String.valueOf(uid));
     }
 
@@ -59,31 +59,31 @@ public class LikeRedisDAO {
      * @param uid             用户id
      * @param rid             关联id
      * @param likeAction      ture-点赞 false-取消点赞
-     * @param likeBusTypeEnum 业务枚举
+     * @param busTypeEnum 业务枚举
      * @return {@link Long}
      */
-    public Long remove(Long uid, Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
-        String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
+    public Long remove(Long uid, Long rid, boolean likeAction, BusTypeEnum busTypeEnum) {
+        String redisKey = formatKey(String.valueOf(rid), likeAction, busTypeEnum);
         return stringRedisTemplate.opsForSet().remove(redisKey, String.valueOf(uid));
     }
 
     /**
      * @param likeAction      ture-点赞 false-取消点赞
-     * @param likeBusTypeEnum 业务枚举
+     * @param busTypeEnum 业务枚举
      * @return {@link Long}
      */
-    public Long removeBatch(boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
-        Set<String> keys = list(likeAction, likeBusTypeEnum);
+    public Long removeBatch(boolean likeAction, BusTypeEnum busTypeEnum) {
+        Set<String> keys = list(likeAction, busTypeEnum);
         return stringRedisTemplate.delete(keys);
     }
 
     /**
      * @param likeAction      ture-点赞 false-取消点赞
-     * @param likeBusTypeEnum 业务枚举
+     * @param busTypeEnum 业务枚举
      * @return {@link Set}<{@link String}>
      */
-    public Set<String> list(boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
-        String pattern = formatKey("*", likeAction, likeBusTypeEnum);
+    public Set<String> list(boolean likeAction, BusTypeEnum busTypeEnum) {
+        String pattern = formatKey("*", likeAction, busTypeEnum);
         RKeys keys = redissonClient.getKeys();
         Set<String> keyList = new HashSet<>();
         keys.getKeysByPattern(pattern).forEach(keyList::add);
@@ -102,15 +102,15 @@ public class LikeRedisDAO {
     /**
      * @param rid             关联id
      * @param likeAction      ture-点赞 false-取消点赞
-     * @param likeBusTypeEnum 业务枚举
+     * @param busTypeEnum 业务枚举
      * @return {@link Long}
      */
-    public Long sSize(Long rid, boolean likeAction, LikeBusTypeEnum likeBusTypeEnum) {
-        String redisKey = formatKey(String.valueOf(rid), likeAction, likeBusTypeEnum);
+    public Long sSize(Long rid, boolean likeAction, BusTypeEnum busTypeEnum) {
+        String redisKey = formatKey(String.valueOf(rid), likeAction, busTypeEnum);
         return stringRedisTemplate.opsForSet().size(redisKey);
     }
 
-    private static String formatKey(String rid, boolean likeAction, LikeBusTypeEnum busTypeEnum) {
+    private static String formatKey(String rid, boolean likeAction, BusTypeEnum busTypeEnum) {
         switch (busTypeEnum) {
             case FEEDBACK:
                 if (likeAction) {

@@ -62,8 +62,15 @@ const submit = async ({ content, parentId, reply, files, clear }: SubmitParam2Ap
 
   createFeedback(modelData as FeedbackCreateVO).then((data) => {
     if (data) {
-      emit('submit', data);
-      isShow.value = false;
+      if (data.sensitive) {
+        ElMessage.error({
+          message: `存在敏感词[${data.sensitive.join()}]`,
+          showClose: true,
+        });
+      } else {
+        emit('submit', data);
+        isShow.value = false;
+      }
     }
   });
 };

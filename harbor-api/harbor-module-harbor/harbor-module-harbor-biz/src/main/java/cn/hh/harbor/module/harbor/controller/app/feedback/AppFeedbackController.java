@@ -4,6 +4,7 @@ import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.framework.security.core.annotations.PreAuthenticated;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
+import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackCreateRespVO;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
 import cn.hh.harbor.module.harbor.convert.feedback.FeedbackConvert;
@@ -38,7 +39,7 @@ public class AppFeedbackController {
     @PostMapping("/create")
     @PreAuthenticated
     @Operation(summary = "创建用户反馈")
-    public CommonResult<AppFeedbackRespVO> createFeedback(@Valid @RequestBody AppFeedbackCreateReqVO createReqVO) {
+    public CommonResult<AppFeedbackCreateRespVO> createFeedback(@Valid @RequestBody AppFeedbackCreateReqVO createReqVO) {
         return success(feedbackService.createFeedback(createReqVO, getLoginUserId()));
     }
 

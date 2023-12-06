@@ -84,8 +84,9 @@ public class UserServiceImpl implements UserService {
     public Long createSocialUser(UserCreateSocialReqVO reqVO) {
         UserDO user = UserConvert.INSTANCE.convert(reqVO);
         // 随机生成用户名
-        user.setUsername(IdUtil.simpleUUID());
         userMapper.insert(user);
+        // 用户名设置为用户Id
+        userMapper.updateById(user.setUsername(String.valueOf(user.getId())));
         return user.getId();
     }
 

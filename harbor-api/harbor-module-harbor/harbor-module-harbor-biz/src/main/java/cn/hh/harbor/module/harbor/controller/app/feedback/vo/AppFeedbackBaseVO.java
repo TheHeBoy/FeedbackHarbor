@@ -18,7 +18,7 @@ public class AppFeedbackBaseVO {
     @Schema(description = "主键id")
     private Long id;
 
-    @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "创建时间")
     private LocalDateTime createTime;
 
     @Schema(description = "内容")

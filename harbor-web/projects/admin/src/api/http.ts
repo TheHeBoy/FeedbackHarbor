@@ -7,7 +7,7 @@ import errorCode from './errorCode';
 // 忽略的错误不需要提示给用户
 const ignoreCode = [
   431, // 无效的刷新令牌
-  401, // 刷新令牌已过期
+  432, // 刷新令牌已过期
   430, // 用户类型错误请尝试重新登录
   901, // 演示模式，禁止写操作
 ];
@@ -43,6 +43,33 @@ axiosInstance.interceptors.request.use(
     if (tenantId) {
       (config as Recordable).headers['tenant-id'] = tenantId;
     }
+
+    // get参数编码，解决创建时间参数问题
+    const params = config.params || {};
+    if (config.method?.toUpperCase() === 'GET' && params) {
+      let url = config.url + '?';
+      for (const propName of Object.keys(params)) {
+        const value = params[propName];
+        if (value !== void 0 && value !== null && typeof value !== 'undefined') {
+          if (typeof value === 'object') {
+            for (const val of Object.keys(value)) {
+              const params = propName + '[' + val + ']';
+              const subPart = encodeURIComponent(params) + '=';
+              url += subPart + encodeURIComponent(value[val]) + '&';
+            }
+          } else {
+            url += `${propName}=${encodeURIComponent(value)}&`;
+          }
+        }
+      }
+      // 给 get 请求加上时间戳参数，避免从缓存中拿数据
+      // const now = new Date().getTime()
+      // params = params.substring(0, url.length - 1) + `?_t=${now}`
+      url = url.slice(0, -1);
+      config.params = {};
+      config.url = url;
+    }
+
     return config;
   },
   (error: AxiosError) => {
@@ -67,12 +94,14 @@ axiosInstance.interceptors.response.use(
     ) {
       return response.data;
     }
+
     // 获取错误信息
     const msg = data.msg || errorCode[code] || errorCode['default'];
+
     if (ignoreCode.indexOf(code) !== -1) {
       // 如果是忽略的错误码，直接返回 msg 异常
       return Promise.reject(msg);
-    } else if (code === 401) {
+    } else if (code == 401) {
       // 未登录,尝试无感知刷新token
       if (!isRefreshToken) {
         isRefreshToken = true;

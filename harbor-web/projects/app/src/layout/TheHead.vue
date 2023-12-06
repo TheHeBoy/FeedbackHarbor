@@ -21,21 +21,12 @@
       <el-menu-item index="/roadmap">{{ t('roadmap') }}</el-menu-item>
       <div class="flex-grow"></div>
       <div class="flex">
-        <el-tooltip :content="t('change lang')" placement="top">
-          <button class="icon-btn mx-2" @click="toggleLocales()">
-            <i-la-language class="icon-footer" />
-          </button>
-        </el-tooltip>
-        <el-tooltip
-          class="ml-2"
-          :content="isDark ? t('change light') : t('change dark')"
-          placement="top"
-        >
-          <button class="mx-3 !outline-none" @click="toggleDark()">
-            <i-ph-cloud-moon-bold v-if="isDark" class="w-6 h-6" />
-            <i-ph-sun-horizon-bold v-else class="w-6 h-6" />
-          </button>
-        </el-tooltip>
+        <!-- 国际化待实现 -->
+        <!--                <el-tooltip :content="t('change lang')" placement="top">-->
+        <!--                  <button class="icon-btn mx-2" @click="toggleLocales()">-->
+        <!--                    <i-la-language class="icon-footer" />-->
+        <!--                  </button>-->
+        <!--                </el-tooltip>-->
         <div class="ml-5">
           <div v-if="!userStore.isLogin()">
             <button @click="useLoginStoreWithOut().open()">{{ t('signIn') }}</button>
@@ -67,7 +58,6 @@ import { ElMenuItem } from 'element-plus';
 import { useLoginStoreWithOut } from '@/store/login';
 import { useUserStoreWithOut } from '@/store/user';
 import { logout } from '@/api/login';
-import { isDark, toggleDark } from '@/utils/dark';
 import { useTenantStoreWithOut } from '@/store/tenant';
 
 const appName = import.meta.env.VITE_APP_TITLE;

@@ -22,7 +22,9 @@ export function createVitePlugins() {
   return [
     Vue(),
     VueJsx(),
-    WindiCSS(),
+    WindiCSS({
+      configFiles: ['../../windi.config.js'],
+    }),
     progress(),
     PurgeIcons(),
     svgLoader(),
@@ -67,10 +69,6 @@ export function createVitePlugins() {
       // 自定义组件的解析器
       resolvers: [ElementPlusResolver(), IconsResolver()],
       exclude: [/[\\/]node_modules[\\/]/],
-    }),
-    EslintPlugin({
-      cache: false,
-      include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'], // 检查的文件
     }),
     VueI18nPlugin({
       runtimeOnly: true,

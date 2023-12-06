@@ -1,5 +1,7 @@
 package cn.hh.harbor.module.system.api.user;
 
+import cn.hh.harbor.framework.security.core.LoginUser;
+import cn.hh.harbor.framework.security.core.util.SecurityFrameworkUtils;
 import cn.hh.harbor.module.system.api.user.dto.UserRespDTO;
 import cn.hh.harbor.module.system.convert.user.UserConvert;
 import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
@@ -22,6 +24,11 @@ public class UserApiImpl implements UserApi {
     @Override
     public UserRespDTO getUser(Long id) {
         UserDO user = userService.getUser(id);
-        return UserConvert.INSTANCE.convert4(user);
+        UserRespDTO userRespDTO = UserConvert.INSTANCE.convert4(user);
+        LoginUser loginUser = SecurityFrameworkUtils.getLoginUser();
+        if (loginUser != null) {
+            userRespDTO.setUserType(loginUser.getUserType());
+        }
+        return userRespDTO;
     }
 }

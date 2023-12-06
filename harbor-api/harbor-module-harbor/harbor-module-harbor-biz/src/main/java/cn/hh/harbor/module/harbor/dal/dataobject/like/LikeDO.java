@@ -1,9 +1,7 @@
 package cn.hh.harbor.module.harbor.dal.dataobject.like;
 
 import cn.hh.harbor.framework.mybatis.core.dataobject.BaseDO;
-import cn.hh.harbor.framework.tenant.core.db.TenantBaseDO;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
-import com.baomidou.mybatisplus.annotation.KeySequence;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
@@ -36,7 +34,7 @@ public class LikeDO extends BaseDO {
     private Long uid;
     /**
      * 业务类型
-     * 枚举 {@link LikeBusTypeEnum}
+     * 枚举 {@link BusTypeEnum}
      */
     private int busType;
 }

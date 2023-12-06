@@ -7,10 +7,12 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Schema(description = "App - 用户反馈 Response VO")
+@Schema(description = "App - 创建用户反馈 Response VO")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class AppFeedbackRespVO extends AppFeedbackBaseVO {
+public class AppFeedbackCreateRespVO extends AppFeedbackBaseVO {
 
+    @Schema(description = "敏感词-如果不为空表示有敏感词")
+    private List<String> sensitive;
 }

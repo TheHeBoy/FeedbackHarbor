@@ -11,8 +11,8 @@
     </UComment>
     <div class="w-full text-center">
       <p v-if="loading">loading</p>
-      <el-button v-if="!disabled" @click="more" link type="primary"
-        >加载更多
+      <el-button v-if="!disabled" @click="more" link type="primary">
+        加载更多
       </el-button>
     </div>
   </div>
@@ -101,6 +101,13 @@ const submit = async ({ content, parentId, files, finish }: SubmitParamApi) => {
   };
 
   createComment(createCommentVO).then((data) => {
+    if (data.sensitive) {
+      ElMessage.error({
+        message: `存在敏感词[${data.sensitive.join()}]`,
+        showClose: true,
+      });
+      return;
+    }
     const comment: CommentApi = {
       id: data.id,
       parentId: data.parentId,

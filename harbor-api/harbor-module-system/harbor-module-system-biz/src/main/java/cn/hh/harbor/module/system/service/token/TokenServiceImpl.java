@@ -14,10 +14,12 @@ import cn.hh.harbor.module.system.dal.dataobject.token.TokenRefreshDO;
 import cn.hh.harbor.module.system.dal.mysql.token.TokenAccessTokenMapper;
 import cn.hh.harbor.module.system.dal.mysql.token.TokenRefreshTokenMapper;
 import cn.hh.harbor.module.system.dal.redis.token.AccessTokenRedisDAO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,6 +39,12 @@ public class TokenServiceImpl implements TokenService {
     @Resource
     private AccessTokenRedisDAO accessTokenRedisDAO;
 
+    @Value("${harbor.token-access-time}")
+    private Duration tokenAccessTime;
+
+    @Value("${harbor.token-refresh-time}")
+    private Duration tokenRefreshTime;
+
     @Override
     @Transactional
     public TokenAccessDO createAccessToken(Long userId, Integer userType, List<Long> tenantIds, boolean isRequireRefreshToken) {
@@ -48,7 +56,7 @@ public class TokenServiceImpl implements TokenService {
                 .setUserType(userType)
                 .setRefreshToken(refreshToken)
                 .setTenantIds(tenantIds)
-                .setExpiresTime(LocalDateTime.now().plusSeconds(360000)); // todo 配置过期时间
+                .setExpiresTime(LocalDateTime.now().plus(tokenAccessTime));
         tokenAccessTokenMapper.insert(accessTokenDO);
         // 记录到 Redis 中
         accessTokenRedisDAO.set(accessTokenDO);
@@ -142,7 +150,7 @@ public class TokenServiceImpl implements TokenService {
     private TokenRefreshDO createRefreshToken(Long userId, Integer userType) {
         TokenRefreshDO refreshToken = new TokenRefreshDO().setRefreshToken(generateRefreshToken())
                 .setUserId(userId).setUserType(userType)
-                .setExpiresTime(LocalDateTime.now().plusSeconds(360000)); // todo 配置过期时间
+                .setExpiresTime(LocalDateTime.now().plus(tokenRefreshTime));
         tokenRefreshTokenMapper.insert(refreshToken);
         return refreshToken;
     }

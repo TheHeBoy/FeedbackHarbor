@@ -52,6 +52,8 @@ export default (env: ConfigEnv) => {
       compositionOnly: true,
       include: [resolve(__dirname, 'src/locales/**')],
     }),
-    WindiCSS(),
+    WindiCSS({
+      configFiles: ['../../windi.config.js'],
+    }),
   ];
 };

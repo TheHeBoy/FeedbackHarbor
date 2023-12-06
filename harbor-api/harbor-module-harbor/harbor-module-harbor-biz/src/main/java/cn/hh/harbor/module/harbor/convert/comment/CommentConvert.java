@@ -4,10 +4,7 @@ import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.module.harbor.controller.admin.comment.vo.CommentCreateReqVO;
 import cn.hh.harbor.module.harbor.controller.admin.comment.vo.CommentRespVO;
 import cn.hh.harbor.module.harbor.controller.admin.comment.vo.CommentUpdateReqVO;
-import cn.hh.harbor.module.harbor.controller.app.comment.vo.AppCommentCreateReqVO;
-import cn.hh.harbor.module.harbor.controller.app.comment.vo.AppCommentPageRespVO;
-import cn.hh.harbor.module.harbor.controller.app.comment.vo.AppCommentRespVO;
-import cn.hh.harbor.module.harbor.controller.app.comment.vo.AppReplyVO;
+import cn.hh.harbor.module.harbor.controller.app.comment.vo.*;
 import cn.hh.harbor.module.harbor.dal.dataobject.comment.CommentDO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -35,4 +32,5 @@ public interface CommentConvert {
     CommentDO convert(AppCommentCreateReqVO createReqVO);
 
     AppCommentRespVO convertApp(CommentDO commentDO);
+    AppCommentCreateRespVO convertApp1(CommentDO commentDO);
 }

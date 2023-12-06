@@ -4,7 +4,7 @@ import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.security.core.annotations.PreAuthenticated;
 import cn.hh.harbor.module.harbor.controller.app.like.vo.AppLikeListReqVO;
 import cn.hh.harbor.module.harbor.controller.app.like.vo.AppLikeReqVO;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import cn.hh.harbor.module.harbor.service.like.LikeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +37,6 @@ public class AppLikeController {
     @GetMapping("/list")
     @Operation(summary = "点赞集合")
     public CommonResult<Set<Long>> listByUid(@Valid AppLikeListReqVO likeListReqVO) {
-        return success(likeService.listByUid(getLoginUserId(), LikeBusTypeEnum.valueOf(likeListReqVO.getBusType())));
+        return success(likeService.listByUid(getLoginUserId(), BusTypeEnum.valueOf(likeListReqVO.getBusType())));
     }
 }

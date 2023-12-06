@@ -1,7 +1,7 @@
 package cn.hh.harbor.module.harbor.service.like;
 
 import cn.hh.harbor.module.harbor.controller.app.like.vo.AppLikeReqVO;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 
 import java.util.List;
 import java.util.Set;
@@ -26,7 +26,7 @@ public interface LikeService {
      * @param uid 用户id
      * @return {@link List}<{@link Long}>
      */
-    Set<Long> listByUid(Long uid, LikeBusTypeEnum busTypeEnum);
+    Set<Long> listByUid(Long uid, BusTypeEnum busTypeEnum);
 
 
     /**
@@ -34,5 +34,5 @@ public interface LikeService {
      *
      * @return int 同步点赞数量
      */
-    int syncLike(LikeBusTypeEnum busTypeEnum);
+    int syncLike(BusTypeEnum busTypeEnum);
 }

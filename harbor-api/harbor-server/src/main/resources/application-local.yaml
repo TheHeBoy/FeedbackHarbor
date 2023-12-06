@@ -45,25 +45,8 @@ spring:
         master:
           name: ruoyi-vue-pro
           url: jdbc:mysql://192.168.10.100:3306/${spring.datasource.dynamic.datasource.master.name}?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true # MySQL Connector/J 8.X 连接的示例
-          #          url: jdbc:mysql://127.0.0.1:3306/${spring.datasource.dynamic.datasource.master.name}?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=CTT # MySQL Connector/J 5.X 连接的示例
-          #          url: jdbc:postgresql://127.0.0.1:5432/${spring.datasource.dynamic.datasource.master.name} # PostgreSQL 连接的示例
-          #          url: jdbc:oracle:thin:@127.0.0.1:1521:xe # Oracle 连接的示例
-          #          url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=${spring.datasource.dynamic.datasource.master.name} # SQLServer 连接的示例
           username: root
           password: 123456
-        #          username: sa
-        #          password: JSm:g(*%lU4ZAkz06cd52KqT3)i1?H7W
-        slave: # 模拟从库，可根据自己需要修改
-          name: ruoyi-vue-pro
-          url: jdbc:mysql://192.168.10.100:3306/${spring.datasource.dynamic.datasource.slave.name}?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true # MySQL Connector/J 8.X 连接的示例
-          #          url: jdbc:mysql://127.0.0.1:3306/${spring.datasource.dynamic.datasource.slave.name}?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=CTT # MySQL Connector/J 5.X 连接的示例
-          #          url: jdbc:postgresql://127.0.0.1:5432/${spring.datasource.dynamic.datasource.slave.name} # PostgreSQL 连接的示例
-          #          url: jdbc:oracle:thin:@127.0.0.1:1521:xe # Oracle 连接的示例
-          #          url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=${spring.datasource.dynamic.datasource.slave.name} # SQLServer 连接的示例
-          username: root
-          password: 123456
-  #          username: sa
-  #          password: JSm:g(*%lU4ZAkz06cd52KqT3)i1?H7W
 
   # Redis 配置。Redisson 默认的配置足够使用，一般不需要进行调优
   redis:
@@ -154,27 +137,9 @@ logging:
     cn.hh.harbor.module.tool.dal.mysql: debug
 debug: false
 
---- #################### 微信公众号、小程序相关配置 ####################
-wx:
-  mp: # 公众号配置（必填），参见 https://github.com/Wechat-Group/WxJava/blob/develop/spring-boot-starters/wx-java-mp-spring-boot-starter/README.md 文档
-    app-id: wx041349c6f39b268b
-    secret: 5abee519483bc9f8cb37ce280e814bd0
-    # 存储配置，解决 AccessToken 的跨节点的共享
-    config-storage:
-      type: RedisTemplate # 采用 RedisTemplate 操作 Redis，会自动从 Spring 中获取
-      key-prefix: wx # Redis Key 的前缀
-      http-client-type: HttpClient # 采用 HttpClient 请求微信公众号平台
-  miniapp: # 小程序配置（必填），参见 https://github.com/Wechat-Group/WxJava/blob/develop/spring-boot-starters/wx-java-miniapp-spring-boot-starter/README.md 文档
-    appid: wx62056c0d5e8db250
-    secret: 333ae72f41552af1e998fe1f54e1584a
-    config-storage:
-      type: RedisTemplate # 采用 RedisTemplate 操作 Redis，会自动从 Spring 中获取
-      key-prefix: wa # Redis Key 的前缀
-      http-client-type: HttpClient # 采用 HttpClient 请求微信公众号平台
+--- #################### 系统相关配置 ####################
 
---- #################### 芋道相关配置 ####################
-
-# 芋道配置项，设置当前项目所有自定义的配置
+# 系统配置项，设置当前项目所有自定义的配置
 harbor:
   security:
     mock-enable: true
@@ -184,8 +149,6 @@ harbor:
       - ${spring.boot.admin.context-path}/** # 不处理 Spring Boot Admin 的请求
       - ${management.endpoints.web.base-path}/** # 不处理 Actuator 的请求
   access-log: # 访问日志的配置项
-    enable: false
-  error-code: # 错误码相关配置项
     enable: false
   demo: false # 关闭演示模式
 

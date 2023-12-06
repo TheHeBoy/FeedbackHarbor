@@ -3,6 +3,7 @@ package cn.hh.harbor.module.harbor.controller.app.comment;
 import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.framework.security.core.annotations.PreAuthenticated;
+import cn.hh.harbor.framework.security.core.util.SecurityFrameworkUtils;
 import cn.hh.harbor.module.harbor.controller.app.comment.vo.*;
 import cn.hh.harbor.module.harbor.service.comment.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,7 @@ public class AppCommentController {
     @PostMapping("/create")
     @PreAuthenticated
     @Operation(summary = "创建评论")
-    public CommonResult<AppCommentRespVO> createComment(@Valid @RequestBody AppCommentCreateReqVO createReqVO) {
+    public CommonResult<AppCommentCreateRespVO> createComment(@Valid @RequestBody AppCommentCreateReqVO createReqVO) {
         return success(commentService.createComment(createReqVO, getLoginUserId()));
     }
 

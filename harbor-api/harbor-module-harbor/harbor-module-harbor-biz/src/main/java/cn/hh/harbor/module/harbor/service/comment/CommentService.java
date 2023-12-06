@@ -14,7 +14,7 @@ import cn.hh.harbor.framework.common.pojo.PageResult;
  */
 public interface CommentService {
 
-    AppCommentRespVO createComment(@Valid AppCommentCreateReqVO createReqVO, Long uid);
+    AppCommentCreateRespVO createComment(@Valid AppCommentCreateReqVO createReqVO, Long uid);
 
 
     /**

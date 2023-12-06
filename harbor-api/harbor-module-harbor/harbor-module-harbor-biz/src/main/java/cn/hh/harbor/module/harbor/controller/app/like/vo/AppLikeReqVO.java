@@ -1,11 +1,9 @@
 package cn.hh.harbor.module.harbor.controller.app.like.vo;
 
 import cn.hh.harbor.framework.common.validation.InEnum;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Schema(description = "App - 用户点赞 Request VO")
@@ -17,6 +15,6 @@ public class AppLikeReqVO {
     private Long rid;
 
     @Schema(description = "业务类型")
-    @InEnum(LikeBusTypeEnum.class)
+    @InEnum(BusTypeEnum.class)
     private int busType;
 }

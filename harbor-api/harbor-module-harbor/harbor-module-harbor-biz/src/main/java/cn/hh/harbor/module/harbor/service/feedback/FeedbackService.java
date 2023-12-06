@@ -5,6 +5,7 @@ import javax.validation.*;
 
 import cn.hh.harbor.module.harbor.controller.admin.feedback.vo.*;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
+import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackCreateRespVO;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
 import cn.hh.harbor.module.harbor.dal.dataobject.feedback.FeedbackDO;
@@ -33,7 +34,7 @@ public interface FeedbackService {
     PageResult<FeedbackRespVO> getFeedbackPage(FeedbackPageReqVO pageReqVO);
 
 
-    AppFeedbackRespVO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid);
+    AppFeedbackCreateRespVO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid);
 
     PageResult<AppFeedbackRespVO> getFeedbackPage(AppFeedbackPageReqVO pageVO);
 }

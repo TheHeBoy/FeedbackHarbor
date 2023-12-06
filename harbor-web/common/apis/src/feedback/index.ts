@@ -11,6 +11,7 @@ export type FeedbackVO = {
   avatar: string;
   userType: number;
   commentNum: number;
+  sensitive: string[];
   imgs?: string[];
 };
 

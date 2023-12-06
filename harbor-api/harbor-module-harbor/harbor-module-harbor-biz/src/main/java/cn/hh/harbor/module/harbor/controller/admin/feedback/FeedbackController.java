@@ -43,7 +43,7 @@ public class FeedbackController {
     @DeleteMapping("/delete")
     @Operation(summary = "删除用户反馈")
     @Parameter(name = "id", description = "编号", required = true)
-    @PreAuthorize("@ss.hasPermission('Harbor:feedback:delete')")
+    @PreAuthorize("@ss.hasPermission('harbor:feedback:delete')")
     public CommonResult<Boolean> deleteFeedback(@RequestParam("id") Long id) {
         feedbackService.deleteFeedback(id);
         return success(true);
@@ -51,7 +51,7 @@ public class FeedbackController {
 
     @GetMapping("/page")
     @Operation(summary = "获得用户反馈分页")
-    @PreAuthorize("@ss.hasPermission('Harbor:feedback:query')")
+    @PreAuthorize("@ss.hasPermission('harbor:feedback:query')")
     public CommonResult<PageResult<FeedbackRespVO>> getFeedbackPage(@Valid FeedbackPageReqVO pageVO) {
         return success(feedbackService.getFeedbackPage(pageVO));
     }

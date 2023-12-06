@@ -1,13 +1,8 @@
 package cn.hh.harbor.module.harbor.job;
 
 import cn.hh.harbor.framework.quartz.core.handler.JobHandler;
-import cn.hh.harbor.framework.tenant.core.aop.TenantIgnore;
-import cn.hh.harbor.framework.tenant.core.context.TenantContextHolder;
-import cn.hh.harbor.framework.tenant.core.job.TenantJob;
 import cn.hh.harbor.framework.tenant.core.util.TenantUtils;
-import cn.hh.harbor.module.harbor.dal.mysql.comment.CommentMapper;
-import cn.hh.harbor.module.harbor.dal.mysql.feedback.FeedbackMapper;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import cn.hh.harbor.module.harbor.service.like.LikeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,8 +25,8 @@ public class FeedbackLikeJob implements JobHandler {
     @Override
     public String execute(String param) {
         TenantUtils.executeIgnore(() -> {
-            likeService.syncLike(LikeBusTypeEnum.FEEDBACK);
-            likeService.syncLike(LikeBusTypeEnum.COMMENT);
+            likeService.syncLike(BusTypeEnum.FEEDBACK);
+            likeService.syncLike(BusTypeEnum.COMMENT);
         });
         return "同步点赞";
     }

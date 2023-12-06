@@ -7,10 +7,7 @@
       <div class="ml-7">
         <div @mouseenter="reportShow = true" @mouseleave="reportShow = false">
           <div class="flex justify-between">
-            <UUserNickNameInfo
-              :nick-name="vModel.nickname"
-              :type="vModel.userType"
-            />
+            <UUserNickNameInfo :nick-name="vModel.nickname" :type="vModel.userType" />
             <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
           </div>
           <div>
@@ -25,6 +22,7 @@
               :comment-num="vModel.commentNum"
               @onLike="onLike(vModel)"
               @onComment="isCommentShow = !isCommentShow"
+              type="feedback"
             />
           </div>
         </div>
@@ -42,20 +40,14 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType, ref, computed } from "vue";
-import {
-  UImageContext,
-  UUserNickNameInfo,
-  UUserAvatar,
-  UFeedbackTag,
-  UActionBar,
-} from "../index";
-import { FeedbackVO, getLikeList, like } from "@harbor/apis";
-import { UHarborComment, URelativelyTime } from "../index";
-import { UserInfo } from "./index";
+import { onMounted, PropType, ref, computed } from 'vue';
+import { UImageContext, UUserNickNameInfo, UUserAvatar, UFeedbackTag, UActionBar } from '../index';
+import { FeedbackVO, getLikeList, like } from '@harbor/apis';
+import { UHarborComment, URelativelyTime } from '../index';
+import { UserInfo } from './index';
 
 defineOptions({
-  name: "UFeedback",
+  name: 'UFeedback',
 });
 
 const props = defineProps({
@@ -75,7 +67,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: "submit", content: String): void;
+  (e: 'submit', content: String): void;
 }>();
 
 // 用户已点赞反馈集合
@@ -89,9 +81,7 @@ const onLike = (feedback: FeedbackVO) => {
       feedbackLikeIds.value.push(fid);
       feedback.likes++;
     } else {
-      feedbackLikeIds.value = feedbackLikeIds.value.filter(
-        (item) => item != fid
-      );
+      feedbackLikeIds.value = feedbackLikeIds.value.filter((item) => item != fid);
       feedback.likes--;
     }
   });

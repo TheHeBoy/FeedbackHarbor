@@ -28,17 +28,12 @@
 
         <module>harbor-spring-boot-starter-biz-operatelog</module>
         <module>harbor-spring-boot-starter-biz-dict</module>
-        <module>harbor-spring-boot-starter-biz-sms</module>
 
-        <module>harbor-spring-boot-starter-biz-pay</module>
-        <module>harbor-spring-boot-starter-biz-weixin</module>
         <module>harbor-spring-boot-starter-biz-social</module>
         <module>harbor-spring-boot-starter-biz-tenant</module>
         <module>harbor-spring-boot-starter-biz-data-permission</module>
         <module>harbor-spring-boot-starter-biz-ip</module>
 
-        <module>harbor-spring-boot-starter-flowable</module>
-        <module>harbor-spring-boot-starter-captcha</module>
         <module>harbor-spring-boot-starter-websocket</module>
         <module>harbor-spring-boot-starter-desensitize</module>
     </modules>

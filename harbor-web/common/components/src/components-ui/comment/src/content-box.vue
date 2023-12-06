@@ -17,6 +17,7 @@
             :is-like="user.likeIds.indexOf(data.id) == -1"
             @onLike="like(data.id)"
             @onComment="reply"
+            type="comment"
           />
         </div>
       </div>

@@ -10,7 +10,7 @@ import cn.hh.harbor.module.harbor.dal.mysql.feedback.FeedbackMapper;
 import cn.hh.harbor.module.harbor.dal.dataobject.like.LikeDO;
 import cn.hh.harbor.module.harbor.dal.mysql.like.LikeMapper;
 import cn.hh.harbor.module.harbor.dal.redis.like.LikeRedisDAO;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public boolean like(Long uid, AppLikeReqVO appLikeReqVO) {
         Long rid = appLikeReqVO.getRid();
-        LikeBusTypeEnum busTypeEnum = LikeBusTypeEnum.valueOf(appLikeReqVO.getBusType());
+        BusTypeEnum busTypeEnum = BusTypeEnum.valueOf(appLikeReqVO.getBusType());
         boolean isLiked = isLiked(uid, rid, busTypeEnum);
         //用户已经点赞了
         if (isLiked) {
@@ -61,7 +61,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public Set<Long> listByUid(Long uid, LikeBusTypeEnum busTypeEnum) {
+    public Set<Long> listByUid(Long uid, BusTypeEnum busTypeEnum) {
         Set<Long> resultSet = new HashSet<>();
 
         // 缓存中的点赞
@@ -80,7 +80,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Transactional
     @Override
-    public synchronized int syncLike(LikeBusTypeEnum busTypeEnum) {
+    public synchronized int syncLike(BusTypeEnum busTypeEnum) {
         return like(true, busTypeEnum) - like(false, busTypeEnum);
     }
 
@@ -91,7 +91,7 @@ public class LikeServiceImpl implements LikeService {
      * @param busTypeEnum 业务枚举
      * @return int
      */
-    private int like(boolean action, LikeBusTypeEnum busTypeEnum) {
+    private int like(boolean action, BusTypeEnum busTypeEnum) {
         Set<String> keys = likeRedisDAO.list(action, busTypeEnum);
         // redis 点赞列表
         List<LikeDO> redisLikes = new ArrayList<>();
@@ -167,7 +167,7 @@ public class LikeServiceImpl implements LikeService {
         return redisLikes.size();
     }
 
-    private boolean isLiked(Long uid, Long rid, LikeBusTypeEnum busTypeEnum) {
+    private boolean isLiked(Long uid, Long rid, BusTypeEnum busTypeEnum) {
         Boolean isLiked = likeRedisDAO.isMember(uid, rid, true, busTypeEnum);
 
         if (isLiked) {
@@ -194,7 +194,7 @@ public class LikeServiceImpl implements LikeService {
      * @param busTypeEnum 业务类型
      * @return {@link List}<{@link Integer}>
      */
-    private Set<Long> listByUidWithRedis(Long uid, boolean likeAction, LikeBusTypeEnum busTypeEnum) {
+    private Set<Long> listByUidWithRedis(Long uid, boolean likeAction, BusTypeEnum busTypeEnum) {
         Set<Long> rids = new HashSet<>();
         //得到所有点赞或取消点赞的key
         Set<String> keyList = likeRedisDAO.list(likeAction, busTypeEnum);

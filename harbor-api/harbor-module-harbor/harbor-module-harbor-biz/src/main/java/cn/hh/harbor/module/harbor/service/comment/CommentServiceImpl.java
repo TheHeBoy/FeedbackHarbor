@@ -1,5 +1,7 @@
 package cn.hh.harbor.module.harbor.service.comment;
 
+import cn.hh.harbor.module.system.api.sensitiveword.SensitiveWordApi;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hh.harbor.framework.common.enums.UserTypeEnum;
@@ -7,7 +9,7 @@ import cn.hh.harbor.module.harbor.controller.app.comment.vo.*;
 import cn.hh.harbor.module.harbor.dal.mysql.feedback.FeedbackMapper;
 import cn.hh.harbor.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.hh.harbor.module.harbor.enums.feedback.FeedbackReplyStateEnum;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import cn.hh.harbor.module.system.api.user.UserApi;
 import cn.hh.harbor.module.system.api.user.dto.UserRespDTO;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import cn.hh.harbor.framework.common.pojo.PageResult;
 
 import cn.hh.harbor.module.harbor.convert.comment.CommentConvert;
 import cn.hh.harbor.module.harbor.dal.mysql.comment.CommentMapper;
+
+import java.util.List;
 
 import static cn.hh.harbor.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.hh.harbor.module.harbor.enums.ErrorCodeConstants.*;
@@ -45,6 +49,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Resource
     private FeedbackMapper feedbackMapper;
+
+    @Resource
+    private SensitiveWordApi sensitiveWordApi;
 
     @Override
     public void deleteComment(Long id) {
@@ -97,21 +104,26 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public AppCommentRespVO createComment(AppCommentCreateReqVO createReqVO, Long uid) {
+    public AppCommentCreateRespVO createComment(AppCommentCreateReqVO createReqVO, Long uid) {
+        List<String> sensitiveList = sensitiveWordApi.validateText(createReqVO.getContent(), null);
+        if (CollUtil.isNotEmpty(sensitiveList)) {
+            return new AppCommentCreateRespVO().setSensitive(sensitiveList);
+        }
+
         CommentDO commentDO = CommentConvert.INSTANCE.convert(createReqVO);
         commentDO.setUid(uid);
         commentMapper.insert(commentDO);
 
         // 填充用户信息
         commentDO = commentMapper.selectById(commentDO.getId());
-        AppCommentRespVO respVO = CommentConvert.INSTANCE.convertApp(commentDO);
+        AppCommentCreateRespVO respVO = CommentConvert.INSTANCE.convertApp1(commentDO);
         fillUserInfo(respVO);
 
         // 如果时管理员用户，修改反馈回复状态为已回复
         if (ObjectUtil.equal(respVO.getUserType(), UserTypeEnum.ADMIN.getValue())) {
             feedbackMapper.updateReplyState(createReqVO.getFeedbackId(), FeedbackReplyStateEnum.REPLIED);
         }
-        return CommentConvert.INSTANCE.convertApp(commentDO);
+        return CommentConvert.INSTANCE.convertApp1(commentDO);
     }
 
     /**
@@ -121,8 +133,8 @@ public class CommentServiceImpl implements CommentService {
      * @return void
      */
     private Long getLikeCount(Long rid) {
-        long count = likeRedisDAO.sSize(rid, true, LikeBusTypeEnum.COMMENT);
-        long cancelCount = likeRedisDAO.sSize(rid, false, LikeBusTypeEnum.COMMENT);
+        long count = likeRedisDAO.sSize(rid, true, BusTypeEnum.COMMENT);
+        long cancelCount = likeRedisDAO.sSize(rid, false, BusTypeEnum.COMMENT);
         return count - cancelCount;
     }
 

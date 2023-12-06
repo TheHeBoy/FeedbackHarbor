@@ -2,6 +2,7 @@ package cn.hh.harbor.module.harbor.convert.feedback;
 
 import cn.hh.harbor.module.harbor.controller.admin.feedback.vo.FeedbackRespVO;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
+import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackCreateRespVO;
 import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
 import cn.hh.harbor.module.harbor.dal.dataobject.feedback.FeedbackDO;
 import org.mapstruct.Mapper;
@@ -20,5 +21,6 @@ public interface FeedbackConvert {
     FeedbackRespVO convert(FeedbackDO bean);
 
     AppFeedbackRespVO convertApp(FeedbackDO feedbackDO);
+    AppFeedbackCreateRespVO convertApp1(FeedbackDO feedbackDO);
 
 }

@@ -1,15 +1,14 @@
 package cn.hh.harbor.module.harbor.service.feedback;
 
+import cn.hh.harbor.module.harbor.controller.app.feedback.vo.*;
+import cn.hh.harbor.module.system.api.sensitiveword.SensitiveWordApi;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackBaseVO;
-import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackCreateReqVO;
-import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackPageReqVO;
-import cn.hh.harbor.module.harbor.controller.app.feedback.vo.AppFeedbackRespVO;
 import cn.hh.harbor.module.harbor.convert.feedbacktag.FeedbackTagConvert;
 import cn.hh.harbor.module.harbor.dal.dataobject.feedbacktag.FeedbackTagDO;
 import cn.hh.harbor.module.harbor.dal.redis.like.LikeRedisDAO;
 import cn.hh.harbor.module.harbor.enums.feedback.FeedbackReplyStateEnum;
-import cn.hh.harbor.module.harbor.enums.like.LikeBusTypeEnum;
+import cn.hh.harbor.module.harbor.enums.common.BusTypeEnum;
 import cn.hh.harbor.module.harbor.service.comment.CommentService;
 import cn.hh.harbor.module.harbor.service.feedbacktag.FeedbackTagService;
 import cn.hh.harbor.module.system.api.user.UserApi;
@@ -58,6 +57,9 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Resource
     private FeedbackTagConvert feedbackTagConvert;
 
+    @Resource
+    private SensitiveWordApi sensitiveWordApi;
+
     @Override
     public void deleteFeedback(Long id) {
         // 校验存在
@@ -85,7 +87,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public AppFeedbackRespVO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid) {
+    public AppFeedbackCreateRespVO createFeedback(AppFeedbackCreateReqVO createReqVO, Long uid) {
+        List<String> sensitiveList = sensitiveWordApi.validateText(createReqVO.getContent(), null);
+        if (CollUtil.isNotEmpty(sensitiveList)) {
+            return new AppFeedbackCreateRespVO().setSensitive(sensitiveList);
+        }
+
         // 插入
         FeedbackDO feedbackDO = FeedbackConvert.INSTANCE.convert(createReqVO);
         feedbackDO.setUid(uid);
@@ -94,7 +101,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         // 填充用户信息
         feedbackDO = feedbackMapper.selectById(feedbackDO.getId());
-        AppFeedbackRespVO feedbackRespVO = FeedbackConvert.INSTANCE.convertApp(feedbackDO);
+        AppFeedbackCreateRespVO feedbackRespVO = FeedbackConvert.INSTANCE.convertApp1(feedbackDO);
         fill(feedbackRespVO, feedbackDO, true);
         return feedbackRespVO;
     }
@@ -118,8 +125,8 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @return void
      */
     private Long getLikeCount(Long feedbackId) {
-        long count = likeRedisDAO.sSize(feedbackId, true, LikeBusTypeEnum.FEEDBACK);
-        long cancelCount = likeRedisDAO.sSize(feedbackId, false, LikeBusTypeEnum.FEEDBACK);
+        long count = likeRedisDAO.sSize(feedbackId, true, BusTypeEnum.FEEDBACK);
+        long cancelCount = likeRedisDAO.sSize(feedbackId, false, BusTypeEnum.FEEDBACK);
         return count - cancelCount;
     }
 
