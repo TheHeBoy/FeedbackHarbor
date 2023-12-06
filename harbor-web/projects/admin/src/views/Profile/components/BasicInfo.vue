@@ -1,12 +1,5 @@
 <template>
-  <Form ref="formRef" :labelWidth="80" :rules="rules" :schema="schema">
-    <template #sex="form">
-      <el-radio-group v-model="form['sex']">
-        <el-radio :label="1">{{ t('profile.user.man') }}</el-radio>
-        <el-radio :label="2">{{ t('profile.user.woman') }}</el-radio>
-      </el-radio-group>
-    </template>
-  </Form>
+  <Form ref="formRef" :labelWidth="80" :rules="rules" :schema="schema"></Form>
   <XButton :title="t('common.save')" @click="submit()" />
   <XButton :title="t('common.reset')" type="danger" @click="init()" />
 </template>
@@ -28,7 +21,6 @@ const message = useMessage(); // 消息弹窗
 const rules = reactive<FormRules>({
   nickname: [{ required: true, message: t('profile.rules.nickname'), trigger: 'blur' }],
   email: [
-    { required: true, message: t('profile.rules.mail'), trigger: 'blur' },
     {
       type: 'email',
       message: t('profile.rules.truemail'),
@@ -36,7 +28,6 @@ const rules = reactive<FormRules>({
     },
   ],
   mobile: [
-    { required: true, message: t('profile.rules.phone'), trigger: 'blur' },
     {
       pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
       message: t('profile.rules.truephone'),
@@ -59,12 +50,6 @@ const schema = reactive<FormSchema[]>([
     field: 'email',
     label: t('profile.user.email'),
     component: 'Input',
-  },
-  {
-    field: 'sex',
-    label: t('profile.user.sex'),
-    component: 'InputNumber',
-    value: 0,
   },
 ]);
 const formRef = ref<FormExpose>(); // 表单 Ref

@@ -38,7 +38,6 @@ export interface ProfileVO {
   socialUsers: SocialUser[];
   email: string;
   mobile: string;
-  sex: number;
   avatar: string;
   status: number;
   remark: string;
@@ -51,7 +50,6 @@ export interface UserProfileUpdateReqVO {
   nickname: string;
   email: string;
   mobile: string;
-  sex: number;
 }
 
 // 查询用户个人信息

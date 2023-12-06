@@ -17,8 +17,9 @@ public class TenantUserServiceImpl implements TenantUserService {
     @Override
     public void insert(Long tenantId, Long userId) {
         TenantUserDO tenantUserDO = tenantUserMapper.selectByTenantIdAndUserId(tenantId, userId);
-        if(tenantUserDO != null){
+        if (tenantUserDO != null) {
             throw ServiceExceptionUtil.exception(TENANT_USER_EXISTS);
         }
+        tenantUserMapper.insert(new TenantUserDO().setTenantId(tenantId).setUserId(userId));
     }
 }

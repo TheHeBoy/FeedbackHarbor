@@ -94,14 +94,4 @@ public class RoleController {
         return success(RoleConvert.INSTANCE.convertList02(list));
     }
 
-    @GetMapping("/export")
-    @OperateLog(type = EXPORT)
-    @PreAuthorize("@ss.hasPermission('system:role:export')")
-    public void export(HttpServletResponse response, @Validated RoleExportReqVO reqVO) throws IOException {
-        List<RoleDO> list = roleService.getRoleList(reqVO);
-        List<RoleExcelVO> data = RoleConvert.INSTANCE.convertList03(list);
-        // 输出
-        ExcelUtils.write(response, "角色数据.xls", "角色列表", RoleExcelVO.class, data);
-    }
-
 }

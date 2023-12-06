@@ -68,6 +68,7 @@ public class RoleServiceImpl implements RoleService {
         RoleDO roleDO = new RoleDO()
                 .setName(RoleCodeEnum.SUPER_TENANT_ADMIN.getName())
                 .setCode(RoleCodeEnum.SUPER_TENANT_ADMIN.getCode())
+                .setStatus(CommonStatusEnum.ENABLE.getStatus())
                 .setRemark("系统生成")
                 .setSort(0);
         roleMapper.insert(roleDO);
@@ -110,10 +111,12 @@ public class RoleServiceImpl implements RoleService {
         permissionService.processRoleDeleted(id);
     }
 
+    @Transactional
     @Override
     public void deleteRoleByTenantId(Long tenantId) {
-        RoleDO roleDO = roleMapper.selectOne(RoleDO::getTenantId, tenantId);
-        getSelf().deleteRole(roleDO.getId());
+        roleMapper.selectListByTenantId(tenantId).forEach(e -> {
+            getSelf().deleteRole(e.getId());
+        });
     }
 
     /**
@@ -195,10 +198,6 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.selectPage(reqVO);
     }
 
-    @Override
-    public List<RoleDO> getRoleList(RoleExportReqVO reqVO) {
-        return roleMapper.selectList(reqVO);
-    }
 
     @Override
     public boolean hasAnySuperAdmin(Collection<Long> ids) {

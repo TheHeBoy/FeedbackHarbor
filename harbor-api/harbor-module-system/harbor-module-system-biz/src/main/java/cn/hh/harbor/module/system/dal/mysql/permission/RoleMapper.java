@@ -37,12 +37,11 @@ public interface RoleMapper extends BaseMapperX<RoleDO> {
         return selectOne(RoleDO::getName, name);
     }
 
-    default RoleDO selectByCode(String code) {
-        return selectOne(RoleDO::getCode, code);
-    }
-
     default List<RoleDO> selectListByStatus(@Nullable Collection<Integer> statuses) {
         return selectList(RoleDO::getStatus, statuses);
     }
 
+    default List<RoleDO> selectListByTenantId(@Nullable Long tenantId) {
+        return selectList(RoleDO::getTenantId, tenantId);
+    }
 }

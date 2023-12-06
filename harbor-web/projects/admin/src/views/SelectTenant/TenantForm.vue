@@ -1,42 +1,45 @@
 <template>
-  <div class="bg-[var(--dark-bg-color)] flex h-full items-center justify-center">
-    <Transition appear enter-active-class="animate__animated animate__bounceInRight">
-      <el-card shadow="hover" class="w-100 !rounded-3xl">
-        <div class="text-3xl font-bold text-center mb-4">
-          {{ formType === 'create' ? '新建' : '修改' }}反馈社区
-        </div>
-        <el-form label-position="top" ref="ruleFormRef" :model="formData" :rules="rules">
-          <el-form-item label="Logo" prop="logo">
-            <UploadImg
-              v-model="formData.logo"
-              :actionTool="false"
-              class="flex items-end"
-              height="52px"
-              width="52px"
-            />
-          </el-form-item>
-          <el-form-item label="社区名" prop="name">
-            <el-input v-model="formData.name" />
-          </el-form-item>
-          <el-form-item label="社区路由" prop="routerUri">
-            <el-input v-model="formData.routerUri">
-              <template #prepend>Http://.../product/</template>
-            </el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button :disabled="formLoading" type="primary" @click="submitForm(ruleFormRef)"
-              >确定
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-    </Transition>
-  </div>
+  <LayoutHead>
+    <div class="flex h-full items-center justify-center">
+      <Transition appear enter-active-class="animate__animated animate__bounceInRight">
+        <el-card shadow="hover" class="w-100 !rounded-3xl">
+          <div class="text-3xl font-bold text-center mb-4">
+            {{ formType === 'create' ? '新建' : '修改' }}反馈社区
+          </div>
+          <el-form label-position="top" ref="ruleFormRef" :model="formData" :rules="rules">
+            <el-form-item label="Logo" prop="logo">
+              <UploadImg
+                v-model="formData.logo"
+                :actionTool="false"
+                class="flex items-end"
+                height="52px"
+                width="52px"
+              />
+            </el-form-item>
+            <el-form-item label="社区名" prop="name">
+              <el-input v-model="formData.name" />
+            </el-form-item>
+            <el-form-item label="社区路由" prop="routerUri">
+              <el-input v-model="formData.routerUri">
+                <template #prepend>Http://.../product/</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button :disabled="formLoading" type="primary" @click="submitForm(ruleFormRef)"
+                >确定
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </Transition>
+    </div>
+  </LayoutHead>
 </template>
 <script lang="ts" setup>
 import * as SelectTenantApi from '@/api/system/selectTenant';
 import router from '@/router';
 import { FormInstance, FormRules } from 'element-plus';
+import LayoutHead from '@/components/LayoutHead/src/LayoutHead.vue';
 
 const { t } = useI18n(); // 国际化
 const message = useMessage(); // 消息弹窗

@@ -134,29 +134,6 @@ const remainingRouter: AppRouteRecordRaw[] = [
     ],
   },
   {
-    path: '/codegen',
-    component: Layout,
-    name: 'CodegenEdit',
-    meta: {
-      hidden: true,
-    },
-    children: [
-      {
-        path: 'edit',
-        component: () => import('@/views/infra/codegen/EditTable.vue'),
-        name: 'InfraCodegenEditTable',
-        meta: {
-          noCache: true,
-          hidden: true,
-          canTo: true,
-          icon: 'ep:edit',
-          title: '修改生成配置',
-          activeMenu: 'infra/codegen/index',
-        },
-      },
-    ],
-  },
-  {
     path: '/job',
     component: Layout,
     name: 'JobL',

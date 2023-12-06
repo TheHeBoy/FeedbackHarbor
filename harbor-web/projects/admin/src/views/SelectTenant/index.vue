@@ -1,54 +1,49 @@
 <template>
-  <div class="bg-[var(--dark-bg-color)] flex h-full items-center justify-center">
-    <Transition appear enter-active-class="animate__animated animate__bounceInRight">
-      <el-card shadow="hover" class="w-100 !rounded-3xl">
-        <div class="flex relative justify-center mb-4">
-          <el-dropdown placement="top" class="!absolute !left-0">
-            <el-avatar :src="useUserStore().user.avatar" />
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="logout" :icon="Back">登出</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-          <div class="text-3xl font-bold text-center">请选择管理系统</div>
-        </div>
-        <div class="overflow-y-auto max-h-100">
-          <InviteList :refresh="getList" />
-          <button
-            v-for="tenant in model"
-            :key="tenant.id"
-            @click="onEntry(tenant)"
-            @mouseenter="operation[tenant.id] = true"
-            @mouseleave="operation[tenant.id] = false"
-            :class="tenant.id == SystemIdEnum ? 'bg-cyan-500' : 'bg-cyan-700'"
-            class="text-white h-10 w-full px-3 py-2 block flex items-center rounded-1xl mt-2 hover:bg-cyan-800"
-          >
-            <img class="w-6 h-6" :src="tenant.logo" alt="" />
-            <span class="ml-3 text-1xl">{{ tenant.name }}</span>
-            <div class="flex-grow"></div>
-            <div v-if="operation[tenant.id] && tenant.id != SystemIdEnum" class="flex items-center">
-              <Icon @click.stop="onUpdate(tenant.id)" class="mr-1" icon="ep:edit" />
-              <Icon @click.stop="onDelete(tenant)" icon="ep:delete" />
-            </div>
-          </button>
-        </div>
-        <el-button link type="primary" class="w-full mt-4" @click="onCreate"
-          >新建社区租户
-        </el-button>
-      </el-card>
-    </Transition>
-    <el-dialog v-model="confirmDialog" align-center width="400">
-      <template #header>
-        <div>你确定要删除 {{ waitDeleteTenant!.name }} 反馈社区吗?</div>
-        <el-text type="danger">删除后将不能恢复！</el-text>
-      </template>
-      <div class="flex justify-end">
-        <el-button @click="confirmDialog = false">取消</el-button>
-        <el-button type="primary" @click="dialogDelete">确定</el-button>
-      </div>
-    </el-dialog>
-  </div>
+  <LayoutHead>
+    <div class="flex h-full items-center justify-center">
+      <Transition appear enter-active-class="animate__animated animate__bounceInRight">
+        <el-card shadow="hover" class="w-100 !rounded-3xl">
+          <div class="flex relative justify-center mb-4">
+            <el-dropdown placement="top" class="!absolute !left-0">
+              <el-avatar :src="useUserStore().user.avatar" />
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="logout" :icon="Back">登出</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <div class="text-3xl font-bold text-center">请选择管理系统</div>
+          </div>
+          <div class="overflow-y-auto max-h-100">
+            <InviteList :refresh="getList" />
+            <button
+              v-for="tenant in model"
+              :key="tenant.id"
+              @click="onEntry(tenant)"
+              @mouseenter="operation[tenant.id] = true"
+              @mouseleave="operation[tenant.id] = false"
+              :class="tenant.id == SystemIdEnum ? 'bg-cyan-500' : 'bg-cyan-700'"
+              class="text-white h-10 w-full px-3 py-2 block flex items-center rounded-1xl mt-2 hover:bg-cyan-800"
+            >
+              <img class="w-6 h-6" :src="tenant.logo" alt="" />
+              <span class="ml-3 text-1xl">{{ tenant.name }}</span>
+              <div class="flex-grow"></div>
+              <div
+                v-if="operation[tenant.id] && tenant.id != SystemIdEnum"
+                class="flex items-center"
+              >
+                <Icon @click.stop="onUpdate(tenant.id)" class="mr-1" icon="ep:edit" />
+                <Icon @click.stop="onDelete(tenant)" icon="ep:delete" />
+              </div>
+            </button>
+          </div>
+          <el-button link type="primary" class="w-full mt-4" @click="onCreate"
+            >新建社区租户
+          </el-button>
+        </el-card>
+      </Transition>
+    </div>
+  </LayoutHead>
 </template>
 
 <script lang="ts" setup>
@@ -63,27 +58,21 @@ import { SystemIdEnum } from '@/utils/constants';
 import InviteList from './inviteList.vue';
 import { useUserStore } from '@/store/modules/user';
 import { Back } from '@element-plus/icons-vue';
+import LayoutHead from '@/components/LayoutHead/src/LayoutHead.vue';
 
 const message = useMessage(); // 消息弹窗
 
 const model = ref<SelectTenantVO[]>();
 const operation = ref({});
-const confirmDialog = ref(false);
 const onCreate = () => {
   router.push({ path: 'createTenant' });
 };
-const waitDeleteTenant = ref<SelectTenantVO>();
 
-const onDelete = (tenantVO: SelectTenantVO) => {
-  waitDeleteTenant.value = tenantVO;
-  confirmDialog.value = true;
-};
-
-const dialogDelete = async () => {
-  await SelectTenantApi.deleteTenant(waitDeleteTenant.value!.id);
+const onDelete = async (tenantVO: SelectTenantVO) => {
+  await message.delConfirm(`你确定删除 ${tenantVO.name} 租户吗`);
+  await SelectTenantApi.deleteTenant(tenantVO.id);
   message.success('删除成功');
   getList();
-  confirmDialog.value = false;
 };
 
 const getList = () => {

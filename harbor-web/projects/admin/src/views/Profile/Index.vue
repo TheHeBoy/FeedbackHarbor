@@ -22,16 +22,13 @@
           <el-tab-pane :label="t('profile.info.resetPwd')" name="resetPwd">
             <ResetPwd />
           </el-tab-pane>
-          <el-tab-pane :label="t('profile.info.userSocial')" name="userSocial">
-            <UserSocial />
-          </el-tab-pane>
         </el-tabs>
       </div>
     </el-card>
   </div>
 </template>
 <script setup lang="ts" name="Profile">
-import { BasicInfo, ProfileUser, ResetPwd, UserSocial } from './components/';
+import { BasicInfo, ProfileUser, ResetPwd } from './components/';
 
 const { t } = useI18n();
 

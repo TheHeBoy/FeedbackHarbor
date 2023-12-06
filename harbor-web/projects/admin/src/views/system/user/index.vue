@@ -17,10 +17,10 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="手机号码" prop="mobile">
+      <el-form-item label="邮箱" prop="email">
         <el-input
-          v-model="queryParams.mobile"
-          placeholder="请输入手机号码"
+          v-model="queryParams.email"
+          placeholder="请输入邮箱"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -96,7 +96,7 @@
         prop="nickname"
         :show-overflow-tooltip="true"
       />
-      <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
+      <el-table-column label="邮箱" align="center" prop="email" width="120" />
       <el-table-column label="状态" key="status">
         <template #default="scope">
           <el-switch

@@ -118,7 +118,7 @@ public class PermissionServiceImpl implements PermissionService {
     // ========== 角色-菜单的相关方法  ==========
 
     @Override
-    @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
+    @Transactional
     @CacheEvict(value = RedisKeyConstants.MENU_ROLE_ID_LIST,
             allEntries = true) // allEntries 清空所有缓存，主要一次更新涉及到的 menuIds 较多，反倒批量会更快
     public void assignRoleMenu(Long roleId, Set<Long> menuIds) {
@@ -189,7 +189,7 @@ public class PermissionServiceImpl implements PermissionService {
     // ========== 用户-角色的相关方法  ==========
 
     @Override
-    @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
+    @Transactional
     @CacheEvict(value = RedisKeyConstants.USER_ROLE_ID_LIST, key = "#userId")
     public void assignUserRole(Long userId, Set<Long> roleIds) {
         // 获得角色拥有角色编号

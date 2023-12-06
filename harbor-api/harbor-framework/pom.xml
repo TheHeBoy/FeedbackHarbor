@@ -34,7 +34,6 @@
         <module>harbor-spring-boot-starter-biz-data-permission</module>
         <module>harbor-spring-boot-starter-biz-ip</module>
 
-        <module>harbor-spring-boot-starter-websocket</module>
         <module>harbor-spring-boot-starter-desensitize</module>
     </modules>
 

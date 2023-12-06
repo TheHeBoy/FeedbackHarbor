@@ -71,16 +71,6 @@
           <Icon class="mr-5px" icon="ep:plus" />
           新增
         </el-button>
-        <el-button
-          v-hasPermi="['system:role:export']"
-          :loading="exportLoading"
-          plain
-          type="success"
-          @click="handleExport"
-        >
-          <Icon class="mr-5px" icon="ep:download" />
-          导出
-        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>

@@ -34,6 +34,7 @@ import cn.hh.harbor.module.system.service.token.TokenService;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
@@ -105,8 +106,8 @@ public class TenantServiceImpl implements TenantService {
         return tenantMapper.selectOne(TenantDO::getRouterUri, routerUri);
     }
 
+    @Transactional
     @Override
-    @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
     public Long createTenant(SelectTenantCreateReqVO createReqVO, Long userId, String accessToken) {
         // 校验租户名称是否重复
         validTenantRouterUriDuplicate(createReqVO.getName(), null);
@@ -114,6 +115,7 @@ public class TenantServiceImpl implements TenantService {
         TenantDO tenant = TenantConvert.INSTANCE.convert(createReqVO);
         TenantPackageDO tenantPackage = tenantPackageService.getGeneralTenantPackage();
         tenant.setPackageId(tenantPackage.getId());
+        tenant.setStatus(CommonStatusEnum.ENABLE.getStatus());
         // 过期时间
         tenant.setExpireTime(calculateExpireTime(tenantPackage.getDays()));
         tenantMapper.insert(tenant);
@@ -143,8 +145,8 @@ public class TenantServiceImpl implements TenantService {
     }
 
 
+    @Transactional
     @Override
-    @DSTransactional
     public void updateTenant(SelectTenantUpdateReqVO updateReqVO) {
         // 校验
         TenantDO tenantDO = validateUpdateTenant(updateReqVO.getId());
@@ -153,6 +155,7 @@ public class TenantServiceImpl implements TenantService {
         tenantMapper.updateById(updateObj);
     }
 
+    @Transactional
     @Override
     public void updateTenant(TenantUpdateReqVO updateReqVO) {
         // 校验
@@ -167,8 +170,8 @@ public class TenantServiceImpl implements TenantService {
         tenantMapper.updateById(updateObj);
     }
 
+    @Transactional
     @Override
-    @DSTransactional
     public void updateTenantRoleMenu(Long tenantId, Set<Long> menuIds) {
         TenantUtils.execute(tenantId, () -> {
             // 获得所有角色
@@ -191,6 +194,7 @@ public class TenantServiceImpl implements TenantService {
         });
     }
 
+    @Transactional
     @Override
     public void deleteTenant(Long id) {
         // 校验存在

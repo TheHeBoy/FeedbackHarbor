@@ -119,14 +119,6 @@ public interface RoleService {
     PageResult<RoleDO> getRolePage(RolePageReqVO reqVO);
 
     /**
-     * 获得角色列表
-     *
-     * @param reqVO 列表查询
-     * @return 角色列表
-     */
-    List<RoleDO> getRoleList(RoleExportReqVO reqVO);
-
-    /**
      * 判断角色编号数组中，是否有超级管理员
      *
      * @param ids 角色编号数组

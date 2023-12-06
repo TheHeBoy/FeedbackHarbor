@@ -28,6 +28,16 @@ export default defineConfig((env) => {
       port: 80, // 端口号
       cors: true, // 跨域设置允许
       open: '/product/feedback-harbor/home', // 自动打开浏览器
+      proxy: {
+        '/app-api': {
+          target: 'http://39.101.140.3:48080/',
+          changeOrigin: true, // 允许跨域
+        },
+        '/admin-api': {
+          target: 'http://39.101.140.3:48080/',
+          changeOrigin: true, // 允许跨域
+        },
+      },
     },
     build: {
       reportCompressedSize: false,
