@@ -171,7 +171,6 @@ const list = ref([]); // 列表的数据
 const props = defineProps({
   replyState: {
     type: Number,
-    required: true,
   },
 });
 

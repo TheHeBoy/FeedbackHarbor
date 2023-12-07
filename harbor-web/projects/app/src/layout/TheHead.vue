@@ -22,11 +22,11 @@
       <div class="flex-grow"></div>
       <div class="flex">
         <!-- 国际化待实现 -->
-        <!--                <el-tooltip :content="t('change lang')" placement="top">-->
-        <!--                  <button class="icon-btn mx-2" @click="toggleLocales()">-->
-        <!--                    <i-la-language class="icon-footer" />-->
-        <!--                  </button>-->
-        <!--                </el-tooltip>-->
+        <el-tooltip :content="t('change lang')" placement="top">
+          <button class="icon-btn mx-2" @click="toggleLocales()">
+            <i-la-language class="icon-footer" />
+          </button>
+        </el-tooltip>
         <div class="ml-5">
           <div v-if="!userStore.isLogin()">
             <button @click="useLoginStoreWithOut().open()">{{ t('signIn') }}</button>

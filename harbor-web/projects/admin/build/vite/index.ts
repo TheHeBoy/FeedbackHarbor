@@ -3,7 +3,6 @@ import Vue from '@vitejs/plugin-vue';
 import VueJsx from '@vitejs/plugin-vue-jsx';
 import WindiCSS from 'vite-plugin-windicss';
 import progress from 'vite-plugin-progress';
-import EslintPlugin from 'vite-plugin-eslint';
 import PurgeIcons from 'vite-plugin-purge-icons';
 import { ViteEjsPlugin } from 'vite-plugin-ejs';
 import Icons from 'unplugin-icons/vite';
@@ -15,7 +14,6 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import viteCompression from 'vite-plugin-compression';
 import topLevelAwait from 'vite-plugin-top-level-await';
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import svgLoader from 'vite-svg-loader';
 
 export function createVitePlugins() {
@@ -69,11 +67,6 @@ export function createVitePlugins() {
       // 自定义组件的解析器
       resolvers: [ElementPlusResolver(), IconsResolver()],
       exclude: [/[\\/]node_modules[\\/]/],
-    }),
-    VueI18nPlugin({
-      runtimeOnly: true,
-      compositionOnly: true,
-      include: [resolve(__dirname, 'src/locales/**')],
     }),
     viteCompression({
       verbose: true, // 是否在控制台输出压缩结果

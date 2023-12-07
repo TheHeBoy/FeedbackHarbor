@@ -1,3 +1,5 @@
 export default {
-  com: {},
+  com: {
+    official: 'Official',
+  },
 };

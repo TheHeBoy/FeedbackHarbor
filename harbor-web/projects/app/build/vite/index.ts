@@ -8,9 +8,7 @@ import IconsResolver from 'unplugin-icons/resolver';
 import { ElementPlusResolver, VueUseComponentsResolver } from 'unplugin-vue-components/resolvers';
 import WindiCSS from 'vite-plugin-windicss';
 import ViteFonts from 'vite-plugin-fonts';
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import { ConfigEnv } from 'vite';
-import { resolve } from 'path';
 
 export default (env: ConfigEnv) => {
   return [
@@ -46,11 +44,6 @@ export default (env: ConfigEnv) => {
       google: {
         families: ['Open Sans', 'Montserrat', 'Fira Sans'],
       },
-    }),
-    VueI18nPlugin({
-      runtimeOnly: true,
-      compositionOnly: true,
-      include: [resolve(__dirname, 'src/locales/**')],
     }),
     WindiCSS({
       configFiles: ['../../windi.config.js'],

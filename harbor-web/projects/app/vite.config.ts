@@ -12,6 +12,11 @@ export default defineConfig((env) => {
     // 别名设置
     resolve: {
       alias: [
+        //You are running the esm-bundler build of vue-i18n warn
+        {
+          find: 'vue-i18n',
+          replacement: 'vue-i18n/dist/vue-i18n.cjs.js',
+        },
         {
           find: '@',
           replacement: resolve('src'),

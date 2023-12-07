@@ -1,5 +1,4 @@
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-import { useI18n } from './useI18n';
 
 export const useMessage = () => {
   const { t } = useI18n();

@@ -17,8 +17,8 @@
       <div class="pl-4 w-[25%] min-w-60">
         <el-affix position="top" :offset="70">
           <el-card class="box-card">
-            <el-button class="w-full h-10" type="primary" @click="feedbackClick()"
-              >我要反馈
+            <el-button class="w-full h-10" type="primary" @click="feedbackClick()">
+              我要反馈
             </el-button>
           </el-card>
         </el-affix>

@@ -13,6 +13,7 @@ import enMessage from './locales/en';
 // 国际化
 const i18n = createI18n({
   locale: 'zh-CN',
+  legacy: false,
   fallbackLocale: 'zh-CN',
   messages: {
     'zh-CN': zhCnMessage,

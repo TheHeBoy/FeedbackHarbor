@@ -119,7 +119,7 @@ public class CommentServiceImpl implements CommentService {
         AppCommentCreateRespVO respVO = CommentConvert.INSTANCE.convertApp1(commentDO);
         fillUserInfo(respVO);
 
-        // 如果时管理员用户，修改反馈回复状态为已回复
+        // 如果是管理员用户，修改反馈回复状态为已回复
         if (ObjectUtil.equal(respVO.getUserType(), UserTypeEnum.ADMIN.getValue())) {
             feedbackMapper.updateReplyState(createReqVO.getFeedbackId(), FeedbackReplyStateEnum.REPLIED);
         }
