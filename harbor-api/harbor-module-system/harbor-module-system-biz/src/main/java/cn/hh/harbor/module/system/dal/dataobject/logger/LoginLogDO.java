@@ -42,12 +42,6 @@ public class LoginLogDO extends BaseDO {
      */
     private Long userId;
     /**
-     * 用户类型
-     *
-     * 枚举 {@link UserTypeEnum}
-     */
-    private Integer userType;
-    /**
      * 用户账号
      *
      * 冗余，因为账号可以变更

@@ -22,11 +22,6 @@ public enum SocialTypeEnum implements IntArrayValuable {
      */
     GITEE(10, "GITEE"),
     /**
-     * Google
-     * 文档链接：https://console.developers.google.com/apis/dashboard
-     */
-    GOOGLE(20, "GOOGLE"),
-    /**
      * GitHub
      * 文档链接：
      */

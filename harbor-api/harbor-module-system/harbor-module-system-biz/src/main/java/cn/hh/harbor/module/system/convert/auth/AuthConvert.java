@@ -1,12 +1,10 @@
 package cn.hh.harbor.module.system.convert.auth;
 
-import cn.hh.harbor.module.system.controller.admin.auth.vo.*;
-import cn.hh.harbor.module.system.controller.app.auth.vo.AppAuthLoginRespVO;
-import cn.hh.harbor.module.system.controller.app.auth.vo.AppAuthUserInfoRespVO;
-import cn.hh.harbor.module.system.dal.dataobject.token.TokenAccessDO;
+import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthLoginRespVO;
+import cn.hh.harbor.module.system.controller.admin.auth.vo.AuthPermissionInfoRespVO;
 import cn.hh.harbor.module.system.dal.dataobject.permission.MenuDO;
 import cn.hh.harbor.module.system.dal.dataobject.permission.RoleDO;
-import cn.hh.harbor.module.system.dal.dataobject.user.UserDO;
+import cn.hh.harbor.module.system.dal.dataobject.token.TokenAccessDO;
 import cn.hh.harbor.module.system.enums.permission.MenuTypeEnum;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -24,8 +22,6 @@ public interface AuthConvert {
     AuthConvert INSTANCE = Mappers.getMapper(AuthConvert.class);
 
     AuthLoginRespVO convert(TokenAccessDO bean);
-    AppAuthUserInfoRespVO convertApp(UserDO bean);
-    AppAuthLoginRespVO convertApp(TokenAccessDO bean);
 
     default AuthPermissionInfoRespVO convert(List<RoleDO> roleList, List<MenuDO> menuList) {
         return AuthPermissionInfoRespVO.builder()

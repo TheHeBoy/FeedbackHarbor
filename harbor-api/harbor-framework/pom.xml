@@ -29,7 +29,6 @@
         <module>harbor-spring-boot-starter-biz-operatelog</module>
         <module>harbor-spring-boot-starter-biz-dict</module>
 
-        <module>harbor-spring-boot-starter-biz-social</module>
         <module>harbor-spring-boot-starter-biz-tenant</module>
         <module>harbor-spring-boot-starter-biz-data-permission</module>
         <module>harbor-spring-boot-starter-biz-ip</module>

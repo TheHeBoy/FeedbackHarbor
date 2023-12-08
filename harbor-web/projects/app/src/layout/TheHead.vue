@@ -57,7 +57,6 @@
 import { ElMenuItem } from 'element-plus';
 import { useLoginStoreWithOut } from '@/store/login';
 import { useUserStoreWithOut } from '@/store/user';
-import { logout } from '@/api/login';
 import { useTenantStoreWithOut } from '@/store/tenant';
 
 const appName = import.meta.env.VITE_APP_TITLE;
@@ -67,11 +66,9 @@ const userStore = useUserStoreWithOut();
 const user = userStore.user;
 const homeMenuItem = ref<InstanceType<typeof ElMenuItem>>();
 const tenant = useTenantStoreWithOut().tenant;
-const logoutClick = () => {
-  logout().then(async (data) => {
-    await userStore.loginOut();
-    location.reload();
-  });
+const logoutClick = async () => {
+  await userStore.loginOut();
+  location.reload();
 };
 
 const toggleLocales = () => {

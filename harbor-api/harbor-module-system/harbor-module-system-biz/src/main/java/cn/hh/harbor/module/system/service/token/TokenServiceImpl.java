@@ -1,18 +1,13 @@
 package cn.hh.harbor.module.system.service.token;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hh.harbor.framework.common.exception.enums.GlobalErrorCodeConstants;
-import cn.hh.harbor.framework.common.exception.util.ServiceExceptionUtil;
 import cn.hh.harbor.framework.common.pojo.PageResult;
 import cn.hh.harbor.framework.common.util.date.DateUtils;
-import cn.hh.harbor.framework.common.util.spring.SpringExpressionUtils;
 import cn.hh.harbor.module.system.controller.admin.token.vo.AccessTokenPageReqVO;
 import cn.hh.harbor.module.system.dal.dataobject.token.TokenAccessDO;
-import cn.hh.harbor.module.system.dal.dataobject.token.TokenRefreshDO;
 import cn.hh.harbor.module.system.dal.mysql.token.TokenAccessTokenMapper;
-import cn.hh.harbor.module.system.dal.mysql.token.TokenRefreshTokenMapper;
 import cn.hh.harbor.module.system.dal.redis.token.AccessTokenRedisDAO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,59 +30,24 @@ public class TokenServiceImpl implements TokenService {
     @Resource
     private TokenAccessTokenMapper tokenAccessTokenMapper;
     @Resource
-    private TokenRefreshTokenMapper tokenRefreshTokenMapper;
-    @Resource
     private AccessTokenRedisDAO accessTokenRedisDAO;
 
     @Value("${harbor.token-access-time}")
     private Duration tokenAccessTime;
 
-    @Value("${harbor.token-refresh-time}")
-    private Duration tokenRefreshTime;
-
     @Override
     @Transactional
-    public TokenAccessDO createAccessToken(Long userId, Integer userType, List<Long> tenantIds, boolean isRequireRefreshToken) {
-        // 创建 refresh 令牌
-        String refreshToken = isRequireRefreshToken ? createRefreshToken(userId, userType).getRefreshToken() : null;
+    public TokenAccessDO createAccessToken(Long userId, List<Long> tenantIds) {
+
         // 创建访问令牌
         TokenAccessDO accessTokenDO = new TokenAccessDO().setAccessToken(generateAccessToken())
                 .setUserId(userId)
-                .setUserType(userType)
-                .setRefreshToken(refreshToken)
                 .setTenantIds(tenantIds)
                 .setExpiresTime(LocalDateTime.now().plus(tokenAccessTime));
         tokenAccessTokenMapper.insert(accessTokenDO);
         // 记录到 Redis 中
         accessTokenRedisDAO.set(accessTokenDO);
         return accessTokenDO;
-    }
-
-    @Override
-    public TokenAccessDO refreshAccessToken(String refreshToken) {
-        // 查询访问令牌
-        TokenRefreshDO refreshTokenDO = tokenRefreshTokenMapper.selectByRefreshToken(refreshToken);
-        if (refreshTokenDO == null) {
-            throw ServiceExceptionUtil.exception(GlobalErrorCodeConstants.INVALID_REFRESH_TOKEN);
-        }
-
-        // 移除相关的访问令牌
-        TokenAccessDO accessTokenDO = tokenAccessTokenMapper.selectByRefreshToken(refreshToken);
-        if (ObjectUtil.isNotNull(accessTokenDO)) {
-            tokenAccessTokenMapper.deleteById(accessTokenDO.getId());
-            accessTokenRedisDAO.delete(accessTokenDO.getAccessToken());
-        }
-
-        // 已过期的情况下，删除刷新令牌
-        if (DateUtils.isExpired(refreshTokenDO.getExpiresTime())) {
-            tokenRefreshTokenMapper.deleteById(refreshTokenDO.getId());
-            throw ServiceExceptionUtil.exception(GlobalErrorCodeConstants.REFRESH_TOKEN_OVERDUE);
-        }
-
-        // 创建访问令牌
-        return getSelf().createAccessToken(
-                refreshTokenDO.getUserId(), refreshTokenDO.getUserType(), accessTokenDO.getTenantIds(),
-                true);
     }
 
     @Override
@@ -128,8 +88,6 @@ public class TokenServiceImpl implements TokenService {
         }
         tokenAccessTokenMapper.deleteById(accessTokenDO.getId());
         accessTokenRedisDAO.delete(accessToken);
-        // 删除刷新令牌
-        tokenRefreshTokenMapper.deleteByRefreshToken(accessTokenDO.getRefreshToken());
         return accessTokenDO;
     }
 
@@ -147,22 +105,9 @@ public class TokenServiceImpl implements TokenService {
         accessTokenRedisDAO.update(accessToken, tokenAccessDO);
     }
 
-    private TokenRefreshDO createRefreshToken(Long userId, Integer userType) {
-        TokenRefreshDO refreshToken = new TokenRefreshDO().setRefreshToken(generateRefreshToken())
-                .setUserId(userId).setUserType(userType)
-                .setExpiresTime(LocalDateTime.now().plus(tokenRefreshTime));
-        tokenRefreshTokenMapper.insert(refreshToken);
-        return refreshToken;
-    }
-
     private static String generateAccessToken() {
         return IdUtil.fastSimpleUUID();
     }
-
-    private static String generateRefreshToken() {
-        return IdUtil.fastSimpleUUID();
-    }
-
 
     /**
      * 获得自身的代理对象，解决 AOP 生效问题

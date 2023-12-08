@@ -1,6 +1,5 @@
 package cn.hh.harbor.module.system.service.auth;
 
-import cn.hh.harbor.framework.common.enums.UserTypeEnum;
 import cn.hh.harbor.module.system.controller.admin.auth.vo.*;
 import cn.hh.harbor.module.system.dal.dataobject.token.TokenAccessDO;
 import cn.hh.harbor.module.system.enums.social.SocialTypeEnum;
@@ -18,10 +17,9 @@ public interface AuthService {
      *
      * @param username     用户名
      * @param password     密码
-     * @param userTypeEnum 用户类型
      * @return 登录结果
      */
-    TokenAccessDO login(String username, String password, UserTypeEnum userTypeEnum);
+    TokenAccessDO login(String username, String password);
 
     /**
      * 基于 token 退出登录
@@ -37,15 +35,7 @@ public interface AuthService {
      * @param reqVO 登录信息
      * @return 登录结果
      */
-    TokenAccessDO socialLogin(@Valid AuthSocialLoginReqVO reqVO, UserTypeEnum userTypeEnum);
-
-    /**
-     * 刷新访问令牌
-     *
-     * @param refreshToken 刷新令牌
-     * @return 登录结果
-     */
-    AuthLoginRespVO refreshToken(String refreshToken);
+    TokenAccessDO socialLogin(@Valid AuthSocialLoginReqVO reqVO);
 
     /**
      * 获得社交平台的授权 URL

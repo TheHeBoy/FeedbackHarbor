@@ -12,15 +12,6 @@ import javax.validation.Valid;
 public interface TokenApi {
 
     /**
-     * 创建访问令牌
-     *
-     * @param reqDTO              访问令牌的创建信息
-     * @param isRequireRefreshToken 是否需要刷新 token
-     * @return 访问令牌的信息
-     */
-    TokenRespDTO createAccessToken(@Valid TokenCreateReqDTO reqDTO, boolean isRequireRefreshToken);
-
-    /**
      * 校验访问令牌
      *
      * @param accessToken 访问令牌
@@ -28,19 +19,4 @@ public interface TokenApi {
      */
     TokenCheckRespDTO checkAccessToken(String accessToken);
 
-    /**
-     * 移除访问令牌
-     *
-     * @param accessToken 访问令牌
-     * @return 访问令牌的信息
-     */
-    TokenRespDTO removeAccessToken(String accessToken);
-
-    /**
-     * 刷新访问令牌
-     *
-     * @param refreshToken 刷新令牌
-     * @return 访问令牌的信息
-     */
-    TokenRespDTO refreshAccessToken(String refreshToken);
 }

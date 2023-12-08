@@ -4,18 +4,21 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hh.harbor.framework.common.enums.UserTypeEnum;
 import cn.hh.harbor.framework.common.pojo.CommonResult;
 import cn.hh.harbor.framework.web.config.WebProperties;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * 专属于 web 包的工具类
- *
- *
  */
+@Slf4j
 public class WebFrameworkUtils {
 
     private static final String REQUEST_ATTRIBUTE_LOGIN_USER_ID = "login_user_id";
@@ -50,7 +53,7 @@ public class WebFrameworkUtils {
     /**
      * 设置用户类型
      *
-     * @param request 请求
+     * @param request  请求
      * @param userType 用户类型
      */
     public static void setLoginUserType(ServletRequest request, Integer userType) {

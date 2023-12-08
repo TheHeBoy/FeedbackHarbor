@@ -35,6 +35,7 @@ const { t } = useI18n();
 const remainingRouter: AppRouteRecordRaw[] = [
   {
     path: '/redirect',
+    fullPath: '',
     component: Layout,
     name: 'Redirect',
     children: [
@@ -163,6 +164,16 @@ const remainingRouter: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: t('router.login'),
+      noTagsView: true,
+    },
+  },
+  {
+    path: '/social-login',
+    component: () => import('@/views/socialLogin.vue'),
+    name: 'social-login',
+    meta: {
+      hidden: true,
+      title: '社交登录',
       noTagsView: true,
     },
   },

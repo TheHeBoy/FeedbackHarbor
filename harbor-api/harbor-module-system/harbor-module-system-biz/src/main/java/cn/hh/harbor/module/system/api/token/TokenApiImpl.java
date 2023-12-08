@@ -20,28 +20,9 @@ public class TokenApiImpl implements TokenApi {
     @Resource
     private TokenService tokenService;
 
-    @Override
-    public TokenRespDTO createAccessToken(TokenCreateReqDTO reqDTO, boolean isRequireRefreshToken) {
-        TokenAccessDO accessTokenDO = tokenService.createAccessToken(reqDTO.getUserId(), reqDTO.getUserType(),
-                Collections.singletonList(reqDTO.getTenantId()), isRequireRefreshToken);
-        return TokenConvert.INSTANCE.convert2(accessTokenDO);
-    }
 
     @Override
     public TokenCheckRespDTO checkAccessToken(String accessToken) {
         return TokenConvert.INSTANCE.convert(tokenService.checkAccessToken(accessToken));
     }
-
-    @Override
-    public TokenRespDTO removeAccessToken(String accessToken) {
-        TokenAccessDO accessTokenDO = tokenService.removeAccessToken(accessToken);
-        return TokenConvert.INSTANCE.convert2(accessTokenDO);
-    }
-
-    @Override
-    public TokenRespDTO refreshAccessToken(String refreshToken) {
-        TokenAccessDO accessTokenDO = tokenService.refreshAccessToken(refreshToken);
-        return TokenConvert.INSTANCE.convert2(accessTokenDO);
-    }
-
 }

@@ -1,7 +1,7 @@
 import store from './index';
 import { getAccessToken, removeToken } from '@/utils/auth';
-import { getUserInfo, logout } from '@/api/login';
-import {CACHE_KEY, useCache} from '@/hooks/useCache';
+import * as LoginApi from '@harbor/apis/src/login';
+import { CACHE_KEY, useCache } from '@/hooks/useCache';
 
 const { wsCache } = useCache();
 
@@ -21,13 +21,13 @@ export const useUserStore = defineStore('app-user', {
       // 设置用户信息
       let userInfo = wsCache.get(CACHE_KEY.USER);
       if (!userInfo) {
-        userInfo = await getUserInfo();
+        userInfo = await LoginApi.getUserInfo();
       }
       this.user = userInfo;
       this.isSetUser = true;
     },
     async loginOut() {
-      await logout();
+      await LoginApi.logout();
       removeToken();
       wsCache.delete(CACHE_KEY.USER);
       this.resetState();

@@ -18,10 +18,6 @@ public class TokenCheckRespDTO implements Serializable {
      */
     private Long userId;
     /**
-     * 用户类型
-     */
-    private Integer userType;
-    /**
      * 租户编号
      */
     private List<Long> tenantIds;

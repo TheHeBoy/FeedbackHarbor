@@ -1,6 +1,6 @@
-import { TokenType } from '@/api/login';
 import { CACHE_KEY, useCache } from '@/hooks/useCache';
 import { getExp } from './formatTime';
+import { AuthLoginRespVO } from '@harbor/apis/src/login';
 
 const { wsCache } = useCache();
 
@@ -12,13 +12,11 @@ export const getAccessToken = () => {
 };
 
 // 设置token
-export const setToken = (token: TokenType) => {
-  wsCache.set(CACHE_KEY.ACCESS_TOKEN, token.accessToken, { exp: getExp(token.expiresTime) });
+export const setToken = (respVO: AuthLoginRespVO) => {
+  wsCache.set(CACHE_KEY.ACCESS_TOKEN, respVO.accessToken, { exp: getExp(respVO.expiresTime) });
 };
 
 // 删除token
 export const removeToken = () => {
   wsCache.delete(CACHE_KEY.ACCESS_TOKEN);
 };
-
-//------------ tenant ----------

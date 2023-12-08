@@ -3,9 +3,10 @@
 </template>
 
 <script lang="ts" setup>
-import { SocialLoginVO, socialLogin } from '@/api/login';
+import * as LoginApi from '@harbor/apis/src/login';
 import { setToken } from '@/utils/auth';
 import { useUserStoreWithOut } from '@/store/user';
+import { SocialLoginVO } from '@harbor/apis/src/login';
 
 const userStore = useUserStoreWithOut();
 const message = ref('授权中');
@@ -25,13 +26,13 @@ if (!type || !code || !state) {
     type: parseInt(type),
     code: code,
     state: state,
+    redirectUri: location.href,
   };
 
-  socialLogin(data)
+  LoginApi.socialLogin(data)
     .then(async (data) => {
       if (data) {
         setToken(data);
-        await userStore.setUserInfoAction();
         message.value = '授权成功';
         setTimeout(function () {
           window.close();
@@ -40,7 +41,7 @@ if (!type || !code || !state) {
       }
     })
     .catch((err) => {
-      message.value = '授权失败';
+      message.value = `授权失败:${err.message}`;
     });
 }
 </script>

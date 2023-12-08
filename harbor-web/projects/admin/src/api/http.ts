@@ -1,23 +1,15 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-import { getAccessToken, getRefreshToken, removeToken, setToken } from '@/utils/auth';
+import { getAccessToken, removeToken } from '@/utils/auth';
 import { getTenantId } from '@/utils/auth';
 import errorCode from './errorCode';
 
 // 忽略的错误不需要提示给用户
 const ignoreCode = [
-  431, // 无效的刷新令牌
-  432, // 刷新令牌已过期
-  430, // 用户类型错误请尝试重新登录
   901, // 演示模式，禁止写操作
 ];
 // 是否显示重新登录
 const isRelogin = { show: false };
-// Axios 无感知刷新令牌，参考 https://www.dashingdog.cn/article/11 与 https://segmentfault.com/a/1190000020210980 实现
-// 请求队列
-let requestList: any[] = [];
-// 是否正在刷新中
-let isRefreshToken = false;
 
 const result_code = 200;
 const base_url = import.meta.env.VITE_API_BASEURL + import.meta.env.VITE_API_URL;
@@ -62,9 +54,6 @@ axiosInstance.interceptors.request.use(
           }
         }
       }
-      // 给 get 请求加上时间戳参数，避免从缓存中拿数据
-      // const now = new Date().getTime()
-      // params = params.substring(0, url.length - 1) + `?_t=${now}`
       url = url.slice(0, -1);
       config.params = {};
       config.url = url;
@@ -102,45 +91,8 @@ axiosInstance.interceptors.response.use(
       // 如果是忽略的错误码，直接返回 msg 异常
       return Promise.reject(msg);
     } else if (code == 401) {
-      // 未登录,尝试无感知刷新token
-      if (!isRefreshToken) {
-        isRefreshToken = true;
-        // 1. 如果获取不到刷新令牌，则只能执行登出操作
-        if (!getRefreshToken()) {
-          return handleAuthorized();
-        }
-        // 2. 进行刷新访问令牌
-        try {
-          const refreshTokenRes = await refreshToken();
-          // 2.1 刷新成功，则回放队列的请求 + 当前请求
-          setToken(refreshTokenRes.data.data);
-          config.headers!.Authorization = 'Bearer ' + getAccessToken();
-          requestList.forEach((cb: any) => {
-            cb();
-          });
-          requestList = [];
-          return axiosInstance(config);
-        } catch (e) {
-          // 为什么需要 catch 异常呢？刷新失败时，请求因为 Promise.reject 触发异常。
-          // 2.2 刷新失败，只回放队列的请求
-          requestList.forEach((cb: any) => {
-            cb();
-          });
-          // 提示是否要登出。即不回放当前请求！不然会形成递归
-          return handleAuthorized();
-        } finally {
-          requestList = [];
-          isRefreshToken = false;
-        }
-      } else {
-        // 刷新token中时先添加到队列，等待刷新获取到新的令牌
-        return new Promise((resolve) => {
-          requestList.push(() => {
-            config.headers!.Authorization = 'Bearer ' + getAccessToken(); // 让每个请求携带自定义token 请根据实际情况自行修改
-            resolve(axiosInstance(config));
-          });
-        });
-      }
+      // 未登录
+      return handleAuthorized();
     } else if (code === 500) {
       ElMessage.error(t('sys.api.errMsg500'));
       return Promise.reject(new Error(msg));
@@ -166,13 +118,6 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-const refreshToken = async () => {
-  axios.defaults.headers.common['tenant-id'] = getTenantId();
-  return await axios.post(
-    base_url + '/system/auth/refresh-token?refreshToken=' + getRefreshToken(),
-  );
-};
 
 // 重新登录
 const handleAuthorized = () => {

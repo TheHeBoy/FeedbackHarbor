@@ -74,7 +74,7 @@ public class AuthController {
     @Operation(summary = "使用账号密码登录")
     @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
     public CommonResult<AuthLoginRespVO> login(@RequestBody @Valid AuthLoginReqVO reqVO) {
-        TokenAccessDO tokenAccessDO = authService.login(reqVO.getUsername(), reqVO.getPassword(), getUserType());
+        TokenAccessDO tokenAccessDO = authService.login(reqVO.getUsername(), reqVO.getPassword());
         return success(AuthConvert.INSTANCE.convert(tokenAccessDO));
     }
 
@@ -88,15 +88,6 @@ public class AuthController {
             authService.logout(token, LoginLogTypeEnum.LOGOUT_SELF.getType());
         }
         return success(true);
-    }
-
-    @PostMapping("/refresh-token")
-    @PermitAll
-    @Operation(summary = "刷新令牌")
-    @Parameter(name = "refreshToken", description = "刷新令牌", required = true)
-    @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
-    public CommonResult<AuthLoginRespVO> refreshToken(@RequestParam("refreshToken") String refreshToken) {
-        return success(authService.refreshToken(refreshToken));
     }
 
     @GetMapping("/get-permission-info")
@@ -198,11 +189,6 @@ public class AuthController {
     @Operation(summary = "社交快捷登录，使用 code 授权码")
     @OperateLog(enable = false) // 避免 Post 请求被记录操作日志
     public CommonResult<AuthLoginRespVO> socialLogin(@RequestBody @Valid AuthSocialLoginReqVO reqVO) {
-        return success(AuthConvert.INSTANCE.convert(authService.socialLogin(reqVO, getUserType())));
-    }
-
-
-    private UserTypeEnum getUserType() {
-        return UserTypeEnum.ADMIN;
+        return success(AuthConvert.INSTANCE.convert(authService.socialLogin(reqVO)));
     }
 }

@@ -2,8 +2,9 @@ import { store } from '@/store';
 import { defineStore } from 'pinia';
 import { getAccessToken, removeToken } from '@/utils/auth';
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
-import { loginOut, getUserLoginInfo } from '@/api/login';
+import * as LoginApi from '@harbor/apis/src/login';
 import { usePermissionStore } from '@/store/modules/permission';
+import { logout } from '@harbor/apis/src/login';
 
 const { wsCache } = useCache();
 
@@ -45,7 +46,7 @@ export const useUserStore = defineStore('admin-user', {
       }
       let userInfo = wsCache.get(CACHE_KEY.USER);
       if (!userInfo) {
-        userInfo = await getUserLoginInfo();
+        userInfo = await LoginApi.getUserInfo();
       }
 
       this.user = userInfo;
@@ -53,7 +54,7 @@ export const useUserStore = defineStore('admin-user', {
       wsCache.set(CACHE_KEY.USER, userInfo);
     },
     async loginOut() {
-      await loginOut();
+      await LoginApi.logout();
       // 删除用户信息
       wsCache.delete(CACHE_KEY.USER);
       // 删除权限信息

@@ -1,5 +1,5 @@
 export default {
   com: {
-    official: "官方",
+    official: '官方',
   },
 };

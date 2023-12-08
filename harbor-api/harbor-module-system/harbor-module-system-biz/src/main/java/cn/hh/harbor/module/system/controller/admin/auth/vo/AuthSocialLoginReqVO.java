@@ -27,8 +27,11 @@ public class AuthSocialLoginReqVO {
     @NotEmpty(message = "授权码不能为空")
     private String code;
 
-    @Schema(description = "state", requiredMode = Schema.RequiredMode.REQUIRED, example = "9b2ffbc1-7425-4155-9894-9d5c08541d62")
-    @NotEmpty(message = "state 不能为空")
+    @Schema(description = "state", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotEmpty(message = "state不能为空")
     private String state;
 
+    @Schema(description = "回调地址", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotEmpty(message = "回调地址不能为空")
+    private String redirectUri;
 }

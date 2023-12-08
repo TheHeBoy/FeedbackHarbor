@@ -112,11 +112,6 @@
             </dependency>
             <dependency>
                 <groupId>cn.hh.boot</groupId>
-                <artifactId>harbor-spring-boot-starter-biz-social</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.hh.boot</groupId>
                 <artifactId>harbor-spring-boot-starter-biz-ip</artifactId>
                 <version>${revision}</version>
             </dependency>

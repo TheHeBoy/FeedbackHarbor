@@ -5,7 +5,6 @@ export interface LoginLogVO {
   logType: number;
   traceId: number;
   userId: number;
-  userType: number;
   username: string;
   status: number;
   userIp: string;

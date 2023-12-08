@@ -31,18 +31,9 @@ public class TokenAccessDO extends BaseDO {
      */
     private String accessToken;
     /**
-     * 刷新令牌
-     */
-    private String refreshToken;
-    /**
      * 用户编号
      */
     private Long userId;
-    /**
-     * 用户类型
-     * 枚举 {@link UserTypeEnum}
-     */
-    private Integer userType;
     /**
      * 过期时间
      */

@@ -1,35 +1,25 @@
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
-import { TokenType } from '@/api/login/types';
 import { decrypt, encrypt } from '@/utils/jsencrypt';
 import { TenantKeyType } from '@harbor/core/src/wscache';
 import { changeFavicon } from '@harbor/core/src/utils/favicon';
 import { usePermissionStore } from '@/store/modules/permission';
+import { AuthLoginRespVO } from '@harbor/apis/src/login';
 
 const { wsCache } = useCache();
 // ========== Token相关 ==========
-const AccessTokenKey = CACHE_KEY.ACCESS_TOKEN;
-const RefreshTokenKey = CACHE_KEY.REFRESH_TOKEN;
-
 // 获取token
 export const getAccessToken = () => {
-  return wsCache.get(AccessTokenKey);
-};
-
-// 刷新token
-export const getRefreshToken = () => {
-  return wsCache.get(RefreshTokenKey);
+  return wsCache.get(CACHE_KEY.ACCESS_TOKEN);
 };
 
 // 设置token
-export const setToken = (token: TokenType) => {
-  wsCache.set(RefreshTokenKey, token.refreshToken);
-  wsCache.set(AccessTokenKey, token.accessToken);
+export const setToken = (respVO: AuthLoginRespVO) => {
+  wsCache.set(CACHE_KEY.ACCESS_TOKEN, respVO.accessToken);
 };
 
 // 删除token
 export const removeToken = () => {
-  wsCache.delete(AccessTokenKey);
-  wsCache.delete(RefreshTokenKey);
+  wsCache.delete(CACHE_KEY.ACCESS_TOKEN);
 };
 
 // ========== 账号相关 ==========

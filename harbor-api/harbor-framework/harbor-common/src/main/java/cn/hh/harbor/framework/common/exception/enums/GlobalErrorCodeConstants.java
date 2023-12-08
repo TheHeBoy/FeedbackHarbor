@@ -23,9 +23,6 @@ public interface GlobalErrorCodeConstants {
     ErrorCode METHOD_NOT_ALLOWED = new ErrorCode(405, "请求方法不正确");
     ErrorCode LOCKED = new ErrorCode(423, "请求失败，请稍后重试"); // 并发请求，不允许
     ErrorCode TOO_MANY_REQUESTS = new ErrorCode(429, "请求过于频繁，请稍后重试");
-    ErrorCode BAD_USER_TYPE = new ErrorCode(430, "用户类型错误请尝试重新登录!");
-    ErrorCode INVALID_REFRESH_TOKEN = new ErrorCode(431, "无效的刷新令牌");
-    ErrorCode REFRESH_TOKEN_OVERDUE = new ErrorCode(432, "刷新令牌已过期");
 
     // ========== 服务端错误段 ==========
 

@@ -31,4 +31,12 @@ public interface TenantApi {
      * @return {@link TenantRespDTO} 存在时返回对象 不存在时返回 null
      */
     TenantRespDTO checkTenantRouterUri(String routerUri);
+
+    /**
+     * 校验租户和用户是否存在管理，存在就表示用户属于当前租户的管理员
+     * @param tenantId 租户id
+     * @param userId 用户id
+     * @return 存在返回 true
+     */
+    boolean checkTenantUser(Long tenantId,Long userId);
 }

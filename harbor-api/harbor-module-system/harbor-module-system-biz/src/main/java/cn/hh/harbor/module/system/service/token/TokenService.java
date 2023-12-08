@@ -15,20 +15,10 @@ public interface TokenService {
      * 创建访问令牌
      *
      * @param userId              用户编号
-     * @param userType            用户类型
      * @param tenantIds             授权的社区租户
-     * @param isRequireRefreshToken 是否需要刷新token
      * @return 访问令牌的信息
      */
-    TokenAccessDO createAccessToken(Long userId, Integer userType, List<Long> tenantIds, boolean isRequireRefreshToken);
-
-    /**
-     * 刷新访问令牌
-     *
-     * @param refreshToken 刷新令牌
-     * @return 访问令牌的信息
-     */
-    TokenAccessDO refreshAccessToken(String refreshToken);
+    TokenAccessDO createAccessToken(Long userId, List<Long> tenantIds);
 
     /**
      * 获得访问令牌
@@ -48,10 +38,8 @@ public interface TokenService {
 
     /**
      * 移除访问令牌
-     * 注意：该流程中，会移除相关的刷新令牌
-     * 参考 DefaultTokenServices 的 revokeToken 方法
      *
-     * @param accessToken 刷新令牌
+     * @param accessToken 访问令牌
      * @return 访问令牌的信息
      */
     TokenAccessDO removeAccessToken(String accessToken);

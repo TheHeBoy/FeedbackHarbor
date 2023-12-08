@@ -17,8 +17,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER # 解决 SpringFox 与 SpringBoot 2.6.x 不兼容的问题，参见 SpringFoxHandlerProviderBeanPostProcessor 类
-  #    throw-exception-if-no-handler-found: true # 404 错误时抛出异常，方便统一处理
-  #    static-path-pattern: /static/** # 静态资源路径; 注意：如果不配置，则 throw-exception-if-no-handler-found 不生效！！！ TODO 芋艿：不能配置，会导致 swagger 不生效
+      throw-exception-if-no-handler-found: true # 404 错误时抛出异常，方便统一处理
+      static-path-pattern: /static/** # 静态资源路径; 注意：如果不配置，则 throw-exception-if-no-handler-found 不生效！！！ TODO 芋艿：不能配置，会导致 swagger 不生效
 
   # Jackson 配置项
   jackson:
@@ -72,25 +72,11 @@ harbor:
   web:
     admin-ui:
       url: http://dashboard.harbor.iocoder.cn # Admin 管理后台 UI 的地址
-  websocket:
-    enable: true # websocket的开关
-    path: /websocket/message # 路径
-    maxOnlineCount: 0 # 最大连接人数
-    sessionMap: true # 保存sessionMap
   swagger:
     title: 反馈港快速开发平台
     description: 提供管理后台、用户 App 的所有功能
     version: ${harbor.info.version}
     url: ${harbor.web.admin-ui.url}
-    email: xingyu4j@vip.qq.com
-    license: MIT
-    license-url: https://gitee.com/zhijiantianya/ruoyi-vue-pro/blob/master/LICENSE
-  captcha:
-    enable: true # 验证码的开关，默认为 true
-  codegen:
-    base-package: ${harbor.info.base-package}
-    db-schemas: ${spring.datasource.dynamic.datasource.master.name}
-    front-type: 10 # 前端模版的类型，参见 CodegenFrontTypeEnum 枚举类
   mq:
     redis:
       pubsub:
@@ -103,11 +89,8 @@ harbor:
       - /admin-api/system/select-tenant/** # 租户选择界面
       - /admin-api/system/dict-data/** # 字典和，和租户无关
       - /admin-api/system/auth/** # 用户登录，和租户无关
-      - /admin-api/system/captcha/get # 获取图片验证码，和租户无关
-      - /admin-api/system/captcha/check # 校验图片验证码，和租户无关
       - /admin-api/infra/file/** # 文件，和租户无关
-      - /admin-api/system/sms/callback/** # 短信回调接口，无法带上租户编号
-      - /admin-api/system/invite/**
+      - /admin-api/system/invite/** # 邀请功能
       - /app-api/system/auth/**
     ignore-tables:
       - system_users
@@ -146,5 +129,4 @@ harbor:
     end-code: 999999
   mail-link-expire-time: 7d # 邮箱链接失效时长
   token-access-time: 1d # 访问令牌有效时长
-  token-refresh-time: 25d # 刷新令牌有效时长
 debug: false

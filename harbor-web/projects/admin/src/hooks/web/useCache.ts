@@ -14,7 +14,6 @@ export const CACHE_KEY = {
   LAYOUT: 'layout',
   PERMISSION: 'permission',
   DICT_CACHE: 'dictCache',
-  REFRESH_TOKEN: 'refresh_token',
   ACCESS_TOKEN: AccessTokenKey,
   LOGIN_FORM: 'login_form',
   TENANT: 'tenant_key',

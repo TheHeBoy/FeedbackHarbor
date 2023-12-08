@@ -28,11 +28,6 @@ public class LoginLogCreateReqDTO {
      */
     private Long userId;
     /**
-     * 用户类型
-     */
-    @NotNull(message = "用户类型不能为空")
-    private Integer userType;
-    /**
      * 用户账号
      */
     @Size(max = 30, message = "用户账号长度不能超过30个字符")

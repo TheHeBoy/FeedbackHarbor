@@ -66,16 +66,18 @@ public class TenantSecurityWebFilter extends ApiRequestFilter {
                 return;
             }
 
-            // 2. 登陆的用户，admin需要校验是否有权限访问该租户，避免越权问题。
-            LoginUser user = SecurityFrameworkUtils.getLoginUser();
-            if (user != null && Objects.equals(user.getUserType(), UserTypeEnum.ADMIN.getValue()) && !user.getTenantIds().contains(tenantId)) {
-                log.error("[doFilterInternal][租户({}) User({}/{}) 越权访问租户({}) URL({}/{})]",
-                        user.getTenantIds(), user.getId(), user.getUserType(),
-                        TenantContextHolder.getTenantId(), request.getRequestURI(), request.getMethod());
-                ServletUtils.writeJSON(response, CommonResult.error(GlobalErrorCodeConstants.FORBIDDEN.getCode(),
-                        "您无权访问该租户的数据"));
-                return;
+            // 2. /admin-api 路径需要租户权限校验，避免租户越权问题。
+            if (Objects.equals(WebFrameworkUtils.getLoginUserType(), UserTypeEnum.ADMIN.getValue())) {
+                LoginUser user = SecurityFrameworkUtils.getLoginUser();
+                if (user != null && !user.getTenantIds().contains(tenantId)) {
+                    log.error("[doFilterInternal][租户({}) User({}) 越权访问租户({}) URL({}/{})]",
+                            user.getTenantIds(), user.getId(), TenantContextHolder.getTenantId(), request.getRequestURI(), request.getMethod());
+                    ServletUtils.writeJSON(response, CommonResult.error(GlobalErrorCodeConstants.FORBIDDEN.getCode(),
+                            "您无权访问该租户的数据"));
+                    return;
+                }
             }
+
 
             // 3. 校验租户是合法，例如说被禁用、到期
             try {

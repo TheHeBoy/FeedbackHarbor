@@ -57,12 +57,6 @@
             <version>${revision}</version>
         </dependency>
 
-        <dependency>
-            <groupId>cn.hh.boot</groupId>
-            <artifactId>harbor-module-harbor-api</artifactId> <!-- 需要使用它，进行 Admin 与 App 用户转换 -->
-            <version>${revision}</version>
-        </dependency>
-
     </dependencies>
 
 </project>

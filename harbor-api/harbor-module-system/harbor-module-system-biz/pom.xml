@@ -44,10 +44,6 @@
         </dependency>
         <dependency>
             <groupId>cn.hh.boot</groupId>
-            <artifactId>harbor-spring-boot-starter-biz-social</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hh.boot</groupId>
             <artifactId>harbor-spring-boot-starter-biz-tenant</artifactId>
         </dependency>
         <dependency>
@@ -105,6 +101,11 @@
         <dependency>
             <groupId>cn.hh.boot</groupId>
             <artifactId>harbor-spring-boot-starter-excel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xingyuv</groupId>
+            <artifactId>spring-boot-starter-justauth</artifactId> <!-- 社交登陆（例如说，个人微信、企业微信等等） -->
         </dependency>
 
         <dependency>

@@ -16,10 +16,6 @@ public interface TokenAccessTokenMapper extends BaseMapperX<TokenAccessDO> {
         return selectOne(TokenAccessDO::getAccessToken, accessToken);
     }
 
-    default TokenAccessDO selectByRefreshToken(String refreshToken) {
-        return selectOne(TokenAccessDO::getRefreshToken, refreshToken);
-    }
-
     default PageResult<TokenAccessDO> selectPage(AccessTokenPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<TokenAccessDO>()
                 .eqIfPresent(TokenAccessDO::getUserId, reqVO.getUserId())

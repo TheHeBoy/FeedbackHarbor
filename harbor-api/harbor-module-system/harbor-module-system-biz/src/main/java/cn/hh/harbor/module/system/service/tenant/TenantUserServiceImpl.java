@@ -22,4 +22,9 @@ public class TenantUserServiceImpl implements TenantUserService {
         }
         tenantUserMapper.insert(new TenantUserDO().setTenantId(tenantId).setUserId(userId));
     }
+
+    @Override
+    public TenantUserDO get(Long tenantId, Long userId) {
+        return tenantUserMapper.selectByTenantIdAndUserId(tenantId, userId);
+    }
 }

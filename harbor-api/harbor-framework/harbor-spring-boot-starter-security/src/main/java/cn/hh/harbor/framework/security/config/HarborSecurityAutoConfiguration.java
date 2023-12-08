@@ -8,6 +8,7 @@ import cn.hh.harbor.framework.security.core.handler.AuthenticationEntryPointImpl
 import cn.hh.harbor.framework.security.core.service.SecurityFrameworkService;
 import cn.hh.harbor.framework.security.core.service.SecurityFrameworkServiceImpl;
 import cn.hh.harbor.framework.web.core.handler.GlobalExceptionHandler;
+import cn.hh.harbor.module.system.api.tenant.TenantApi;
 import cn.hh.harbor.module.system.api.token.TokenApi;
 import cn.hh.harbor.module.system.api.permission.PermissionApi;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -74,8 +75,8 @@ public class HarborSecurityAutoConfiguration {
      * Token 认证过滤器 Bean
      */
     @Bean
-    public TokenAuthenticationFilter authenticationTokenFilter(GlobalExceptionHandler globalExceptionHandler,TokenApi tokenApi) {
-        return new TokenAuthenticationFilter(securityProperties, globalExceptionHandler, tokenApi);
+    public TokenAuthenticationFilter authenticationTokenFilter(GlobalExceptionHandler globalExceptionHandler, TokenApi tokenApi, TenantApi tenantApi) {
+        return new TokenAuthenticationFilter(securityProperties, globalExceptionHandler, tokenApi, tenantApi);
     }
 
     @Bean("ss") // 使用 Spring Security 的缩写，方便使用

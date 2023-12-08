@@ -15,8 +15,6 @@ public interface WebFilterOrderEnum {
 
     int REQUEST_BODY_CACHE_FILTER = Integer.MIN_VALUE + 500;
 
-    // OrderedRequestContextFilter 默认为 -105，用于国际化上下文等等
-
     int TENANT_CONTEXT_FILTER = - 104; // 需要保证在 ApiAccessLogFilter 前面
 
     int API_ACCESS_LOG_FILTER = -103; // 需要保证在 RequestBodyCacheFilter 后面
