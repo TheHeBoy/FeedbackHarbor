@@ -123,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
         if (ObjectUtil.equal(respVO.getUserType(), UserTypeEnum.ADMIN.getValue())) {
             feedbackMapper.updateReplyState(createReqVO.getFeedbackId(), FeedbackReplyStateEnum.REPLIED);
         }
-        return CommentConvert.INSTANCE.convertApp1(commentDO);
+        return respVO;
     }
 
     /**

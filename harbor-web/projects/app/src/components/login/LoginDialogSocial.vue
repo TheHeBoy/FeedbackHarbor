@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog v-model="isShow" :show-close="false" width="500">
+    <el-dialog v-model="isShow" :show-close="false" width="450">
       <ULogin @login="login" @login-social="doSocialLogin" />
     </el-dialog>
   </div>
@@ -51,5 +51,9 @@ const doSocialLogin = async (type: number) => {
 :deep(.el-dialog) {
   background: transparent;
   box-shadow: 0 0 0 #ccc;
+}
+
+:deep(.el-dialog__body) {
+  @apply p-0 #{!important};
 }
 </style>

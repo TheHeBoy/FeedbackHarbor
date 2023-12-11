@@ -2,10 +2,8 @@
  * 配置浏览器本地存储的方式，可直接存储对象数组。
  */
 import { AccessTokenKey } from '@harbor/core/src/wscache';
-import WebStorageCache from 'web-storage-cache';
 
-type CacheType = 'localStorage' | 'sessionStorage';
-
+export { useCache } from '@harbor/core/src/wscache';
 export const CACHE_KEY = {
   IS_DARK: 'isDark',
   USER: 'user',
@@ -17,14 +15,4 @@ export const CACHE_KEY = {
   ACCESS_TOKEN: AccessTokenKey,
   LOGIN_FORM: 'login_form',
   TENANT: 'tenant_key',
-};
-
-export const useCache = (type: CacheType = 'localStorage') => {
-  const wsCache: WebStorageCache = new WebStorageCache({
-    storage: type,
-  });
-
-  return {
-    wsCache,
-  };
 };

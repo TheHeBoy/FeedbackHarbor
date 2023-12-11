@@ -5,25 +5,25 @@
   <div class="flex flex-wrap">
     <template v-for="(url, index) in imgs" :key="index">
       <ElImage
-          :src="url"
-          class="w-16 h-16 mr-1 mt-1"
-          lazy
-          preview-teleported
-          :preview-src-list="imgs"
-          :initial-index="index"
+        :src="url"
+        class="w-16 h-16 mr-1 mt-1"
+        lazy
+        preview-teleported
+        :preview-src-list="imgs"
+        :initial-index="index"
       ></ElImage>
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, PropType } from "vue";
-import { UFold } from "../fold";
-import emoji from "../../types/emoji";
-import { Emoji } from "../emoji";
+import { computed, onMounted, PropType } from 'vue';
+import { UFold } from '../fold';
+import emoji from '@harbor/core/src/types/emoji';
+import { Emoji } from '../emoji';
 
 defineOptions({
-  name: "UImageContext",
+  name: 'UImageContext',
 });
 
 const props = defineProps({
@@ -64,15 +64,13 @@ const useEmojiParse = (allEmoji: Emoji, val: string): string => {
       '" title="',
       str,
       '" style="margin: 0 1px; vertical-align: text-bottom; display: inline"',
-      "/>",
-    ].join("");
+      '/>',
+    ].join('');
   });
   return val;
 };
 
-const emojiContents = computed(() =>
-  useEmojiParse(emoji.allEmoji, props.contents)
-);
+const emojiContents = computed(() => useEmojiParse(emoji.allEmoji, props.contents));
 
 onMounted(() => {});
 </script>

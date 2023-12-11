@@ -1,7 +1,7 @@
 import store from './index';
 import { CACHE_KEY, useCache } from '@/hooks/useCache';
 import { checkTenantRouterUri } from '@/api/login';
-import { TenantKeyType } from '@harbor/core/src/wscache';
+import { TenantKeyType } from '@harbor/core/src/wscache/tenant';
 
 const { wsCache } = useCache();
 

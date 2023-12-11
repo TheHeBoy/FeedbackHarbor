@@ -7,7 +7,7 @@
     "dev": "vite --mode dev",
     "build:local": "vite build --mode .env.local",
     "build:dev": "vite build --mode dev",
-    "preview": "pnpm build:dev && vite preview"
+    "preview": "pnpm build:local && vite preview"
   },
   "dependencies": {
     "@harbor/apis": "workspace:^",

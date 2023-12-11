@@ -1,19 +1,16 @@
 <template>
   <div>
-    <i-mdi-tag-multiple
-      :color="feedbackTag.color"
-      class="inline w-5 h-5 mr-1"
-    />
-    <span class="text-sm"> {{ feedbackTag.nameCh }}</span>
+    <i-mdi-tag-multiple :color="feedbackTag.color" class="inline mr-1" />
+    <el-text type="info"> {{ feedbackTag.nameCh }}</el-text>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType } from "vue";
-import { FeedbackTagVO } from "@harbor/apis";
+import { onMounted, PropType } from 'vue';
+import { FeedbackTagVO } from '@harbor/apis/src/feedback';
 
 defineOptions({
-  name: "UFeedbackTag",
+  name: 'UFeedbackTag',
 });
 
 const props = defineProps({

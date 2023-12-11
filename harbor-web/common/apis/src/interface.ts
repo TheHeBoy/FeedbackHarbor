@@ -1,5 +1,5 @@
 // 定义 api 请求接口
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig } from 'axios';
 
 export interface ApiBase {
   // apiUrl参数部不为空时会覆盖原有的接口前缀
@@ -16,4 +16,14 @@ export interface ApiBase {
   download(option: AxiosRequestConfig, apiUrl?: string): Promise<any>;
 
   upload(option: AxiosRequestConfig, apiUrl?: string): Promise<any>;
+}
+
+export interface PageParam {
+  pageSize: number;
+  pageNo: number;
+}
+
+export interface PageResult<T> {
+  list: T[];
+  total: number;
 }

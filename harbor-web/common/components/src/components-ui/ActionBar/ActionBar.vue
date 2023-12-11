@@ -4,11 +4,6 @@
     <!--    <el-button link v-if="reportShow" @click="reportDialogShow = true"-->
     <!--      >举报-->
     <!--    </el-button>-->
-    <el-button link @click="$emit('onLike')">
-      <span class="mr-1">{{ likeNum || '' }}</span>
-      <likeNoSVG class="icon-btn" v-if="isLike" />
-      <likeSVG v-else class="icon-btn" color="#1e80ff" />
-    </el-button>
     <el-button link @click="$emit('onComment')">
       <span class="mr-1">{{ commentNum || '' }}</span>
       <commentSVG class="w-4 h-4" />
@@ -33,8 +28,8 @@
       </el-form-item>
       <el-form-item>
         <div class="w-full flex justify-center">
-          <el-button class="w-30" @click="reportDialogShow = false"> 取消 </el-button>
-          <el-button type="primary" class="w-30" @submit="submit">确认 </el-button>
+          <el-button class="w-30" @click="reportDialogShow = false">取消</el-button>
+          <el-button type="primary" class="w-30" @submit="submit">确认</el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -43,8 +38,6 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
-import likeSVG from './svg/likeSVG.svg?component';
-import likeNoSVG from './svg/likeNoSVG.svg?component';
 import commentSVG from './svg/commentSVG.svg?component';
 import { FormInstance, FormRules } from 'element-plus';
 

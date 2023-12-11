@@ -39,13 +39,15 @@ import '@/plugins/tongji'; // 百度统计
 import VueDOMPurifyHTML from 'vue-dompurify-html'; // 解决v-html 的安全隐患
 import { axiosInstance } from '@/api/http';
 import { initApi } from '@harbor/apis';
+import { setEnv } from '@harbor/core/src/env';
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App);
 
   // 给通用组件提供 api 请求
   initApi(axiosInstance, import.meta.env.VITE_API_BASEURL);
-
+  setEnv(import.meta.env);
+  
   await setupI18n(app);
 
   setupStore(app);

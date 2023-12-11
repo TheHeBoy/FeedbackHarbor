@@ -1,10 +1,12 @@
-import UFeedback from "./feedback.vue";
+import UFeedback from './feedback.vue';
 
-export type UserInfo = {
+export interface UserInfo {
   id: number;
   avatar: string;
   nickname: string;
   userType: number;
-};
+  feedbackLikeIds: number[];
+  commentLikeIds: number[];
+}
 
 export { UFeedback };

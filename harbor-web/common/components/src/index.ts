@@ -1,4 +1,3 @@
-import "./styles/index.scss";
-import "../index.d";
+import '../index.d';
 
-export * from "./components-ui";
+export * from './components-ui';

@@ -1,146 +1,153 @@
 <template>
-  <ContentWrap>
-    <!-- 搜索工作栏 -->
-    <el-form
-      class="-mb-15px"
-      :model="queryParams"
-      ref="queryFormRef"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker
-          v-model="queryParams.createTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="回复状态" prop="replyState">
-        <el-select v-model="queryParams.replyState" placeholder="请选择回复状态" clearable>
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.HARBOR_REPLY_STATE)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+  <div>
+    <ContentWrap>
+      <!-- 搜索工作栏 -->
+      <el-form
+        class="-mb-15px"
+        :model="queryParams"
+        ref="queryFormRef"
+        :inline="true"
+        label-width="68px"
+      >
+        <el-form-item label="创建时间" prop="createTime">
+          <el-date-picker
+            v-model="queryParams.createTime"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            type="daterange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
+            class="!w-240px"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="handleQuery">
-          <Icon icon="ep:search" class="mr-5px" />
-          搜索
-        </el-button>
-        <el-button @click="resetQuery">
-          <Icon icon="ep:refresh" class="mr-5px" />
-          重置
-        </el-button>
-        <el-button
-          type="primary"
-          plain
-          @click="openForm('create')"
-          v-hasPermi="['harbor:feedback:create']"
-        >
-          <Icon icon="ep:plus" class="mr-5px" />
-          新增
-        </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['harbor:feedback:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" />
-          导出
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </ContentWrap>
+        </el-form-item>
+        <el-form-item label="回复状态" prop="replyState">
+          <el-select v-model="queryParams.replyState" placeholder="请选择回复状态" clearable>
+            <el-option
+              v-for="dict in getIntDictOptions(DICT_TYPE.HARBOR_REPLY_STATE)"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="handleQuery">
+            <Icon icon="ep:search" class="mr-5px" />
+            搜索
+          </el-button>
+          <el-button @click="resetQuery">
+            <Icon icon="ep:refresh" class="mr-5px" />
+            重置
+          </el-button>
+          <el-button
+            type="primary"
+            plain
+            @click="openForm('create')"
+            v-hasPermi="['harbor:feedback:create']"
+          >
+            <Icon icon="ep:plus" class="mr-5px" />
+            新增
+          </el-button>
+          <el-button
+            type="success"
+            plain
+            @click="handleExport"
+            :loading="exportLoading"
+            v-hasPermi="['harbor:feedback:export']"
+          >
+            <Icon icon="ep:download" class="mr-5px" />
+            导出
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </ContentWrap>
 
-  <!-- 列表 -->
-  <ContentWrap>
-    <el-table v-loading="loading" :data="list" @row-click="onRowClick" highlight-current-row>
-      <el-table-column label="反馈信息" width="500">
-        <template #default="scope">
-          <div class="flex w-full">
-            <UUserAvatar :avatar="scope.row.avatar" :uid="scope.row.uid" />
-            <div class="ml-2">
-              <div class="flex justify-between">
-                <UUserNickNameInfo :nick-name="scope.row.nickname" :type="scope.row.userType" />
-              </div>
-              <div class="mt-2">
-                <UImageContext :contents="scope.row.content" :imgs="scope.row.imgs" />
+    <!-- 列表 -->
+    <ContentWrap>
+      <el-table v-loading="loading" :data="list" @row-click="onRowClick" highlight-current-row>
+        <el-table-column label="反馈信息" width="500">
+          <template #default="scope">
+            <div class="flex w-full">
+              <UUserAvatar :avatar="scope.row.avatar" :uid="scope.row.uid" />
+              <div class="ml-2">
+                <div class="flex justify-between">
+                  <UUserNickNameInfo :nick-name="scope.row.nickname" :type="scope.row.userType" />
+                </div>
+                <div class="mt-2">
+                  <UImageContext :contents="scope.row.content" :imgs="scope.row.imgs" />
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="反馈标签" align="center">
-        <template #default="scope">
-          <UFeedbackTag :feedback-tag="scope.row.feedbackTag" />
-        </template>
-      </el-table-column>
-      <el-table-column label="回复状态" align="center" width="150">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.HARBOR_REPLY_STATE" :value="scope.row.replyState as number" />
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="反馈时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-      />
-      <el-table-column label="操作" align="center">
-        <template #default="scope">
-          <el-button
-            link
-            type="danger"
-            @click.stop="handleDelete(scope.row.id)"
-            v-hasPermi="['harbor:feedback:delete']"
-          >
-            删除
-          </el-button>
-          <el-button link type="danger">回复</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页 -->
-    <div class="w-full flex justify-center">
-      <Pagination
-        :total="total"
-        v-model:page="queryParams.pageNo"
-        v-model:limit="queryParams.pageSize"
-        @pagination="getList"
-      />
-    </div>
-  </ContentWrap>
+          </template>
+        </el-table-column>
+        <el-table-column label="反馈标签" align="center">
+          <template #default="scope">
+            <UFeedbackTag :feedback-tag="scope.row.feedbackTag" />
+          </template>
+        </el-table-column>
+        <el-table-column label="回复状态" align="center" width="150">
+          <template #default="scope">
+            <dict-tag
+              :type="DICT_TYPE.HARBOR_REPLY_STATE"
+              :value="scope.row.replyState as number"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="反馈时间"
+          align="center"
+          prop="createTime"
+          :formatter="dateFormatter"
+        />
+        <el-table-column label="操作" align="center">
+          <template #default="scope">
+            <el-button
+              link
+              type="danger"
+              @click.stop="handleDelete(scope.row.id)"
+              v-hasPermi="['harbor:feedback:delete']"
+            >
+              删除
+            </el-button>
+            <el-button link type="danger">回复</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <div class="w-full flex justify-center">
+        <Pagination
+          :total="total"
+          v-model:page="queryParams.pageNo"
+          v-model:limit="queryParams.pageSize"
+          @pagination="getList"
+        />
+      </div>
+    </ContentWrap>
 
-  <!-- 表单弹窗：添加/修改 -->
-  <FeedbackForm ref="formRef" @success="getList" />
+    <!-- 表单弹窗：添加/修改 -->
+    <FeedbackForm ref="formRef" @success="getList" />
 
-  <el-drawer
-    modal-class="drawer-modal"
-    class="min-w-150"
-    :show-close="true"
-    title="反馈信息"
-    direction="rtl"
-    destroy-on-close
-    v-model="drawer"
-    @open="open"
-  >
-    <UFeedback
-      ref="feedbackRef"
-      :v-model="feedbackRow"
-      commentShow
-      :user-info="useUserStore().getUser"
-      @submit="feedbackRow.replyState == HarborFeedbackReplayStateEnum.NO_REPLY ? getList() : null"
-    />
-  </el-drawer>
+    <el-drawer
+      modal-class="drawer-modal"
+      class="feedback-drawer min-w-150"
+      :show-close="true"
+      title="反馈信息"
+      direction="rtl"
+      destroy-on-close
+      v-model="drawer"
+      @open="open"
+    >
+      <UFeedback
+        ref="feedbackRef"
+        :v-model="feedbackRow"
+        commentShow
+        :userInfo="userInfo"
+        @submit="
+          feedbackRow.replyState == HarborFeedbackReplayStateEnum.NO_REPLY ? getList() : null
+        "
+      />
+    </el-drawer>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -153,11 +160,14 @@ import {
   UFeedback,
   UFeedbackTag,
   UImageContext,
+  UserInfo,
   UUserAvatar,
   UUserNickNameInfo,
 } from '@harbor/components';
 import { useUserStore } from '@/store/modules/user';
 import { HarborFeedbackReplayStateEnum } from '@/utils/constants';
+import * as LikeApi from '@harbor/apis/src/like';
+import { BusTypeVO } from '@harbor/apis/src/like';
 
 defineOptions({ name: 'FeedbackAll' });
 
@@ -184,7 +194,7 @@ const queryParams = reactive({
   nickname: undefined,
   replyState: props.replyState,
 });
-
+const userInfo = { ...useUserStore().user } as UserInfo;
 const queryFormRef = ref(); // 搜索的表单
 const exportLoading = ref(false); // 导出的加载中
 const drawer = ref(false);
@@ -264,8 +274,10 @@ const open = () => {
 };
 
 /** 初始化 **/
-onMounted(() => {
-  getList();
+onMounted(async () => {
+  await getList();
+  userInfo.feedbackLikeIds = await LikeApi.getLikeList(BusTypeVO.Feedback);
+  userInfo.commentLikeIds = await LikeApi.getLikeList(BusTypeVO.Comment);
 });
 </script>
 <style lang="scss" scoped>
@@ -273,8 +285,12 @@ onMounted(() => {
   --el-table-tr-bg-color: var(--el-color-info-light-9);
 }
 </style>
-<style lang="scss">
-.drawer-modal {
+<style lang="scss" scoped>
+:deep(.drawer-modal) {
   background: rgba(0, 0, 0, 0);
+}
+
+:deep(.el-drawer__body) {
+  padding: 0 !important;
 }
 </style>

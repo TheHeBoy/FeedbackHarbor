@@ -1,20 +1,20 @@
 <template>
-  <el-row class="w-full">
-    <el-col :span="1">
-      <UUserAvatar :avatar="vModel.avatar" :uid="vModel.uid" />
-    </el-col>
-    <el-col :span="23">
-      <div class="ml-7">
-        <div @mouseenter="reportShow = true" @mouseleave="reportShow = false">
-          <div class="flex justify-between">
-            <UUserNickNameInfo :nick-name="vModel.nickname" :type="vModel.userType" />
-            <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
+  <div class="root flex w-full">
+    <div class="w-full feedback-border">
+      <div class="flex-grow p-4" @mouseenter="reportShow = true" @mouseleave="reportShow = false">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center justify-center">
+            <UUserAvatar :size="35" :avatar="vModel.avatar" :uid="vModel.uid" />
+            <UUserNickNameInfo class="ml-1" :nick-name="vModel.nickname" :type="vModel.userType" />
           </div>
-          <div>
-            <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
-          </div>
-          <div class="flex justify-between mt-1">
-            <URelativelyTime :time="vModel.createTime" />
+          <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
+        </div>
+        <div class="mt-1">
+          <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
+        </div>
+        <div class="flex justify-between mt-1">
+          <URelativelyTime :time="vModel.createTime" />
+          <div class="flex space-x-4">
             <UActionBar
               :reportShow="reportShow"
               :is-like="feedbackLikeIds.indexOf(vModel.id) == -1"
@@ -26,25 +26,59 @@
             />
           </div>
         </div>
+      </div>
+      <div v-if="isCommentShow">
         <!-- 评论-->
-        <UHarborComment
+        <UComment
           ref="commentRef"
-          v-if="isCommentShow"
           :user-info="userInfo"
           :v-model="vModel"
+          @login="emit('login')"
           @submit="$emit('submit')"
         />
       </div>
-    </el-col>
-  </el-row>
+    </div>
+    <div>
+      <button
+        class="feedback-btn"
+        @click="onLike(vModel)"
+        :class="feedbackLikeIds.indexOf(vModel.id) == -1 ? '' : 'like'"
+      >
+        <div class="flex flex-col">
+          <div>
+            <div class="m-auto">
+              <i-ep-arrowUpBold class="m-auto" />
+              <span>{{ vModel.likes }}</span>
+            </div>
+            <!--            <div-->
+            <!--              v-if="isCommentShow"-->
+            <!--              class="m-auto text-sm mt-2"-->
+            <!--              style="writing-mode: vertical-lr; text-orientation: upright; letter-spacing: 1px"-->
+            <!--            >-->
+            <!--              <span class="truncate">张三,李四,王五</span>-->
+            <!--              <span>等赞同</span>-->
+            <!--            </div>-->
+          </div>
+        </div>
+      </button>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType, ref, computed } from 'vue';
-import { UImageContext, UUserNickNameInfo, UUserAvatar, UFeedbackTag, UActionBar } from '../index';
-import { FeedbackVO, getLikeList, like } from '@harbor/apis';
-import { UHarborComment, URelativelyTime } from '../index';
-import { UserInfo } from './index';
+import { onMounted, PropType, ref } from 'vue';
+import {
+  UActionBar,
+  UComment,
+  UFeedbackTag,
+  UImageContext,
+  UUserAvatar,
+  UUserNickNameInfo,
+  URelativelyTime,
+  UserInfo,
+} from '../index';
+import { FeedbackVO } from '@harbor/apis/src/feedback';
+import * as LikeApi from '@harbor/apis/src/like';
 
 defineOptions({
   name: 'UFeedback',
@@ -68,15 +102,17 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'submit', content: String): void;
+  (e: 'login'): void;
 }>();
 
 // 用户已点赞反馈集合
-const feedbackLikeIds = ref<Number[]>([]);
+const feedbackLikeIds = ref<Number[]>(props.userInfo.feedbackLikeIds);
 const isCommentShow = ref(props.commentShow);
 const commentRef = ref();
+const reportShow = ref(false);
 const onLike = (feedback: FeedbackVO) => {
   let fid = feedback.id;
-  like({ rid: fid, busType: 0 }).then((data) => {
+  LikeApi.like({ rid: fid, busType: 0 }).then((data) => {
     if (data) {
       feedbackLikeIds.value.push(fid);
       feedback.likes++;
@@ -87,19 +123,32 @@ const onLike = (feedback: FeedbackVO) => {
   });
 };
 
-const reportShow = ref(false);
-onMounted(() => {
-  getLikeList(0).then((data) => {
-    feedbackLikeIds.value = data;
-  });
-});
+onMounted(() => {});
 
 defineExpose({
-  focus: () => commentRef.value.focus(),
+  focus: () => commentRef.value?.focus(),
 });
 </script>
-<style lang="scss" scoped>
-.icon-btn {
-  @apply w-4 h-4;
+<style scoped lang="scss">
+.root {
+  --feedback-like-color: #409eff;
+  --feedback-hoverLike-color: #6eb0f5;
+  --feedback-border-color: #dcdfe6;
+}
+
+.like {
+  @apply bg-[var(--feedback-like-color)] text-white #{!important};
+}
+
+.feedback-border {
+  @apply border-r-1 border-[var(--feedback-border-color)];
+}
+
+.feedback-btn {
+  @apply w-14 h-full text-xl text-[#44cef6];
+}
+
+.feedback-btn:hover {
+  @apply bg-[var(--feedback-hoverLike-color)] text-white #{!important};
 }
 </style>

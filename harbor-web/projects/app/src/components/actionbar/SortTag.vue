@@ -1,5 +1,5 @@
 <template>
-  <el-radio-group v-model="tag" size="large" @change="$emit('change')">
+  <el-radio-group v-model="tag" @change="$emit('change')">
     <el-radio-button label="0">推荐</el-radio-button>
     <el-radio-button label="1">最新</el-radio-button>
   </el-radio-group>

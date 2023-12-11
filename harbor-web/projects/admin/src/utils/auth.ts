@@ -1,26 +1,13 @@
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { decrypt, encrypt } from '@/utils/jsencrypt';
-import { TenantKeyType } from '@harbor/core/src/wscache';
 import { changeFavicon } from '@harbor/core/src/utils/favicon';
 import { usePermissionStore } from '@/store/modules/permission';
-import { AuthLoginRespVO } from '@harbor/apis/src/login';
+import { TenantKeyType } from '@harbor/core/src/wscache/tenant';
 
 const { wsCache } = useCache();
 // ========== Token相关 ==========
-// 获取token
-export const getAccessToken = () => {
-  return wsCache.get(CACHE_KEY.ACCESS_TOKEN);
-};
 
-// 设置token
-export const setToken = (respVO: AuthLoginRespVO) => {
-  wsCache.set(CACHE_KEY.ACCESS_TOKEN, respVO.accessToken);
-};
-
-// 删除token
-export const removeToken = () => {
-  wsCache.delete(CACHE_KEY.ACCESS_TOKEN);
-};
+export * from '@harbor/core/src/wscache/token';
 
 // ========== 账号相关 ==========
 

@@ -1,32 +1,48 @@
- import { request } from "../index";
+import { PageParam, PageResult, request } from '../index';
 
-export type createCommentVO = {
+interface CommentBase {
+  id: number;
+  parentId: number | null;
+  uid: number;
+  feedbackId: number;
+  content: string;
+  likes: number;
+  userType: number;
+  avatar: string;
+  nickname: string;
+  createTime: number;
+  imgs?: string[];
+}
+
+export interface CommentVO extends CommentBase {
+  replyPage?: PageResult<ReplyVO>;
+}
+
+export interface ReplyVO extends CommentBase {}
+
+export interface createCommentVO {
   content: string;
   feedbackId: number;
   parentId?: number;
   imgs?: string[];
-};
+}
 
-export type CommentPageParams = {
-  pageNo: number;
-  pageSize: number;
+export interface CommentPageParams extends PageParam {
   feedbackId: number;
-};
+}
 
-export type ReplyPageParams = {
-  pageNo: number;
-  pageSize: number;
+export interface ReplyPageParams extends PageParam {
   commentId: number;
-};
+}
 
 export const createComment = (data: createCommentVO) => {
-  return request.post({ url: "/comment/create", data: data },'/app-api/harbor');
+  return request.post({ url: '/comment/create', data: data }, '/app-api/harbor');
 };
 
-export const getCommentPage = (data: CommentPageParams) => {
-  return request.get({ url: "/comment/page", params: data },'/app-api/harbor');
+export const getCommentPage = (data: CommentPageParams): Promise<PageResult<CommentVO>> => {
+  return request.get({ url: '/comment/page', params: data }, '/app-api/harbor');
 };
 
-export const getReplyPage = (data: ReplyPageParams) => {
-  return request.get({ url: "/comment/replyPage", params: data },'/app-api/harbor');
+export const getReplyPage = (data: ReplyPageParams): Promise<PageResult<ReplyVO>> => {
+  return request.get({ url: '/comment/replyPage', params: data }, '/app-api/harbor');
 };

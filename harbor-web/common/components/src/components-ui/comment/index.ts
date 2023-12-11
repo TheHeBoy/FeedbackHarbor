@@ -1,6 +1,4 @@
-import UComment from "./src/comment.vue";
+import UComment from './comment.vue';
 
-export * from "./interface";
-export * from "./key";
 export type CommentInstance = InstanceType<typeof UComment>;
 export { UComment };

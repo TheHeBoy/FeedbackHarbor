@@ -23,13 +23,14 @@ public interface CommentMapper extends BaseMapperX<CommentDO> {
 
     default PageResult<CommentDO> selectPage(AppCommentPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommentDO>()
-                .eqIfPresent(CommentDO::getFeedbackId, reqVO.getFeedbackId())
+                .eq(CommentDO::getFeedbackId, reqVO.getFeedbackId())
                 .isNull(CommentDO::getParentId)
                 .orderByDesc(CommentDO::getId));
     }
 
     default PageResult<CommentDO> selectReplyPage(PageParam pageVO, Long commentId) {
         return selectPage(pageVO, new LambdaQueryWrapperX<CommentDO>()
-                .eq(CommentDO::getParentId, commentId));
+                .eq(CommentDO::getParentId, commentId)
+                .orderByDesc(CommentDO::getId));
     }
 }

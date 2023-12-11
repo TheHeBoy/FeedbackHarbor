@@ -1,6 +1,6 @@
-import { request } from "../index";
+import { PageParam, request } from '../index';
 
-export type FeedbackVO = {
+export interface FeedbackVO extends PageParam {
   id: number;
   createTime: number;
   content: string;
@@ -13,7 +13,7 @@ export type FeedbackVO = {
   commentNum: number;
   sensitive: string[];
   imgs?: string[];
-};
+}
 
 export type FeedbackTagVO = {
   id: number;
@@ -36,15 +36,9 @@ export type FeedbackCreateVO = {
 };
 
 export const createFeedback = (data: FeedbackCreateVO) => {
-  return request.post(
-    { url: "/feedback/create", data: data },
-    "/app-api/harbor"
-  );
+  return request.post({ url: '/feedback/create', data: data }, '/app-api/harbor');
 };
 
 export const getFeedbackPage = (data: FeedbackPageParams) => {
-  return request.get(
-    { url: "/feedback/page", params: data },
-    "/app-api/harbor"
-  );
+  return request.get({ url: '/feedback/page', params: data }, '/app-api/harbor');
 };

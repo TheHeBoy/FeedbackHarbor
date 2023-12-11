@@ -1,31 +1,48 @@
 <template>
-  <div class="comment-box">
-    <u-editor
-      ref="editorRef"
-      v-model:modelValue="content"
-      v-model:imgList="imgList"
-      :placeholder="props.placeholder"
-      :min-height="props.minHeight"
-      :maxWords="maxWords"
-      @input="input"
-      @submit="onSubmit"
-    ></u-editor>
-    <div class="flex items-center justify-between mt-1">
+  <div
+    :class="{ active: active }"
+    class="w-full text-sm flex flex-col root border-1 bg-[var(--u-imageInput-bg-color)] p-2 rounded-lg"
+  >
+    <div :style="{ height: `${height}px` }" class="overflow-auto">
+      <div
+        ref="editorRef"
+        class="rich-input text-sm w-full h-full outline-0"
+        contenteditable="true"
+        :placeholder="placeholder"
+        @focus="active = true"
+        @blur="onBlur"
+        @paste="textPlain"
+        @input="input"
+        autofocus
+        v-html="text"
+      ></div>
+    </div>
+    <el-upload
+      :hidden="imgList.length < 1"
+      v-model:file-list="imgList"
+      :headers="uploadHeaders"
+      :action="action"
+      list-type="picture-card"
+      multiple
+      :on-error="uploadError"
+      :before-upload="beforeUpload"
+      :on-preview="onPreview"
+      :on-success="uploadSuccess"
+      :accept="fileType.join(',')"
+      :limit="6"
+    >
+      <template #trigger>
+        <el-button ref="inputRef" link>
+          <i-ep-plus />
+        </el-button>
+      </template>
+    </el-upload>
+    <div class="flex items-center justify-between">
       <div class="flex items-center">
-        <u-emoji
-          :emoji="emoji"
-          @add-emoji="(val: string) => editorRef?.addText(val)"
-        />
+        <u-emoji :emoji="emoji" @add-emoji="(val: string) => addText(val)" />
         <el-button link>
-          <div @click="inputRef?.click">
+          <div @click="inputRef?.$.vnode.el?.click()">
             <UploadSVG class="w-5 h-5" />
-            <input
-              class="hidden"
-              ref="inputRef"
-              type="file"
-              multiple
-              @change="change"
-            />
           </div>
         </el-button>
         <div class="flex items-center ml-1">
@@ -37,149 +54,232 @@
           </el-text>
         </div>
       </div>
-      <el-button type="primary" :disabled="disabled" @click="onSubmit">
+      <el-button type="primary" class="rounded-lg" :disabled="disabled" @click="onSubmit">
         {{ props.contentBtn }}
       </el-button>
     </div>
+    <el-image-viewer
+      v-if="imgViewVisible"
+      @close="imgViewVisible = false"
+      :initial-index="initialIndex"
+      :url-list="imgList.map((e) => e.url)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { isEmpty, isNull, isImage, getImgTypes } from "../../util";
-import { onMounted, ref } from "vue";
-import UploadSVG from "./svg/UploadSVG.svg?component";
-import { ElButton, ElMessage } from "element-plus";
-import {
-  CommentApi,
-  EditorInstance,
-  SubmitParam2Api,
-  UEditor,
-  UEmoji,
-} from "../index";
-import emoji from "../../types/emoji";
+import { isEmpty } from '../../util';
+import { onMounted, computed, ref, nextTick } from 'vue';
+import UploadSVG from './svg/UploadSVG.svg?component';
+import { ElButton, ElMessage, UploadFile } from 'element-plus';
+import { SubmitCommentProp, UEmoji } from '../index';
+import emoji from '@harbor/core/src/types/emoji';
+import { UploadUserFile } from 'element-plus/es/components/upload/src/upload';
+import { getAccessToken } from '@harbor/core/src/wscache';
+import { getEnv } from '@harbor/core/src/env';
 
+const uploadHeaders = ref({
+  Authorization: 'Bearer ' + getAccessToken(),
+});
 defineOptions({
-  name: "UImageInputBox",
+  name: 'UImageInputBox',
 });
 
 interface Props {
+  modelValue: string;
   placeholder: string;
   contentBtn: string;
-  parentId?: number;
-  reply?: CommentApi;
-  minHeight?: number;
+  height?: number;
+  maxWords?: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {});
+const props = withDefaults(defineProps<Props>(), {
+  height: 200,
+  maxWords: 500,
+});
 
-const content = ref("");
-const disabled = ref(true);
-const editorRef = ref<EditorInstance>();
-const inputRef = ref<HTMLInputElement>();
-const imgList = ref<File[]>([]);
-const maxWords = ref<number>(500);
-
-const input = (e: Event) => {
-  let str = content.value.replace(/&nbsp;|<br>| /g, "");
-  disabled.value = isEmpty(str) || str.length > maxWords.value;
-};
 const emit = defineEmits<{
-  (e: "close"): void;
-  (e: "submit", data: SubmitParam2Api): void;
+  (e: 'submit', data: SubmitCommentProp): void;
+  (e: 'update:modelValue', val: string): void;
 }>();
+
+// v-html不能双向绑定
+const text = ref('');
+const content = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value: string) {
+    emit('update:modelValue', value);
+  },
+});
+const disabled = ref(true);
+const editorRef = ref<HTMLDivElement>();
+const inputRef = ref();
+const imgList = ref<UploadUserFile[]>([]);
+const initialIndex = ref(0);
+const active = ref(false);
+const imgViewVisible = ref(false);
+const range = ref<Range>();
+const fileType = ['image/jpeg', 'image/png', 'image/gif'];
+const fileSize = 5; // 5M
+const env = getEnv();
+const action = env.VITE_UPLOAD_URL;
+const input = (e: Event) => {
+  let str = (e.target as HTMLDivElement).innerHTML;
+  str = str.replace(/&nbsp;|<br>| /g, '');
+  disabled.value = isEmpty(str) || str.length > props.maxWords;
+  content.value = str;
+};
 
 // 提交评论的数据
 const onSubmit = () => {
-  emit("submit", {
-    content: props.reply
-      ? `回复 <span style="color: var(--u-color-success-dark-2);">@${props.reply.user.username}:</span> ${content.value}`
-      : content.value,
-    parentId: isNull(props.parentId, null),
-    reply: props.reply,
-    files: imgList.value,
-    clear: () => {
-      // 清理输入框提交的数据
-      clearData();
-      // 关闭评论框事件
-      emit("close");
-    },
+  emit('submit', {
+    content: content.value,
+    imgUrls: imgList.value.map((e) => e.url!),
+    clear: clearData,
   });
 };
 
 //清理提交后输入框和图片列表数据
 const clearData = () => {
   // 清空评论框内容
-  (editorRef.value as any).clear();
+  if (editorRef.value) {
+    editorRef.value.innerHTML = '';
+  }
+  content.value = '';
   imgList.value = [];
   //提交按钮禁用
   disabled.value = true;
-};
-
-defineExpose({
-  focus: () => (editorRef as any).value?.focus(),
-});
-
-const change = (val: Event) => {
-  const files = inputRef.value?.files as any; //获取选中的文件对象
-  let sameFiles = [];
-  if (!files) {
-    return;
-  }
-
-  if (imgList.value.length + files.length > 6) {
-    ElMessage.warning("图片个数不能超过6张!");
-    return;
-  }
-
-  for (let i = 0; i < files.length; i++) {
-    // 文件名
-    let fileName = files[i].name;
-
-    // 存在相同图片
-    if (imgList.value.map((e) => e.name).includes(fileName)) {
-      sameFiles.push(fileName);
-      continue;
-    }
-
-    // 判断文件是否是图片类型
-    if (isImage(fileName)) {
-      imgList.value.push(files[i]);
-    } else {
-      ElMessage.warning(
-        `请选择图片类型文件! 只支持[${getImgTypes().join(",")}]`
-      );
-    }
-  }
-
-  if (sameFiles.length > 0) {
-    ElMessage.warning(`存在相同图片名! [ ${sameFiles.join(",")} ]`);
-  }
+  active.value = false;
 };
 
 // 空格和换行只占用一个字符
 function trimModelValueLen(): number {
-  return content.value.replaceAll(/&nbsp;|<br>| /g, " ").trim().length;
+  return content.value.replaceAll(/&nbsp;|<br>| /g, ' ').trim().length;
 }
 
+function textPlain(e: any) {
+  e.preventDefault();
+  let text: string;
+  let clp = (e.originalEvent || e).clipboardData;
+  if (clp) {
+    text = clp.getData('text/plain') || '';
+    if (text !== '') {
+      document.execCommand('insertText', false, text);
+    }
+  }
+}
+
+function addText(val: string) {
+  let selection = window.getSelection();
+  if (selection) {
+    selection.removeAllRanges();
+    // 为空初始化光标
+    if (!range.value) {
+      editorRef.value?.focus();
+      range.value = selection.getRangeAt(0);
+    }
+    // 删除选中内容
+    range.value.deleteContents();
+
+    // 添加内容
+    range.value.insertNode(range.value.createContextualFragment(val));
+
+    range.value.collapse(false);
+    selection.addRange(range.value);
+
+    content.value = editorRef.value?.innerHTML || '';
+  }
+}
+
+function onPreview(file: UploadUserFile) {
+  imgViewVisible.value = true;
+  initialIndex.value = imgList.value.findIndex((e) => e.url == file.url);
+}
+
+function beforeUpload(rawFile: File) {
+  const imgSize = rawFile.size! / 1024 / 1024 < fileSize;
+  if (!fileType.includes(rawFile.type)) {
+    ElMessage.warning('上传图片不符合所需的格式！');
+    return;
+  }
+  if (!imgSize) {
+    ElMessage.warning(`上传图片大小不能超过${fileSize}M！`);
+    return;
+  }
+  return rawFile;
+}
+
+function onBlur() {
+  // 记录光标
+  range.value = window.getSelection()?.getRangeAt(0);
+  active.value = false;
+}
+
+function uploadSuccess(response: any, uploadFile: UploadFile) {
+  if (!response || !response.data) {
+    ElMessage.error('图片上传失败！');
+    console.log(response);
+    return;
+  }
+  uploadFile.url = response.data;
+  ElMessage.success('上传成功');
+}
+
+const uploadError = () => {
+  ElMessage.error('图片上传失败，请您重新上传！');
+};
+
+defineExpose({
+  focus: () => {
+    nextTick(() => {
+      editorRef.value?.focus();
+    });
+  },
+});
+
 onMounted(() => {
-  (editorRef as any).value?.focus();
+  editorRef.value?.focus();
 });
 </script>
 
 <style lang="scss" scoped>
-.comment-box {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
+.root {
+  --u-imageInput-bg-color: #f8f9f9;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
+:deep(.el-upload--picture-card) {
+  --el-upload-picture-card-size: 80px;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+:deep(.el-upload-list) {
+  --el-upload-list-picture-card-size: 80px;
+}
+
+.active {
+  @apply bg-white border-blue-300;
+}
+
+.content {
+  width: 380px;
+  height: 50px;
+  border: 1px solid #e1e1e1;
+  -webkit-user-modify: read-write-plaintext-only;
+}
+
+.text:empty:before {
+  content: attr(placeholder);
+  color: #bbb;
+}
+
+.text:focus {
+  content: none;
+}
+
+.rich-input:empty::before {
+  cursor: text;
+  content: attr(placeholder);
+  color: #a8abb2;
 }
 </style>

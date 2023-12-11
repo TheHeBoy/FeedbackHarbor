@@ -7,7 +7,6 @@ import { useTenantStoreWithOut } from '@/store/tenant';
 import { changeFavicon } from '@harbor/core/src/utils/favicon';
 
 const routes: Array<RouteRecordRaw> = [
-  // 带鉴权的业务路由
   ...asyncRoutes,
   // 异常页必须放在路由匹配规则的最后
   ...exceptionRoutes,

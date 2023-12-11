@@ -133,7 +133,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     /**
      * 填充点赞数、评论数量、用户信息和反馈标签
      *
-     * @param isCreate 是否填充新建数据
+     * @param isCreate 是否是新建数据
      */
     private void fill(AppFeedbackBaseVO vo, FeedbackDO feedbackDO, boolean isCreate) {
         if (!isCreate) {

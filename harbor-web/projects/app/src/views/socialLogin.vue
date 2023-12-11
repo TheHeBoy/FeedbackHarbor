@@ -5,10 +5,8 @@
 <script lang="ts" setup>
 import * as LoginApi from '@harbor/apis/src/login';
 import { setToken } from '@/utils/auth';
-import { useUserStoreWithOut } from '@/store/user';
 import { SocialLoginVO } from '@harbor/apis/src/login';
 
-const userStore = useUserStoreWithOut();
 const message = ref('授权中');
 
 const getUrlValue = (key: string) => {

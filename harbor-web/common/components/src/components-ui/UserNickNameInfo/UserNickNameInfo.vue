@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center">
-    <el-text type="primary" size="large">{{ nickName ?? '注销用户' }}</el-text>
+    <el-text type="info" class="text-18">{{ nickName ?? '注销用户' }}</el-text>
     <el-tag v-if="type === UserTypeEnum.ADMIN" class="ml-1" type="danger" size="small">
       {{ t('com.official') }}
     </el-tag>
@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import { UserTypeEnum } from '@harbor/apis';
+import { UserTypeEnum } from '@harbor/apis/src/user';
 import { useI18n } from 'vue-i18n';
 
 defineOptions({

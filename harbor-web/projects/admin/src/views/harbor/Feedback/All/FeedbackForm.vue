@@ -1,21 +1,23 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
-      v-loading="formLoading"
-    >
-      <el-form-item label="内容">
-        <Editor v-model="formData.content" height="150px" />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
-    </template>
-  </Dialog>
+  <div class="root">
+    <Dialog :title="dialogTitle" v-model="dialogVisible">
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="100px"
+        v-loading="formLoading"
+      >
+        <el-form-item label="内容">
+          <Editor v-model="formData.content" height="150px" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+      </template>
+    </Dialog>
+  </div>
 </template>
 <script setup lang="ts">
 import * as FeedbackApi from '@/api/harbor/feedback';
