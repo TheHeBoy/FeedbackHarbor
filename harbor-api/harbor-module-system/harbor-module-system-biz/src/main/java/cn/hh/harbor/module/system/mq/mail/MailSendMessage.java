@@ -1,8 +1,6 @@
-package cn.hh.harbor.module.system.mq.message.mail;
+package cn.hh.harbor.module.system.mq.mail;
 
-import cn.hh.harbor.framework.mq.core.stream.AbstractStreamMessage;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,8 +11,7 @@ import javax.validation.constraints.NotNull;
  *
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class MailSendMessage extends AbstractStreamMessage {
+public class MailSendMessage {
 
     /**
      * 邮件日志编号
@@ -31,7 +28,6 @@ public class MailSendMessage extends AbstractStreamMessage {
      */
     @NotNull(message = "邮件账号编号不能为空")
     private Long accountId;
-
     /**
      * 邮件发件人
      */
@@ -46,10 +42,5 @@ public class MailSendMessage extends AbstractStreamMessage {
      */
     @NotEmpty(message = "邮件内容不能为空")
     private String content;
-
-    @Override
-    public String getStreamKey() {
-        return "system.mail.send";
-    }
 
 }

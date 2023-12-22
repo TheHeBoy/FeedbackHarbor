@@ -1,6 +1,6 @@
 package cn.hh.harbor.module.system.service.mail;
 
-import cn.hh.harbor.module.system.mq.message.mail.MailSendMessage;
+import cn.hh.harbor.module.system.mq.mail.MailSendMessage;
 
 import java.util.Map;
 

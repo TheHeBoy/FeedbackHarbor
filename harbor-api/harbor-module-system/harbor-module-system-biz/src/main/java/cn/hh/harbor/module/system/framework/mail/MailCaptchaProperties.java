@@ -1,7 +1,8 @@
-package cn.hh.harbor.module.system.framework.sms;
+package cn.hh.harbor.module.system.framework.mail;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import java.time.Duration;
 
 @ConfigurationProperties(prefix = "harbor.mail-captcha")
 @Validated
+@Component
 @Data
 public class MailCaptchaProperties {
 
@@ -18,9 +20,9 @@ public class MailCaptchaProperties {
     @NotNull(message = "过期时间不能为空")
     private Duration expireTimes;
     /**
-     * 短信发送频率
+     * 邮箱发送频率
      */
-    @NotNull(message = "短信发送频率不能为空")
+    @NotNull(message = "邮箱发送频率不能为空")
     private Duration sendFrequency;
     /**
      * 每日发送最大数量

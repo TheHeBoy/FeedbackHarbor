@@ -40,8 +40,6 @@
         <podam.version>7.2.11.RELEASE</podam.version>
         <jedis-mock.version>1.0.7</jedis-mock.version>
         <mockito-inline.version>4.11.0</mockito-inline.version>
-        <!-- Bpm 工作流相关 -->
-        <flowable.version>6.8.0</flowable.version>
         <!-- 工具类相关 -->
         <jsoup.version>1.15.4</jsoup.version>
         <lombok.version>1.18.28</lombok.version>

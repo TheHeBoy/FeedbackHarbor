@@ -3,7 +3,7 @@ package cn.hh.harbor.module.system.service.mail;
 import cn.hh.harbor.module.system.dal.dataobject.mail.MailCaptchaDO;
 import cn.hh.harbor.module.system.dal.mysql.mail.MailCaptchaMapper;
 import cn.hh.harbor.module.system.enums.mail.MailCaptchaSceneEnum;
-import cn.hh.harbor.module.system.framework.sms.MailCaptchaProperties;
+import cn.hh.harbor.module.system.framework.mail.MailCaptchaProperties;
 import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaSendReqVO;
 import cn.hh.harbor.module.system.service.mail.vo.MailCaptchaUseReqVO;
 import cn.hutool.core.date.LocalDateTimeUtil;

@@ -8,7 +8,7 @@ import cn.hh.harbor.framework.tenant.core.aop.TenantIgnoreAspect;
 import cn.hh.harbor.framework.tenant.core.db.TenantDatabaseInterceptor;
 import cn.hh.harbor.framework.tenant.core.job.TenantJob;
 import cn.hh.harbor.framework.tenant.core.job.TenantJobHandlerDecorator;
-import cn.hh.harbor.framework.tenant.core.mq.TenantRedisMessageInterceptor;
+import cn.hh.harbor.framework.tenant.core.mq.TenantMQMessageInterceptor;
 import cn.hh.harbor.framework.tenant.core.redis.TenantRedisCacheManager;
 import cn.hh.harbor.framework.tenant.core.security.TenantSecurityWebFilter;
 import cn.hh.harbor.framework.tenant.core.service.TenantFrameworkService;
@@ -91,8 +91,8 @@ public class HarborTenantAutoConfiguration {
     // ========== MQ ==========
 
     @Bean
-    public TenantRedisMessageInterceptor tenantRedisMessageInterceptor() {
-        return new TenantRedisMessageInterceptor();
+    public TenantMQMessageInterceptor tenantRedisMessageInterceptor() {
+        return new TenantMQMessageInterceptor();
     }
 
     // ========== Job ==========

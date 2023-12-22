@@ -12,14 +12,13 @@
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
-    <description>消息队列，基于 Redis Pub/Sub 实现广播消费，基于 Stream 实现集群消费</description>
-    <url>https://github.com/YunaiV/ruoyi-vue-pro</url>
+    <description>消息队列</description>
 
     <dependencies>
-        <!-- DB 相关 -->
+        <!-- AMQP依赖，包含RabbitMQ -->
         <dependency>
-            <groupId>cn.hh.boot</groupId>
-            <artifactId>harbor-spring-boot-starter-redis</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
     </dependencies>
 
