@@ -24,6 +24,7 @@ public interface FeedbackService {
      */
     void deleteFeedback(Long id);
 
+    AppFeedbackRespVO getById(Long id);
 
     /**
      * 获得用户反馈分页

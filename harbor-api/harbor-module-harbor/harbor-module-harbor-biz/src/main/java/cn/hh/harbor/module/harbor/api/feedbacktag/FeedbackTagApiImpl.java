@@ -17,6 +17,7 @@ public class FeedbackTagApiImpl implements FeedbackTagApi {
 
     @Override
     public void createTenantFeedbackTag(Long tenantId) {
+        // todo 修改为配置数据
         List<FeedbackTagDO> feedbackTagList = new ArrayList<FeedbackTagDO>() {{
             add(FeedbackTagDO.builder()
                     .sort(1).nameCh("问题反馈").nameEn("Problem feedback").color("#FFD700")

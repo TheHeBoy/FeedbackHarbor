@@ -17,7 +17,6 @@
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
-    <description></description>
 
 
 </project>

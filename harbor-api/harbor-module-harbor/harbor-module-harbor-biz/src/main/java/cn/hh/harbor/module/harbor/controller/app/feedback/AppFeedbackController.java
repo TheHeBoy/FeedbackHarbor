@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 
 import java.util.ArrayList;
@@ -47,5 +48,11 @@ public class AppFeedbackController {
     @Operation(summary = "获得用户反馈分页")
     public CommonResult<PageResult<AppFeedbackRespVO>> getFeedbackPage(@Valid AppFeedbackPageReqVO pageVO) {
         return success(feedbackService.getFeedbackPage(pageVO));
+    }
+
+    @GetMapping("/get")
+    @Operation(summary = "获得用户反馈分页")
+    public CommonResult<AppFeedbackRespVO> getFeedbackPage(@NotNull Long id) {
+        return success(feedbackService.getById(id));
     }
 }

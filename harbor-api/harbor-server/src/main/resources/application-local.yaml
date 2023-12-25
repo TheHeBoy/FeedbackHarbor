@@ -65,6 +65,9 @@ spring:
       simple:
         prefetch: 1 # 每次只能获取一条消息，处理完成才能获取下一个消息
 
+  elasticsearch:
+    uris: 192.168.10.100:9200
+
 --- #################### 定时任务相关配置 ####################
 
 # Quartz 配置项，对应 QuartzProperties 配置类

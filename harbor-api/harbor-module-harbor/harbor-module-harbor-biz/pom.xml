@@ -59,6 +59,11 @@
             <artifactId>harbor-spring-boot-starter-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hh.boot</groupId>
+            <artifactId>harbor-spring-boot-starter-es</artifactId>
+        </dependency>
+
         <!-- Test 测试相关 -->
         <dependency>
             <groupId>cn.hh.boot</groupId>

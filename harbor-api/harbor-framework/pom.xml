@@ -22,6 +22,7 @@
         <module>harbor-spring-boot-starter-protection</module>
         <module>harbor-spring-boot-starter-job</module>
         <module>harbor-spring-boot-starter-mq</module>
+        <module>harbor-spring-boot-starter-es</module>
 
         <module>harbor-spring-boot-starter-excel</module>
         <module>harbor-spring-boot-starter-test</module>
