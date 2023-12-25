@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-full overflow-hidden">
     <el-affix position="top" :offset="0">
       <el-menu
         :default-active="activeIndex"
@@ -23,11 +23,11 @@
         <div class="flex-grow"></div>
         <div class="flex space-x-4">
           <!-- 国际化待实现 -->
-          <el-tooltip :content="t('change lang')" placement="top">
-            <button class="icon-btn mx-2" @click="toggleLocales()">
-              <i-la-language class="icon-footer" />
-            </button>
-          </el-tooltip>
+          <!--          <el-tooltip :content="t('change lang')" placement="top">-->
+          <!--            <button class="icon-btn mx-2" @click="toggleLocales()">-->
+          <!--              <i-la-language class="icon-footer" />-->
+          <!--            </button>-->
+          <!--          </el-tooltip>-->
           <div>
             <div v-if="!userStore.isLogin()">
               <button @click="useLoginStoreWithOut().open()">{{ t('signIn') }}</button>
@@ -48,7 +48,7 @@
         </div>
       </el-menu>
     </el-affix>
-    <div class="h-full">
+    <div class="h-full overflow-auto">
       <router-view></router-view>
     </div>
   </div>

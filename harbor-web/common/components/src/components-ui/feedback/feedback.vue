@@ -1,67 +1,65 @@
 <template>
-  <div class="root flex w-full">
-    <div class="w-full feedback-border">
-      <div class="flex-grow p-4" @mouseenter="reportShow = true" @mouseleave="reportShow = false">
-        <div class="flex justify-between items-center">
-          <div class="flex items-center justify-center">
-            <UUserAvatar :size="35" :avatar="vModel.avatar" :uid="vModel.uid" />
-            <UUserNickNameInfo class="ml-1" :nick-name="vModel.nickname" :type="vModel.userType" />
+  <div class="root flex flex-row">
+    <el-row class="w-full">
+      <el-col :span="22">
+        <div class="feedback-border">
+          <div class="p-4" @mouseenter="reportShow = true" @mouseleave="reportShow = false">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center justify-center">
+                <UUserAvatar :size="35" :avatar="vModel.avatar" :uid="vModel.uid" />
+                <UUserNickNameInfo
+                  class="ml-1"
+                  :nick-name="vModel.nickname"
+                  :type="vModel.userType"
+                />
+              </div>
+              <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
+            </div>
+            <div class="mt-1">
+              <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
+            </div>
+            <div class="flex justify-between mt-1">
+              <URelativelyTime :time="vModel.createTime" />
+              <div class="flex space-x-4">
+                <UActionBar
+                  :reportShow="reportShow"
+                  :is-like="feedbackLikeIds.indexOf(vModel.id) == -1"
+                  :like-num="vModel.likes"
+                  :comment-num="vModel.commentNum"
+                  @onLike="onLike(vModel)"
+                  @onComment="isCommentShow = !isCommentShow"
+                  type="feedback"
+                />
+              </div>
+            </div>
           </div>
-          <UFeedbackTag :feedback-tag="vModel.feedbackTag" />
-        </div>
-        <div class="mt-1">
-          <UImageContext :contents="vModel.content" :imgs="vModel.imgs" />
-        </div>
-        <div class="flex justify-between mt-1">
-          <URelativelyTime :time="vModel.createTime" />
-          <div class="flex space-x-4">
-            <UActionBar
-              :reportShow="reportShow"
-              :is-like="feedbackLikeIds.indexOf(vModel.id) == -1"
-              :like-num="vModel.likes"
-              :comment-num="vModel.commentNum"
-              @onLike="onLike(vModel)"
-              @onComment="isCommentShow = !isCommentShow"
-              type="feedback"
+          <div v-if="isCommentShow">
+            <!-- 评论-->
+            <UComment
+              ref="commentRef"
+              :user-info="userInfo"
+              :v-model="vModel"
+              @login="emit('login')"
+              @submit="$emit('submit')"
             />
           </div>
         </div>
-      </div>
-      <div v-if="isCommentShow">
-        <!-- 评论-->
-        <UComment
-          ref="commentRef"
-          :user-info="userInfo"
-          :v-model="vModel"
-          @login="emit('login')"
-          @submit="$emit('submit')"
-        />
-      </div>
-    </div>
-    <div>
-      <button
-        class="feedback-btn"
-        @click="onLike(vModel)"
-        :class="feedbackLikeIds.indexOf(vModel.id) == -1 ? '' : 'like'"
-      >
-        <div class="flex flex-col">
-          <div>
-            <div class="m-auto">
+      </el-col>
+      <el-col :span="2">
+        <div class="h-full">
+          <button
+            class="feedback-btn"
+            @click="onLike(vModel)"
+            :class="feedbackLikeIds.indexOf(vModel.id) == -1 ? '' : 'like'"
+          >
+            <div class="flex flex-col">
               <i-ep-arrowUpBold class="m-auto" />
               <span>{{ vModel.likes }}</span>
             </div>
-            <!--            <div-->
-            <!--              v-if="isCommentShow"-->
-            <!--              class="m-auto text-sm mt-2"-->
-            <!--              style="writing-mode: vertical-lr; text-orientation: upright; letter-spacing: 1px"-->
-            <!--            >-->
-            <!--              <span class="truncate">张三,李四,王五</span>-->
-            <!--              <span>等赞同</span>-->
-            <!--            </div>-->
-          </div>
+          </button>
         </div>
-      </button>
-    </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -145,7 +143,7 @@ defineExpose({
 }
 
 .feedback-btn {
-  @apply w-14 h-full text-xl text-[#44cef6];
+  @apply h-full text-xl w-full text-[#44cef6];
 }
 
 .feedback-btn:hover {

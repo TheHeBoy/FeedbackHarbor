@@ -6,7 +6,7 @@
           <el-radio-button v-for="tag in feedbackTags" :label="tag.id">
             <template #default>
               <div class="flex items-center">
-                <i-mdi-tag-multiple :color="tag.color" class="inline w-6 h-6 mr-1" />
+                <i-mdi-tag-multiple :color="tag.color" class="inline w-5 h-5 mr-1" />
                 {{ tag.nameCh }}
               </div>
             </template>

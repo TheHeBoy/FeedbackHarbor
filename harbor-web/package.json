@@ -16,7 +16,8 @@
     "web-storage-cache": "^1.1.1",
     "windicss": "^3.5.6",
     "animate.css": "^4.1.1",
-    "vue-i18n": "9.2"
+    "vue-i18n": "9.2",
+    "@element-plus/icons-vue": "^2.1.0"
   },
   "devDependencies": {
     "@iconify/iconify": "^3.1.1",

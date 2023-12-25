@@ -12,7 +12,6 @@
     "@harbor/apis": "workspace:^",
     "@harbor/components": "workspace:^",
     "@harbor/core": "workspace:^",
-    "@element-plus/icons-vue": "^2.1.0",
     "@videojs-player/vue": "^1.0.0",
     "@vueuse/core": "^10.2.1",
     "@wangeditor/editor": "^5.1.23",

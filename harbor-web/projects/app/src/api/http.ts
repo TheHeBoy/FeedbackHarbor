@@ -3,6 +3,9 @@ import showCodeMessage from '@/api/errorCode';
 import { getAccessToken } from '@/utils/auth';
 import { useLoginStoreWithOut } from '@/store/login';
 import { useTenantStoreWithOut } from '@/store/tenant';
+import { ElNotification } from 'element-plus';
+
+const result_code = 200;
 
 // 创建实例
 export const axiosInstance: AxiosInstance = axios.create({
@@ -40,21 +43,26 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data } = response;
-    const code = data.code;
+    // 未设置状态码则默认成功状态
+    const code = data.code || result_code;
+    const msg = showCodeMessage(data.code) || data.msg;
     if (code == 401) {
       // 如果未认证，说明可能是访问令牌过期了
       useLoginStoreWithOut().open();
       return Promise.reject('未认证，请登录');
     } else if (code == 500) {
-      ElMessage.error(showCodeMessage(data.msg));
-      return Promise.reject(data.msg);
+      ElMessage.error(msg);
+      return Promise.reject(msg);
     } else if (code == 400) {
-      ElMessage.error(showCodeMessage(data.msg));
-      return Promise.reject(data.msg);
+      ElMessage.error(msg);
+      return Promise.reject(msg);
     } else if (code == 403) {
       // 租户无权访问时
-      return Promise.reject(data.msg);
-    } else if (code == 0) {
+      return Promise.reject(msg);
+    } else if (code !== 200) {
+      ElMessage.error(msg);
+      return Promise.reject(msg);
+    } else {
       return data;
     }
   },

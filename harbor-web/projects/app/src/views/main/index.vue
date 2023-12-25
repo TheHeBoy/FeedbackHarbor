@@ -1,12 +1,12 @@
 <template>
-  <div class="w-full min-h-full !bg-gray-50 flex justify-center p-10">
+  <div class="mb-10 w-full min-h-full bg-gray-50 flex justify-center p-10">
     <div class="flex">
-      <div class="w-150">
+      <div class="w-150 space-y-4">
         <el-card>
           <div class="w-full flex justify-between">
             <SortTag @change="sortChange" />
             <div class="flex space-x-4">
-              <el-button>
+              <el-button @click="searchDialogRef.show()">
                 <i-ep-search />
                 <span class="ml-1">搜索</span>
               </el-button>
@@ -16,9 +16,9 @@
             </div>
           </div>
         </el-card>
-        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
+        <div class="space-y-4" v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
           <template v-for="feedback in feedbackList" :key="feedback.id">
-            <el-card class="feedback-card w-full mt-4">
+            <el-card class="feedback-card w-full">
               <UFeedback
                 @login="useLoginStoreWithOut().open()"
                 :v-model="feedback"
@@ -31,8 +31,8 @@
       </div>
       <div class="w-80 <lg:hidden">
         <el-affix position="top" :offset="70">
-          <div class="pl-4 w-full">
-            <el-card class="w-full box-card">
+          <div class="pl-4">
+            <el-card>
               <el-button class="w-full" type="primary" @click="feedbackClick()">
                 我要反馈
               </el-button>
@@ -43,6 +43,7 @@
     </div>
     <FeedBackDialog ref="feedBackDialog" @submit="submitFeedback" />
     <el-backtop :right="50" :bottom="50" />
+    <SearchDialog ref="searchDialogRef" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -50,13 +51,12 @@ import { FeedbackPageParams, FeedbackVO, getFeedbackPage } from '@harbor/apis/sr
 import { UFeedback, UserInfo } from '@harbor/components';
 import { useUserStoreWithOut } from '@/store/user';
 import { onMounted } from 'vue';
-import * as LikeApi from '@harbor/apis/src/like';
-import { BusTypeVO } from '@harbor/apis/src/like';
 import { useLoginStoreWithOut } from '@/store/login';
 
+const activeCollapse = ref('1');
 const userStore = useUserStoreWithOut();
-const userInfo = { ...userStore.user } as UserInfo;
-
+const userInfo = userStore.user as UserInfo;
+const searchDialogRef = ref();
 const feedBackDialog = ref<any>(null);
 const feedbackList = ref<FeedbackVO[]>([]);
 const loading = ref(false);
@@ -107,16 +107,10 @@ const resetList = () => {
 
 onMounted(async () => {
   pageRequest();
-  userInfo.feedbackLikeIds = await LikeApi.getLikeList(BusTypeVO.Feedback);
-  userInfo.commentLikeIds = await LikeApi.getLikeList(BusTypeVO.Comment);
 });
 </script>
 <style lang="scss" scoped>
 .feedback-card :deep(.el-card__body) {
   padding: 0;
-}
-
-:deep(.el-card) {
-  @apply rounded-lg;
 }
 </style>

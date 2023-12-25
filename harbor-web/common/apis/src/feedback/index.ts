@@ -1,6 +1,6 @@
-import { PageParam, request } from '../index';
+import { request } from '../index';
 
-export interface FeedbackVO extends PageParam {
+export interface FeedbackVO {
   id: number;
   createTime: number;
   content: string;

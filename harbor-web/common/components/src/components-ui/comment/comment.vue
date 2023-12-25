@@ -1,7 +1,7 @@
 <template>
-  <div class="pt-2">
-    <div class="mx-4 text-lg border-b-2 pb-1 mb-4">评论</div>
-    <div class="px-14 pt-2 pb-4">
+  <div class="pt-2 mx-4">
+    <div class="text-lg border-b-2 pb-1 mb-4">评论</div>
+    <div class="pt-2 pb-4">
       <div class="pb-2">
         <UImageInputBox
           v-if="userInfo.id"

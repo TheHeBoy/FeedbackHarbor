@@ -72,7 +72,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   async (response: AxiosResponse<any>) => {
     const { data } = response;
-    const config = response.config;
     const { t } = useI18n();
     // 未设置状态码则默认成功状态
     const code = data.code || result_code;
