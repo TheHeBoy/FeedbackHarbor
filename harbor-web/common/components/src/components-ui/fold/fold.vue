@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="action-box">
-      <div v-if="isOver && unfold" class="expand-btn" @click="fold = !fold">
+      <div v-if="isOver && unfold" class="expand-btn" @click.stop="fold = !fold">
         {{ fold ? '展开' : '收起' }}
       </div>
     </div>

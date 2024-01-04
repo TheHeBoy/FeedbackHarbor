@@ -37,7 +37,7 @@
     </el-dialog>
     <el-dialog destroy-on-close width="800" :show-close="false" v-model="feedbackShow">
       <UFeedback
-        c
+        :comment-show="true"
         @login="useLoginStoreWithOut().open()"
         :v-model="feedback"
         :userInfo="userInfo"

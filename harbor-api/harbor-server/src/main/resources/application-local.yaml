@@ -43,7 +43,7 @@ spring:
       primary: master
       datasource:
         master:
-          name: ruoyi-vue-pro
+          name: feedback_harbor
           url: jdbc:mysql://192.168.10.100:3306/${spring.datasource.dynamic.datasource.master.name}?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true # MySQL Connector/J 8.X 连接的示例
           username: root
           password: 123456

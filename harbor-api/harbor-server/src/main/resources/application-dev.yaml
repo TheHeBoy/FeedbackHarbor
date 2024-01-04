@@ -55,6 +55,19 @@ spring:
     database: 0 # 数据库索引
     password: Kb07FFe2f37B9cA6 # 密码，建议生产环境开启
 
+  rabbitmq:
+    host: 39.101.140.3 # 主机名
+    port: 5672 # 端口
+    virtual-host: harbor_dev # 虚拟主机
+    username: harbor_dev # 用户名
+    password: 123456 # 密码
+    listener:
+      simple:
+        prefetch: 1 # 每次只能获取一条消息，处理完成才能获取下一个消息
+
+  elasticsearch:
+    uris: 139.9.132.189:9200
+
 --- #################### 定时任务相关配置 ####################
 
 # Quartz 配置项，对应 QuartzProperties 配置类
@@ -150,39 +163,28 @@ harbor:
       - ${management.endpoints.web.base-path}/** # 不处理 Actuator 的请求
   access-log: # 访问日志的配置项
     enable: true
+  social:
+    type:
+      GITEE:
+        App:
+          client-id: f407ceba670e9b118c9c08a7c497ae8d24ce622094862541755dcc98af07fb1f
+          client-secret: da89c20352570ae317f14042543ddd8fc931303e4e653f081f1cb1b3d77faec1
+        Admin:
+          client-id: e695508319c1beac2cc540acf0f47a49bca443301b0235a932fd50b3e833b77d
+          client-secret: b9775a4c50f2d4d169cbe5dd03ea8212a6592e2c0289a0d00f2eb5f4c440aaee
+      GITHUB:
+        App:
+          client-id: ab29ff63b8a920aced77
+          client-secret: 05f57c4f83fdc5fa38ca321204acd062433544eb
+        Admin:
+          client-id: 3a15c33132a8a4610258
+          client-secret: 1bb65a515fca40a30bb899aaa860fe68a33fa700
   demo: false # 关闭演示模式
 
 justauth:
   enabled: true
-  type:
-    GITEE:
-      client-id: f407ceba670e9b118c9c08a7c497ae8d24ce622094862541755dcc98af07fb1f
-      client-secret: da89c20352570ae317f14042543ddd8fc931303e4e653f081f1cb1b3d77faec1
-      redirectUri: http://localhost/product/social-login?type=10
-      ignore-check-redirect-uri: true
-    GOOGLE:
-      client-id: 146084332115-ic58upv7ec6r8p2im141n45jd1dl68ro.apps.googleusercontent.com
-      client-secret: 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
-      redirectUri: http://localhost/product/social-login?type=20
-      ignore-check-redirect-uri: true
-    GITHUB:
-      client-id: ab29ff63b8a920aced77
-      client-secret: eae5169f4511dcc8d1eedf5680a6ce03ea57dc99
-      redirectUri: http://localhost/product/social-login?type=30
-      ignore-check-redirect-uri: true
   cache:
     type: REDIS
     prefix: 'social_auth_state:' # 缓存前缀，目前只对 Redis 缓存生效，默认 JUSTAUTH::STATE::
     timeout: 24h # 超时时长，目前只对 Redis 缓存生效，默认 3 分钟
-  http-config:
-    timeout: 15000
-    proxy:
-      GOOGLE:
-        type: SOCKS
-        hostname: 127.0.0.1
-        port: 10808
-      GITHUB:
-        type: SOCKS
-        hostname: 127.0.0.1
-        port: 10808
 

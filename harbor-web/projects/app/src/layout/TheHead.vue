@@ -19,7 +19,6 @@
         </button>
 
         <el-menu-item ref="homeMenuItem" index="/home">{{ t('home') }}</el-menu-item>
-        <el-menu-item index="/roadmap">{{ t('roadmap') }}</el-menu-item>
         <div class="flex-grow"></div>
         <div class="flex space-x-4">
           <!-- 国际化待实现 -->

@@ -70,7 +70,7 @@ watch(
         :src="getTenantLogo()"
         alt=""
       />
-      <div v-if="show" class="flex items-center justify-center">
+      <div v-if="show" class="flex h-full items-center justify-center">
         <div
           :class="[
             'ml-10px grow whitespace-nowrap overflow-hidden text-16px font-700',

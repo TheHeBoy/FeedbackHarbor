@@ -9,7 +9,7 @@ const { wsCache } = useCache();
 
 export const useUserStore = defineStore('app-user', {
   state: () => ({
-    user: { id: 0, avatar: '', nickname: '', userType: 0 },
+    user: { id: 0, avatar: '', nickname: '', feedbackLikeIds: [], commentLikeIds: [] },
     isSetUser: false,
   }),
   getters: {},
@@ -41,7 +41,8 @@ export const useUserStore = defineStore('app-user', {
         id: 0,
         avatar: '',
         nickname: '',
-        userType: 0,
+        feedbackLikeIds: [],
+        commentLikeIds: [],
       };
       this.isSetUser = false;
     },

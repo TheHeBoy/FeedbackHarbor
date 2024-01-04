@@ -34,6 +34,6 @@ public class FeedbackES {
     /**
      * 多租户编号
      */
-    @Field(store = true, index = false, type = FieldType.Long)
+    @Field(store = true, type = FieldType.Long)
     private Long tenantId;
 }
