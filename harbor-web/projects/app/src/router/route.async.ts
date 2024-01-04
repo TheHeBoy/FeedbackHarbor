@@ -11,11 +11,6 @@ const asyncRoutes: Array<RouteRecordRaw> = [
         name: 'home',
         component: () => import('@/views/main/index.vue'),
       },
-      {
-        path: 'roadmap',
-        name: 'roadmap',
-        component: () => import('@/views/roadmap/index.vue'),
-      },
     ],
   },
   {
