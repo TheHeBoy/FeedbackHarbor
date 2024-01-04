@@ -1,0 +1,2 @@
+cn.hh.harbor.framework.quartz.config.HarborQuartzAutoConfiguration
+cn.hh.harbor.framework.quartz.config.HarborAsyncAutoConfiguration

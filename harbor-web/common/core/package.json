@@ -1,0 +1,7 @@
+{
+  "name": "@harbor/core",
+  "version": "0.0.0",
+  "devDependencies": {
+    "typescript": "^5.0.2"
+  }
+}

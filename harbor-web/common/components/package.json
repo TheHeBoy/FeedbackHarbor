@@ -1,0 +1,10 @@
+{
+  "name": "@harbor/components",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "@harbor/apis": "workspace:^",
+    "@harbor/core": "workspace:^"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@harbor/app",
+  "version": "1.0.0",
+  "author": "hehong",
+  "scripts": {
+    "local": "vite --mode .env.local",
+    "dev": "vite --mode dev",
+    "build:local": "vite build --mode .env.local",
+    "build:dev": "vite build --mode dev",
+    "preview": "pnpm build:local && vite preview"
+  },
+  "dependencies": {
+    "@harbor/apis": "workspace:^",
+    "@harbor/components": "workspace:^",
+    "@harbor/core": "workspace:^",
+    "@vueuse/core": "^8.9.2",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.0.16",
+    "pinia-plugin-persistedstate": "^3.2.0",
+    "prism-theme-vars": "^0.2.4",
+    "vue-router": "^4.2.4",
+    "vue-types": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.10",
+    "@types/nprogress": "^0.2.0",
+    "@types/svgo": "^2.6.1",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "@vitejs/plugin-vue-jsx": "2.0.0",
+    "lint-staged": "^12.3.2",
+    "unplugin-auto-import": "^0.9.2",
+    "vite": "4.4.2",
+    "vite-plugin-fonts": "^0.6.0",
+    "vue-tsc": "^0.38.4"
+  },
+  "lint-staged": {
+    "*.{ts,js,vue}": [
+      "eslint"
+    ]
+  }
+}

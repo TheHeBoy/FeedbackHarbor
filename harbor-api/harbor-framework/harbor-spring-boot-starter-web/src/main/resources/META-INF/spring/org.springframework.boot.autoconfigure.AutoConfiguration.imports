@@ -1,0 +1,6 @@
+cn.hh.harbor.framework.apilog.config.HarborApiLogAutoConfiguration
+cn.hh.harbor.framework.jackson.config.HarborJacksonAutoConfiguration
+com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration
+cn.hh.harbor.framework.swagger.config.HarborSwaggerAutoConfiguration
+cn.hh.harbor.framework.web.config.HarborWebAutoConfiguration
+cn.hh.harbor.framework.xss.config.HarborXssAutoConfiguration

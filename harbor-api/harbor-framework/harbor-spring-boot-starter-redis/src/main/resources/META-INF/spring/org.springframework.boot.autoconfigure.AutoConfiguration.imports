@@ -1,0 +1,2 @@
+cn.hh.harbor.framework.redis.config.HarborRedisAutoConfiguration
+cn.hh.harbor.framework.redis.config.HarborCacheAutoConfiguration
